@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "name": "NOSTR Password Manager",
+  "description": "A password manager where your passwords are encryped by your keys and stored on relays.",
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "NOSTR Password Manager"
+  },
+  "icons": {
+    "128": "images/rounded-512.png"
+  },
+  "permissions": ["tabs", "storage", "webNavigation", "scripting"],
+  "host_permissions": ["https://*/*", "http://*/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "run_at": "document_idle",
+      "js": [
+        "contentScript.js"
+      ]
+    }
+  ]
+}
