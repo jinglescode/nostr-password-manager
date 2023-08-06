@@ -13,7 +13,7 @@
   "permissions": ["tabs", "storage", "webNavigation", "scripting"],
   "host_permissions": ["https://*/*", "http://*/*"],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "scripts/background.js"
   },
   "content_scripts": [
     {
@@ -22,7 +22,7 @@
       ],
       "run_at": "document_idle",
       "js": [
-        "contentScript.js"
+        "scripts/contentScript.js"
       ]
     }
   ]

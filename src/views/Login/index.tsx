@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import LoginStep1 from "./LoginStep1";
-import LoginStep2 from "./LoginStep2";
-import { AccountStates, accountStore } from "../../stores/account";
+import LoginWithSK from "./LoginWithSK";
+import Encrypt from "./Encrypt";
+import { accountStore } from "../../stores/account";
 import Unlock from "./Unlock";
+import Connected from "./Connected";
+import { LoginViews } from "../../enums/loginViews";
+import { AccountStates } from "../../enums/accountStates";
 
 export default function LoginView() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<LoginViews>(LoginViews.SK);
   const [inputSk, setInputSk] = useState("");
   const [session, setSession] = useState<
     undefined | { sk: string; npub: string }
@@ -15,24 +18,27 @@ export default function LoginView() {
 
   useEffect(() => {
     if (state === AccountStates.LOGGED_IN_NO_ACCESS) {
-      setStep(3);
+      setStep(LoginViews.UNLOCK);
     }
-  }, []);
+  }, [state]);
 
-  console.log("step", step);
+  console.log("step:", step);
 
   return (
     <div className="isolate bg-white px-6 pt-20">
-      {step === 1 && (
-        <LoginStep1
+      {step === LoginViews.SK && (
+        <LoginWithSK
           inputSk={inputSk}
           setInputSk={setInputSk}
           setSession={setSession}
           setStep={setStep}
         />
       )}
-      {step === 2 && <LoginStep2 session={session} setStep={setStep} />}
-      {step === 3 && <Unlock setStep={setStep} />}
+      {step === LoginViews.ENCRYPT && (
+        <Encrypt session={session} setStep={setStep} />
+      )}
+      {step === LoginViews.UNLOCK && <Unlock setStep={setStep} />}
+      {step === LoginViews.CONNECTED && <Connected />}
     </div>
   );
 }

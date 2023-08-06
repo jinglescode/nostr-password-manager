@@ -1,6 +1,7 @@
 import { useNDK } from "@nostr-dev-kit/ndk-react";
+import { LoginViews } from "../../enums/loginViews";
 
-export default function LoginStep1({
+export default function LoginWithSK({
   inputSk,
   setInputSk,
   setSession,
@@ -18,7 +19,7 @@ export default function LoginStep1({
     if (session) {
       console.log(session);
       setSession(session);
-      setStep(2);
+      setStep(LoginViews.ENCRYPT);
     }
   }
 

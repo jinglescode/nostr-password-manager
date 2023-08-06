@@ -1,9 +1,11 @@
 import { useNDK } from "@nostr-dev-kit/ndk-react";
 import { useState } from "react";
-import { getStorage, setStorage } from "../../utils/chrome/storage";
+import { setLocalStorage, setSessionStorage } from "../../utils/chrome/storage";
 import StringCrypto from "string-crypto";
+import { LoginViews } from "../../enums/loginViews";
+import { StorageKeys } from "../../enums/storageKeys";
 
-export default function LoginStep2({
+export default function Encrypt({
   session,
   setStep,
 }: {
@@ -16,14 +18,15 @@ export default function LoginStep2({
   async function encrypt() {
     if (session === undefined) return;
 
-    const { encryptString, decryptString } = new StringCrypto();
+    const { encryptString } = new StringCrypto();
 
     let encryptedString = encryptString(session?.sk, inputPasscode);
-    console.log(3, encryptedString);
-    setStorage("user_encryptedsk", encryptedString);
-    setStorage("user_npub", session.npub);
-    // console.log("Decrypted String 1:", decryptString(encryptedString, code));
-    // console.log("Decrypted String 2:", decryptString(encryptedString, "123"));
+
+    setLocalStorage(StorageKeys.USER_ENCRYPTED_SK, encryptedString);
+    setLocalStorage(StorageKeys.USER_NPUB, session.npub);
+
+    setSessionStorage(StorageKeys.USER_SK, session?.sk);
+    setStep(LoginViews.CONNECTED);
   }
 
   if (session === undefined) return <></>;
@@ -40,11 +43,12 @@ export default function LoginStep2({
           }
         />
         <h2 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          Welcome{" "}
           {getProfile(session.npub).displayName
             ? getProfile(session.npub).displayName
             : getProfile(session.npub).name
             ? getProfile(session.npub).name
-            : "Welcome"}
+            : ""}
         </h2>
         <p className="mt-2 text-lg leading-8 text-gray-600">
           Enter a passcode to encrypt your key.

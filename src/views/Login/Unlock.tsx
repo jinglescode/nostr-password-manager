@@ -1,18 +1,28 @@
 import { useNDK } from "@nostr-dev-kit/ndk-react";
-import { getStorage, setStorage } from "../../utils/chrome/storage";
+import {
+  clearLocalStorage,
+  clearSessionStorage,
+  getLocalStorage,
+  setLocalStorage,
+  setSessionStorage,
+} from "../../utils/chrome/storage";
 import StringCrypto from "string-crypto";
 import { useEffect, useState } from "react";
+import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
+import { LoginViews } from "../../enums/loginViews";
+import { StorageKeys } from "../../enums/storageKeys";
 
 export default function Unlock({ setStep }: { setStep: Function }) {
-  const { ndk } = useNDK();
+  const { ndk, loginWithSecret } = useNDK();
   const [npub, setNpub] = useState<undefined | string>(undefined);
-  const [inputPasscode, setInputPasscode] = useState("");
+  const [inputPasscode, setInputPasscode] = useState<string>("");
+  const [passcodeIsError, setPasscodeIsError] = useState<boolean>(false);
 
   const { getProfile } = useNDK();
 
   useEffect(() => {
     if (ndk) {
-      getStorage("user_npub", (npub) => {
+      getLocalStorage(StorageKeys.USER_NPUB, (npub) => {
         console.log(22, npub);
         setNpub(npub);
       });
@@ -22,26 +32,32 @@ export default function Unlock({ setStep }: { setStep: Function }) {
   async function decrypt() {
     const { decryptString } = new StringCrypto();
 
-    getStorage("user_encryptedsk", (encryptedsk) => {
+    getLocalStorage(StorageKeys.USER_ENCRYPTED_SK, (encryptedsk) => {
       console.log(33, encryptedsk);
+      const sk = decryptString(encryptedsk, inputPasscode);
+      tryLogIn(sk);
     });
+  }
 
-    // let encryptedString = encryptString(session?.sk, inputPasscode);
-    // console.log(3, encryptedString);
-    // setStorage("user_encryptedsk", encryptedString);
-    // setStorage("user_npub", session.npub);
-    // console.log("Decrypted String 1:", decryptString(encryptedString, code));
-    // console.log("Decrypted String 2:", decryptString(encryptedString, "123"));
+  async function tryLogIn(sk: string) {
+    try {
+      const session = await loginWithSecret(sk);
+      console.log(44, session);
+      setSessionStorage(StorageKeys.USER_SK, sk);
+      setStep(LoginViews.CONNECTED);
+    } catch (e) {
+      setPasscodeIsError(true);
+    }
   }
 
   function forgetAccount() {
-    setStorage("user_encryptedsk", undefined);
-    setStorage("user_npub", undefined);
+    clearLocalStorage();
+    clearSessionStorage();
+    setStep(LoginViews.SK);
   }
 
   if (npub === undefined) return <></>;
 
-  console.log(55, getProfile(npub));
   return (
     <>
       <div className="mx-auto max-w-2xl text-center">
@@ -54,14 +70,15 @@ export default function Unlock({ setStep }: { setStep: Function }) {
           }
         />
         <h2 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          Welcome{" "}
           {getProfile(npub).displayName
             ? getProfile(npub).displayName
             : getProfile(npub).name
             ? getProfile(npub).name
-            : "Welcome"}
+            : ""}
         </h2>
         <p className="mt-2 text-lg leading-8 text-gray-600">
-          Enter a passcode to access your account.
+          Enter a passcode to unlock.
         </p>
       </div>
       <div className="mx-auto mt-16 max-w-xl sm:mt-20">
@@ -73,16 +90,33 @@ export default function Unlock({ setStep }: { setStep: Function }) {
             >
               Passcode to decrypt your key
             </label>
-            <div className="mt-2.5">
+            <div className="relative mt-2.5">
               <input
                 type="password"
                 name="passcode"
-                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className={`block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 ${
+                  passcodeIsError
+                    ? "ring-red-300 focus:ring-red-500"
+                    : "ring-gray-300 focus:ring-indigo-600"
+                }`}
                 placeholder="at least 6 characters"
                 value={inputPasscode}
                 onChange={(e) => setInputPasscode(e.target.value)}
               />
+              {passcodeIsError && (
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                  <ExclamationCircleIcon
+                    className="h-5 w-5 text-red-500"
+                    aria-hidden="true"
+                  />
+                </div>
+              )}
             </div>
+            {passcodeIsError && (
+              <p className="mt-2 text-sm text-red-600" id="email-error">
+                Passcode incorrect.
+              </p>
+            )}
           </div>
         </div>
         <div className="mt-10">

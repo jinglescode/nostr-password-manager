@@ -3,7 +3,8 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Views, viewStore } from "../../stores/view";
-import { AccountStates, accountStore } from "../../stores/account";
+import { accountStore } from "../../stores/account";
+import { AccountStates } from "../../enums/accountStates";
 
 export default function Navbar() {
   const showMenu = viewStore((state) => state.showMenu);
