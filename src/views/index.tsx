@@ -3,12 +3,14 @@ import Navbar from "../components/Navbar";
 import { Views, viewStore } from "../stores/view";
 import LoginView from "./Login";
 import MenuView from "./Menu";
-import VaultView from "./Vault";
 import { getLocalStorage, getSessionStorage } from "../utils/chrome/storage";
 import { accountStore } from "../stores/account";
 import { AccountStates } from "../enums/account";
 import { StorageKeys } from "../enums/storage";
+import Roadmap from "./Roadmap";
+import VaultView from "./Vault";
 import ItemView from "./Item";
+import RoadmapView from "./Roadmap";
 
 export default function MainView() {
   const view = viewStore((state) => state.view);
@@ -59,6 +61,7 @@ function SignedIn() {
     <>
       {view === Views.VAULT && <VaultView />}
       {view === Views.ITEM && <ItemView />}
+      {view === Views.ROADMAP && <RoadmapView />}
     </>
   );
 }

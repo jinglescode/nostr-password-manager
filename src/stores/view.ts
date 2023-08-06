@@ -6,6 +6,8 @@ export enum Views {
   VAULT,
   LOGIN,
   ITEM,
+  ROADMAP,
+  FAQ,
 }
 
 interface SessionState {
@@ -14,7 +16,7 @@ interface SessionState {
   showMenu: boolean;
   toggleShowMenu: () => void;
   itemDetails: Item | undefined;
-  setItemDetails: (item: Item) => void;
+  setItemDetails: (item: Item | undefined) => void;
 }
 
 export const viewStore = create<SessionState>()((set, get) => ({
@@ -23,5 +25,5 @@ export const viewStore = create<SessionState>()((set, get) => ({
   showMenu: false,
   toggleShowMenu: () => set({ showMenu: !get().showMenu }),
   itemDetails: undefined,
-  setItemDetails: (item: Item) => set({ itemDetails: item }),
+  setItemDetails: (item: Item | undefined) => set({ itemDetails: item }),
 }));

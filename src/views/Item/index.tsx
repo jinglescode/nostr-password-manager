@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import { useNDK } from "@nostr-dev-kit/ndk-react";
-import { viewStore } from "../../stores/view";
+import { Views, viewStore } from "../../stores/view";
 import { ItemKeys, ItemType } from "../../enums/item";
 import {
   ArrowPathIcon,
@@ -26,26 +26,44 @@ export default function ItemView() {
   const setView = viewStore((state) => state.setView);
   const itemDetails = viewStore((state) => state.itemDetails);
 
-  const [mode, setMode] = useState<Mode>(Mode.VIEW);
+  const [isNew, setIsNew] = useState<boolean>(false); // is a new item
+  const [mode, setMode] = useState<Mode>(Mode.VIEW); // view or edit
   const [inputName, setinputName] = useState<string>(
     itemDetails?.[ItemKeys.NAME] || ""
   );
 
+  let _itemDetails = itemDetails;
+  useEffect(() => {
+    if (itemDetails === undefined) {
+      setIsNew(true);
+      setMode(Mode.EDIT);
+      _itemDetails = {
+        [ItemKeys.TYPE]: ItemType.LOGIN,
+        [ItemKeys.NAME]: "",
+        login: {
+          [ItemKeys.USERNAME]: "",
+          [ItemKeys.PASSWORD]: "",
+          [ItemKeys.URI]: [],
+        },
+      };
+    }
+  }, [itemDetails]);
+  console.log(44, "isNew", isNew, itemDetails);
   // login
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
 
   const { onCopy: copyUser } = useClipboard(
-    itemDetails?.login?.[ItemKeys.USERNAME] || ""
+    _itemDetails?.login?.[ItemKeys.USERNAME] || ""
   );
   const { onCopy: copyPassword } = useClipboard(
-    itemDetails?.login?.[ItemKeys.PASSWORD] || ""
+    _itemDetails?.login?.[ItemKeys.PASSWORD] || ""
   );
 
   const [inputUsername, setinputUsername] = useState<string>(
-    itemDetails?.login?.[ItemKeys.USERNAME] || ""
+    _itemDetails?.login?.[ItemKeys.USERNAME] || ""
   );
   const [inputPassword, setinputPassword] = useState<string>(
-    itemDetails?.login?.[ItemKeys.PASSWORD] || ""
+    _itemDetails?.login?.[ItemKeys.PASSWORD] || ""
   );
 
   function generatePassword() {}
@@ -54,12 +72,14 @@ export default function ItemView() {
     return true;
   }
 
-  async function save() {}
+  async function save() {
+    setView(Views.VAULT);
+  }
 
   async function deleteItem() {}
 
   return (
-    <div className="w-full px-2 space-y-2">
+    <div className="w-full p-2 space-y-2">
       <Input
         label="Name"
         name="name"
@@ -68,7 +88,7 @@ export default function ItemView() {
         onChange={(e) => setinputName(e.target.value)}
         disabled={mode === Mode.VIEW}
       />
-      {itemDetails?.[ItemKeys.TYPE] === ItemType.LOGIN && itemDetails.login && (
+      {_itemDetails?.[ItemKeys.TYPE] === ItemType.LOGIN && (
         <>
           <Input
             label="Username"
@@ -120,13 +140,15 @@ export default function ItemView() {
                     <EyeIcon className="h-6 w-6" />
                   )}
                 </button>
-                <button
-                  onClick={() => copyPassword()}
-                  className="text-gray-400 hover:text-brand-3 active:text-primary"
-                  title="Copy password"
-                >
-                  <DocumentDuplicateIcon className="h-6 w-6" />
-                </button>
+                {!isNew && (
+                  <button
+                    onClick={() => copyPassword()}
+                    className="text-gray-400 hover:text-brand-3 active:text-primary"
+                    title="Copy password"
+                  >
+                    <DocumentDuplicateIcon className="h-6 w-6" />
+                  </button>
+                )}
               </div>
             }
           />
@@ -149,15 +171,17 @@ export default function ItemView() {
           </>
         ) : (
           <>
-            <Button
-              onClick={() => setMode(Mode.VIEW)}
-              title="Lock to exit editing mode"
-            >
-              <div className="flex flex-col items-center">
-                <LockOpenIcon className="h-4 w-4" />
-                <span className="text-xs">Lock</span>
-              </div>
-            </Button>
+            {!isNew && (
+              <Button
+                onClick={() => setMode(Mode.VIEW)}
+                title="Lock to exit editing mode"
+              >
+                <div className="flex flex-col items-center">
+                  <LockOpenIcon className="h-4 w-4" />
+                  <span className="text-xs">Lock</span>
+                </div>
+              </Button>
+            )}
             <Button
               disabled={ndk === undefined || !validate()}
               onClick={() => save()}
@@ -168,16 +192,18 @@ export default function ItemView() {
                 <span className="text-xs">Save</span>
               </div>
             </Button>
-            <Button
-              onClick={() => deleteItem()}
-              className="bg-red-800 hover:bg-red-600"
-              title="Delete item"
-            >
-              <div className="flex flex-col items-center">
-                <TrashIcon className="h-4 w-4" />
-                <span className="text-xs">Delete</span>
-              </div>
-            </Button>
+            {!isNew && (
+              <Button
+                onClick={() => deleteItem()}
+                className="bg-red-800 hover:bg-red-600"
+                title="Delete item"
+              >
+                <div className="flex flex-col items-center">
+                  <TrashIcon className="h-4 w-4" />
+                  <span className="text-xs">Delete</span>
+                </div>
+              </Button>
+            )}
           </>
         )}
       </div>
