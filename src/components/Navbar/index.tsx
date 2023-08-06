@@ -5,11 +5,14 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Views, viewStore } from "../../stores/view";
 import { accountStore } from "../../stores/account";
 import { AccountStates } from "../../enums/accountStates";
+import { searchStore } from "../../stores/search";
 
 export default function Navbar() {
   const showMenu = viewStore((state) => state.showMenu);
   const toggleShowMenu = viewStore((state) => state.toggleShowMenu);
   const state = accountStore((state) => state.state);
+  const searchInput = searchStore((state) => state.searchInput);
+  const setSearchInput = searchStore((state) => state.setSearchInput);
 
   return (
     <div className="bg-gray-800">
@@ -39,6 +42,8 @@ export default function Navbar() {
                     className="block w-full rounded-md border-0 bg-gray-700 py-1.5 pl-10 pr-3 text-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus:outline-none"
                     placeholder="Search vault"
                     type="search"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
                   />
                 </div>
               </div>

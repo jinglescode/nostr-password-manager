@@ -4,6 +4,8 @@ import { setLocalStorage, setSessionStorage } from "../../utils/chrome/storage";
 import StringCrypto from "string-crypto";
 import { LoginViews } from "../../enums/loginViews";
 import { StorageKeys } from "../../enums/storageKeys";
+import { AccountStates } from "../../enums/accountStates";
+import { accountStore } from "../../stores/account";
 
 export default function Encrypt({
   session,
@@ -14,6 +16,7 @@ export default function Encrypt({
 }) {
   const { getProfile } = useNDK();
   const [inputPasscode, setInputPasscode] = useState("");
+  const setState = accountStore((state) => state.setState);
 
   async function encrypt() {
     if (session === undefined) return;
@@ -27,6 +30,9 @@ export default function Encrypt({
 
     setSessionStorage(StorageKeys.USER_SK, session?.sk);
     setStep(LoginViews.CONNECTED);
+    setTimeout(() => {
+      setState(AccountStates.LOGGED_IN);
+    }, 2000);
   }
 
   if (session === undefined) return <></>;

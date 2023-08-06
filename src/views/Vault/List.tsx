@@ -1,68 +1,77 @@
-import { KeyIcon, UserIcon } from "@heroicons/react/20/solid";
+import { ItemLogin } from "../../types/item";
+import { ItemType } from "../../enums/item";
+import LoginItem from "./Item/login";
+import { searchStore } from "../../stores/search";
+import { getTabUrl } from "../../utils/chrome/getTabUrl";
+import { useEffect, useState } from "react";
 
 export default function List() {
-  let items = [
+  const searchInput = searchStore((state) => state.searchInput);
+  const [currentDomain, setCurrentDomain] = useState<undefined | string>(
+    undefined
+  );
+
+  useEffect(() => {
+    async function load() {
+      const _url = await getTabUrl();
+      if (_url) {
+        let __url = new URL(_url as string);
+        setCurrentDomain(__url.hostname);
+      }
+    }
+    load();
+  }, []);
+
+  let items: ItemLogin[] = [
     {
-      site: "google.com",
-      email: "jinglescode@gmail.com",
+      type: ItemType.LOGIN,
+      name: "Google",
+      uri: ["https://www.google.com"],
+      username: "jinglescode@gmail.com",
+      password: "123456",
     },
     {
-      site: "nostr.com",
-      email: "jinglescode@gmail.com",
+      type: ItemType.LOGIN,
+      name: "Nostr",
+      uri: ["https://nostr.com"],
+      username: "laoshu@gmail.com",
+      password: "123456",
     },
   ];
 
-  // function fillForms() {
-  //   // console.log("fillForms");
-  //   // var email = document.querySelector('input[type="email"]');
-  //   // console.log(222, email);
+  function filterItem(item: ItemLogin) {
+    if (!searchInput) {
+      if (currentDomain) {
+        if (item.uri.some((v) => v.includes(currentDomain))) {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      const _searchInput = searchInput.trim().toLowerCase();
 
-  //   // if (email) {
-  //   //   //@ts-ignore
-  //   //   email.value = "jinglescode@gmail.com";
-  //   // }
+      if (item.name.toLowerCase().includes(_searchInput)) {
+        return true;
+      }
 
-  //   chrome.runtime.sendMessage(
-  //     {
-  //       type: "DEBUG",
-  //       payload: {
-  //         message: "Hello, my name is Con. I am from ContentScript.",
-  //       },
-  //     },
-  //     (response) => {
-  //       console.log(response);
-  //     }
-  //   );
-  // }
+      if (item.username.toLowerCase().includes(_searchInput)) {
+        return true;
+      }
 
-  function copyUser() {}
+      if (item.uri.some((v) => v.includes(_searchInput))) {
+        return true;
+      }
+    }
 
-  function copyPassword() {}
+    return false;
+  }
 
   return (
     <table className="min-w-full divide-y divide-gray-300">
       <tbody className="divide-y divide-gray-200 bg-white">
-        {items.map((item, i) => {
-          return (
-            <tr key={i}>
-              <td className="whitespace-nowrap text-sm py-2">
-                <div className="flex items-center mx-4">
-                  <div className="flex-1">
-                    <div className="font-medium text-gray-900">{item.site}</div>
-                    <div className="mt-1 text-gray-500">{item.email}</div>
-                  </div>
-                  <div className="text-gray-500 flex items-center">
-                    <button onClick={() => copyUser()}>
-                      <UserIcon className="h-8 w-8 text-gray-400 hover:text-gray-600" />
-                    </button>
-                    <button onClick={() => copyPassword()}>
-                      <KeyIcon className="h-8 w-8 text-gray-400 hover:text-gray-600" />
-                    </button>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          );
+        {items.filter(filterItem).map((item, i) => {
+          return <LoginItem key={i} item={item} />;
         })}
       </tbody>
     </table>

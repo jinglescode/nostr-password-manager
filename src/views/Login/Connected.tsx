@@ -20,7 +20,6 @@ export default function Connected() {
 
   if (npub === undefined) return <></>;
 
-  console.log(55, getProfile(npub));
   return (
     <>
       <div className="mx-auto max-w-2xl text-center">

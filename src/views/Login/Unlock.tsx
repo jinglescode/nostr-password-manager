@@ -11,12 +11,15 @@ import { useEffect, useState } from "react";
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 import { LoginViews } from "../../enums/loginViews";
 import { StorageKeys } from "../../enums/storageKeys";
+import { accountStore } from "../../stores/account";
+import { AccountStates } from "../../enums/accountStates";
 
 export default function Unlock({ setStep }: { setStep: Function }) {
   const { ndk, loginWithSecret } = useNDK();
   const [npub, setNpub] = useState<undefined | string>(undefined);
   const [inputPasscode, setInputPasscode] = useState<string>("");
   const [passcodeIsError, setPasscodeIsError] = useState<boolean>(false);
+  const setState = accountStore((state) => state.setState);
 
   const { getProfile } = useNDK();
 
@@ -45,6 +48,9 @@ export default function Unlock({ setStep }: { setStep: Function }) {
       console.log(44, session);
       setSessionStorage(StorageKeys.USER_SK, sk);
       setStep(LoginViews.CONNECTED);
+      setTimeout(() => {
+        setState(AccountStates.LOGGED_IN);
+      }, 1000);
     } catch (e) {
       setPasscodeIsError(true);
     }

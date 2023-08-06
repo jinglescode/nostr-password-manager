@@ -23,10 +23,10 @@ export default function MainView() {
 
   useEffect(() => {
     getLocalStorage(StorageKeys.USER_ENCRYPTED_SK, (encryptedsk) => {
-      console.log("encryptedsk", encryptedsk);
+      console.log(55, "encryptedsk", encryptedsk);
       if (encryptedsk && state === AccountStates.NOT_LOGGED_IN) {
         getSessionStorage(StorageKeys.USER_SK, (sk) => {
-          console.log("sk", sk);
+          console.log(55, "sk", sk);
           if (sk) {
             setState(AccountStates.LOGGED_IN);
           } else {

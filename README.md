@@ -5,3 +5,4 @@ Todos:
 - one click to fill up forms on site
 - different types of item
 - generate password with rules
+- import from existing password managers
