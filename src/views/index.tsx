@@ -8,37 +8,34 @@ import { getLocalStorage, getSessionStorage } from "../utils/chrome/storage";
 import { accountStore } from "../stores/account";
 import { AccountStates } from "../enums/account";
 import { StorageKeys } from "../enums/storage";
+import ItemView from "./Item";
 
 export default function MainView() {
+  const view = viewStore((state) => state.view);
+  const setView = viewStore((state) => state.setView);
   const showMenu = viewStore((state) => state.showMenu);
   const state = accountStore((state) => state.state);
   const setState = accountStore((state) => state.setState);
-  const [loaded, setLoaded] = useState<boolean>(false);
-
-  console.log("account state", state);
-
-  getSessionStorage(StorageKeys.USER_SK, (sk) => {
-    console.log("sk", sk);
-  });
 
   useEffect(() => {
     getLocalStorage(StorageKeys.USER_ENCRYPTED_SK, (encryptedsk) => {
-      console.log(55, "encryptedsk", encryptedsk);
       if (encryptedsk && state === AccountStates.NOT_LOGGED_IN) {
         getSessionStorage(StorageKeys.USER_SK, (sk) => {
-          console.log(55, "sk", sk);
           if (sk) {
             setState(AccountStates.LOGGED_IN);
+            setView(Views.VAULT);
           } else {
             setState(AccountStates.LOGGED_IN_NO_ACCESS);
+            setView(Views.LOGIN);
           }
         });
+      } else {
+        setView(Views.LOGIN);
       }
     });
-    setLoaded(true);
   }, []);
 
-  if (!loaded) return <></>;
+  if (view === Views.INIT) return <></>;
 
   return (
     <div className="h-screen flex flex-col">
@@ -61,7 +58,7 @@ function SignedIn() {
   return (
     <>
       {view === Views.VAULT && <VaultView />}
-      {view === Views.LOGIN && <LoginView />}
+      {view === Views.ITEM && <ItemView />}
     </>
   );
 }

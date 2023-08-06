@@ -1,16 +1,28 @@
-import { KeyIcon, UserIcon } from "@heroicons/react/20/solid";
+import {
+  InformationCircleIcon,
+  KeyIcon,
+  UserIcon,
+} from "@heroicons/react/20/solid";
 import { Item } from "../../../types/item";
 import { ItemKeys } from "../../../enums/item";
 import { useClipboard } from "../../../hooks/useCopyClipboard";
+import { Views, viewStore } from "../../../stores/view";
 
 export default function LoginItem({ item }: { item: Item }) {
+  const setView = viewStore((state) => state.setView);
+  const setItemDetails = viewStore((state) => state.setItemDetails);
+
   const { onCopy: copyUser } = useClipboard(
-    item.login ? item.login[ItemKeys.USERNAME] : ""
+    item.login?.[ItemKeys.USERNAME] || ""
+  );
+  const { onCopy: copyPassword } = useClipboard(
+    item.login?.[ItemKeys.PASSWORD] || ""
   );
 
-  const { onCopy: copyPassword } = useClipboard(
-    item.login ? item.login[ItemKeys.PASSWORD] : ""
-  );
+  function viewItem() {
+    setItemDetails(item);
+    setView(Views.ITEM);
+  }
 
   if (item.login === undefined) return <></>;
 
@@ -27,45 +39,28 @@ export default function LoginItem({ item }: { item: Item }) {
         </div>
         <div className="flex-none text-gray-500 flex items-center">
           <button
+            onClick={() => viewItem()}
+            className="text-gray-400 hover:text-brand-3 active:text-primary"
+            title="View item"
+          >
+            <InformationCircleIcon className="h-6 w-6" />
+          </button>
+          <button
             onClick={() => copyUser()}
             className="text-gray-400 hover:text-brand-3 active:text-primary"
             title="Copy username"
           >
-            <UserIcon className="h-8 w-8" />
+            <UserIcon className="h-6 w-6" />
           </button>
           <button
             onClick={() => copyPassword()}
             className="text-gray-400 hover:text-brand-3 active:text-primary"
             title="Copy password"
           >
-            <KeyIcon className="h-8 w-8" />
+            <KeyIcon className="h-6 w-6" />
           </button>
         </div>
       </div>
     </div>
   );
-  // return (
-  //   <tr>
-  //     <td className="whitespace-nowrap text-sm py-2">
-  //       <div className="flex items-center mx-4">
-  //         <div className="flex-1">
-  //           <div className="font-medium text-gray-900">
-  //             {item[ItemKeys.NAME]}
-  //           </div>
-  //           <div className="mt-1 text-gray-500">
-  //             {item.login[ItemKeys.USERNAME]}
-  //           </div>
-  //         </div>
-  //         <div className="text-gray-500 flex items-center">
-  //           <button onClick={() => copyUser()}>
-  //             <UserIcon className="h-8 w-8 text-gray-400 hover:text-gray-600" />
-  //           </button>
-  //           <button onClick={() => copyPassword()}>
-  //             <KeyIcon className="h-8 w-8 text-gray-400 hover:text-gray-600" />
-  //           </button>
-  //         </div>
-  //       </div>
-  //     </td>
-  //   </tr>
-  // );
 }

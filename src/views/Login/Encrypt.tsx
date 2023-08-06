@@ -8,6 +8,7 @@ import { AccountStates } from "../../enums/account";
 import { accountStore } from "../../stores/account";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
+import { Views, viewStore } from "../../stores/view";
 
 export default function Encrypt({
   session,
@@ -19,6 +20,7 @@ export default function Encrypt({
   const { getProfile } = useNDK();
   const [inputPasscode, setInputPasscode] = useState("");
   const setState = accountStore((state) => state.setState);
+  const setView = viewStore((state) => state.setView);
 
   async function encrypt() {
     if (session === undefined) return;
@@ -34,6 +36,7 @@ export default function Encrypt({
     setStep(LoginViews.CONNECTED);
     setTimeout(() => {
       setState(AccountStates.LOGGED_IN);
+      setView(Views.VAULT);
     }, 2000);
   }
 
@@ -71,26 +74,15 @@ export default function Encrypt({
         </p>
       </div>
       <div className="mx-auto mt-16 max-w-xl sm:mt-20">
-        <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-          <div>
-            <label
-              htmlFor="passcode"
-              className="block text-sm font-semibold leading-6 text-gray-900"
-            >
-              Passcode to encrypt your key
-            </label>
-            <div className="mt-2.5">
-              <Input
-                type="password"
-                name="passcode"
-                placeholder="at least 6 characters"
-                value={inputPasscode}
-                onChange={(e) => setInputPasscode(e.target.value)}
-                onKeyUp={(e) => handleKeyUp(e)}
-              />
-            </div>
-          </div>
-        </div>
+        <Input
+          label="Passcode to encrypt your key"
+          type="password"
+          name="passcode"
+          placeholder="at least 6 characters"
+          value={inputPasscode}
+          onChange={(e) => setInputPasscode(e.target.value)}
+          onKeyUp={(e) => handleKeyUp(e)}
+        />
         <div className="mt-10">
           <Button disabled={inputPasscode.length < 6} onClick={() => encrypt()}>
             Access

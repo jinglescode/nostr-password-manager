@@ -7,13 +7,13 @@ import {
 } from "../../utils/chrome/storage";
 import StringCrypto from "string-crypto";
 import { useEffect, useState } from "react";
-import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 import { LoginViews } from "../../enums/views";
 import { StorageKeys } from "../../enums/storage";
 import { accountStore } from "../../stores/account";
 import { AccountStates } from "../../enums/account";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
+import { Views, viewStore } from "../../stores/view";
 
 export default function Unlock({ setStep }: { setStep: Function }) {
   const { ndk, loginWithSecret } = useNDK();
@@ -21,6 +21,7 @@ export default function Unlock({ setStep }: { setStep: Function }) {
   const [inputPasscode, setInputPasscode] = useState<string>("");
   const [passcodeIsError, setPasscodeIsError] = useState<boolean>(false);
   const setState = accountStore((state) => state.setState);
+  const setView = viewStore((state) => state.setView);
 
   const { getProfile } = useNDK();
 
@@ -51,6 +52,7 @@ export default function Unlock({ setStep }: { setStep: Function }) {
       setStep(LoginViews.CONNECTED);
       setTimeout(() => {
         setState(AccountStates.LOGGED_IN);
+        setView(Views.VAULT);
       }, 1000);
     } catch (e) {
       setPasscodeIsError(true);
@@ -96,48 +98,25 @@ export default function Unlock({ setStep }: { setStep: Function }) {
           Enter a passcode to unlock.
         </p>
       </div>
-      <div className="mx-auto mt-16 max-w-xl sm:mt-20">
-        <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-          <div>
-            <label
-              htmlFor="passcode"
-              className="block text-sm font-semibold leading-6 text-gray-900"
-            >
-              Passcode to decrypt your key
-            </label>
-            <div className="relative mt-2.5">
-              <Input
-                type="password"
-                name="passcode"
-                placeholder="at least 6 characters"
-                value={inputPasscode}
-                onChange={(e) => setInputPasscode(e.target.value)}
-                isError={passcodeIsError}
-                onKeyUp={(e) => handleKeyUp(e)}
-              />
-              {passcodeIsError && (
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                  <ExclamationCircleIcon
-                    className="h-5 w-5 text-red-500"
-                    aria-hidden="true"
-                  />
-                </div>
-              )}
-            </div>
-            {passcodeIsError && (
-              <p className="mt-2 text-sm text-red-600" id="email-error">
-                Passcode incorrect.
-              </p>
-            )}
-          </div>
-        </div>
+      <div className="mx-auto max-w-xl mt-20">
+        <Input
+          label="Passcode to decrypt your key"
+          type="password"
+          name="passcode"
+          placeholder="at least 6 characters"
+          value={inputPasscode}
+          onChange={(e) => setInputPasscode(e.target.value)}
+          isError={passcodeIsError}
+          isErrorMessage="Passcode incorrect."
+          onKeyUp={(e) => handleKeyUp(e)}
+        />
         <div className="mt-10">
           <Button disabled={inputPasscode.length < 6} onClick={() => decrypt()}>
             Access
           </Button>
-          <p className="mt-4 text-sm leading-6 text-gray-500">
+          <p className="mt-4 text-sm leading-6 text-brand-2">
             <a onClick={() => forgetAccount()} className="cursor-pointer">
-              Connect another account
+              Connect another account<span> &rarr;</span>
             </a>
           </p>
         </div>

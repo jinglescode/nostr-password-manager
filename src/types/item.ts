@@ -10,9 +10,3 @@ export type Item = {
   };
   listId?: string;
 };
-
-// export type ItemLogin = {
-//   [ItemKeys.USERNAME]: string;
-//   [ItemKeys.PASSWORD]: string;
-//   [ItemKeys.URI]: string[];
-// };

@@ -40,6 +40,8 @@ export default function LoginWithSK({
     }
   }
 
+  async function createAccount() {}
+
   return (
     <>
       <div className="mx-auto max-w-2xl text-center">
@@ -55,27 +57,17 @@ export default function LoginWithSK({
         </p>
       </div>
       <div className="mx-auto mt-16 max-w-xl sm:mt-20">
-        <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-          <div>
-            <label
-              htmlFor="sk"
-              className="block text-sm font-semibold leading-6 text-gray-900"
-            >
-              NOSTR Secret Key
-            </label>
-            <div className="mt-2.5">
-              <Input
-                type="password"
-                name="sk"
-                placeholder="nsec..."
-                value={inputSk}
-                onChange={(e) => setInputSk(e.target.value)}
-                isError={isError}
-                onKeyUp={(e) => handleKeyUp(e)}
-              />
-            </div>
-          </div>
-        </div>
+        <Input
+          label="NOSTR Secret Key"
+          type="password"
+          name="sk"
+          placeholder="nsec..."
+          value={inputSk}
+          onChange={(e) => setInputSk(e.target.value)}
+          isError={isError}
+          isErrorMessage="Invalid secret key"
+          onKeyUp={(e) => handleKeyUp(e)}
+        />
         <div className="mt-10">
           <Button
             disabled={ndk === undefined || inputSk.length === 0}
@@ -83,6 +75,11 @@ export default function LoginWithSK({
           >
             Connect
           </Button>
+          <p className="mt-4 text-sm leading-6 text-brand-2">
+            <a onClick={() => createAccount()} className="cursor-pointer">
+              Create account<span> &rarr;</span>
+            </a>
+          </p>
         </div>
       </div>
     </>

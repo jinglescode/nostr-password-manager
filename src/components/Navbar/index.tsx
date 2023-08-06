@@ -12,6 +12,9 @@ export default function Navbar() {
   const searchInput = searchStore((state) => state.searchInput);
   const setSearchInput = searchStore((state) => state.setSearchInput);
 
+  const view = viewStore((state) => state.view);
+  const setView = viewStore((state) => state.setView);
+
   return (
     <div className="bg-brand-4">
       <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
@@ -24,14 +27,13 @@ export default function Navbar() {
               />
             </div>
           </div>
-          {state == AccountStates.LOGGED_IN && (
+          {state == AccountStates.LOGGED_IN && view !== Views.ITEM && (
             <div className="flex flex-1 justify-center px-2 lg:ml-6 lg:justify-end">
               <div className="w-full max-w-lg lg:max-w-xs">
                 <div className="relative">
                   <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                     <MagnifyingGlassIcon
                       className="h-5 w-5 text-gray-400"
-                      aria-hidden="true"
                     />
                   </div>
                   <input
@@ -49,16 +51,25 @@ export default function Navbar() {
           )}
 
           <div className="flex">
-            <button
-              className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white"
-              onClick={() => toggleShowMenu()}
-            >
-              {showMenu ? (
-                <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-              ) : (
-                <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
-              )}
-            </button>
+            {view === Views.ITEM ? (
+              <button
+                className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-brand-2 hover:text-white"
+                onClick={() => setView(Views.VAULT)}
+              >
+                <XMarkIcon className="block h-6 w-6" />
+              </button>
+            ) : (
+              <button
+                className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-brand-2 hover:text-white"
+                onClick={() => toggleShowMenu()}
+              >
+                {showMenu ? (
+                  <XMarkIcon className="block h-6 w-6" />
+                ) : (
+                  <Bars3Icon className="block h-6 w-6" />
+                )}
+              </button>
+            )}
           </div>
         </div>
       </div>

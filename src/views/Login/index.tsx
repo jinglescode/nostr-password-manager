@@ -8,7 +8,7 @@ import { LoginViews } from "../../enums/views";
 import { AccountStates } from "../../enums/account";
 
 export default function LoginView() {
-  const [step, setStep] = useState<LoginViews>(LoginViews.SK);
+  const [step, setStep] = useState<LoginViews>(LoginViews.INIT);
   const [inputSk, setInputSk] = useState("");
   const [session, setSession] = useState<
     undefined | { sk: string; npub: string }
@@ -19,13 +19,15 @@ export default function LoginView() {
   useEffect(() => {
     if (state === AccountStates.LOGGED_IN_NO_ACCESS) {
       setStep(LoginViews.UNLOCK);
+    } else {
+      setStep(LoginViews.SK);
     }
   }, [state]);
 
-  console.log("step:", step);
+  if (step === LoginViews.INIT) return <></>;
 
   return (
-    <div className="isolate bg-white px-6 pt-20">
+    <div className="px-6 mt-20">
       {step === LoginViews.SK && (
         <LoginWithSK
           inputSk={inputSk}
