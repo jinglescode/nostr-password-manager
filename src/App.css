@@ -5,4 +5,5 @@
 .container {
   width: 375px;
   height: 600px;
+  cursor: default;
 }

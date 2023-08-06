@@ -6,8 +6,8 @@ import MenuView from "./Menu";
 import VaultView from "./Vault";
 import { getLocalStorage, getSessionStorage } from "../utils/chrome/storage";
 import { accountStore } from "../stores/account";
-import { AccountStates } from "../enums/accountStates";
-import { StorageKeys } from "../enums/storageKeys";
+import { AccountStates } from "../enums/account";
+import { StorageKeys } from "../enums/storage";
 
 export default function MainView() {
   const showMenu = viewStore((state) => state.showMenu);
@@ -41,14 +41,18 @@ export default function MainView() {
   if (!loaded) return <></>;
 
   return (
-    <>
+    <div className="h-screen flex flex-col">
       <Navbar />
-      {showMenu ? (
-        <MenuView />
-      ) : (
-        <>{state === AccountStates.LOGGED_IN ? <SignedIn /> : <LoginView />}</>
-      )}
-    </>
+      <div className="overflow-y-auto h-full">
+        {showMenu ? (
+          <MenuView />
+        ) : (
+          <>
+            {state === AccountStates.LOGGED_IN ? <SignedIn /> : <LoginView />}
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 

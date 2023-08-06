@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { AccountStates } from "../enums/accountStates";
 
 interface SessionState {
   searchInput: string;

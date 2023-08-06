@@ -1,7 +1,7 @@
 import { useNDK } from "@nostr-dev-kit/ndk-react";
 import { getLocalStorage } from "../../utils/chrome/storage";
 import { useEffect, useState } from "react";
-import { StorageKeys } from "../../enums/storageKeys";
+import { StorageKeys } from "../../enums/storage";
 
 export default function Connected() {
   const { ndk } = useNDK();

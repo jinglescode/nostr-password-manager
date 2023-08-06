@@ -1,12 +1,18 @@
-import { ItemType } from "../enums/item";
+import { ItemKeys, ItemType } from "../enums/item";
 
 export type Item = {
-  type: ItemType;
-  name: string;
+  [ItemKeys.TYPE]: ItemType;
+  [ItemKeys.NAME]: string;
+  login?: {
+    [ItemKeys.USERNAME]: string;
+    [ItemKeys.PASSWORD]: string;
+    [ItemKeys.URI]: string[];
+  };
+  listId?: string;
 };
 
-export type ItemLogin = Item & {
-  username: string;
-  password: string;
-  uri: string[];
-};
+// export type ItemLogin = {
+//   [ItemKeys.USERNAME]: string;
+//   [ItemKeys.PASSWORD]: string;
+//   [ItemKeys.URI]: string[];
+// };

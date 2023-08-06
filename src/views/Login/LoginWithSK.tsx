@@ -1,5 +1,8 @@
 import { useNDK } from "@nostr-dev-kit/ndk-react";
-import { LoginViews } from "../../enums/loginViews";
+import { LoginViews } from "../../enums/views";
+import Input from "../../components/Input";
+import { useState } from "react";
+import Button from "../../components/Button";
 
 export default function LoginWithSK({
   inputSk,
@@ -13,13 +16,27 @@ export default function LoginWithSK({
   setStep: Function;
 }) {
   const { ndk, loginWithSecret } = useNDK();
+  const [isError, setIsError] = useState<boolean>(false);
 
   async function login() {
-    const session = await loginWithSecret(inputSk);
-    if (session) {
-      console.log(session);
-      setSession(session);
-      setStep(LoginViews.ENCRYPT);
+    try {
+      setIsError(false);
+      const session = await loginWithSecret(inputSk);
+      if (session) {
+        console.log(session);
+        setSession(session);
+        setStep(LoginViews.ENCRYPT);
+      }
+    } catch (e) {
+      setIsError(true);
+    }
+  }
+
+  function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter" || e.keyCode === 13) {
+      login();
+      //@ts-ignore
+      e.target.blur();
     }
   }
 
@@ -47,25 +64,25 @@ export default function LoginWithSK({
               NOSTR Secret Key
             </label>
             <div className="mt-2.5">
-              <input
+              <Input
                 type="password"
                 name="sk"
-                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 placeholder="nsec..."
                 value={inputSk}
                 onChange={(e) => setInputSk(e.target.value)}
+                isError={isError}
+                onKeyUp={(e) => handleKeyUp(e)}
               />
             </div>
           </div>
         </div>
         <div className="mt-10">
-          <button
+          <Button
             disabled={ndk === undefined || inputSk.length === 0}
             onClick={() => login()}
-            className="block w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Connect
-          </button>
+          </Button>
         </div>
       </div>
     </>

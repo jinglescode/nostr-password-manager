@@ -4,8 +4,8 @@ import Encrypt from "./Encrypt";
 import { accountStore } from "../../stores/account";
 import Unlock from "./Unlock";
 import Connected from "./Connected";
-import { LoginViews } from "../../enums/loginViews";
-import { AccountStates } from "../../enums/accountStates";
+import { LoginViews } from "../../enums/views";
+import { AccountStates } from "../../enums/account";
 
 export default function LoginView() {
   const [step, setStep] = useState<LoginViews>(LoginViews.SK);

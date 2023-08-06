@@ -1,10 +1,8 @@
-import { Fragment } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Views, viewStore } from "../../stores/view";
 import { accountStore } from "../../stores/account";
-import { AccountStates } from "../../enums/accountStates";
+import { AccountStates } from "../../enums/account";
 import { searchStore } from "../../stores/search";
 
 export default function Navbar() {
@@ -15,7 +13,7 @@ export default function Navbar() {
   const setSearchInput = searchStore((state) => state.setSearchInput);
 
   return (
-    <div className="bg-gray-800">
+    <div className="bg-brand-4">
       <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="flex items-center px-2 lg:px-0">
@@ -39,7 +37,7 @@ export default function Navbar() {
                   <input
                     id="search"
                     name="search"
-                    className="block w-full rounded-md border-0 bg-gray-700 py-1.5 pl-10 pr-3 text-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus:outline-none"
+                    className="block w-full rounded-md border-0 bg-brand-3 py-1.5 pl-10 pr-3 text-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus:outline-none"
                     placeholder="Search vault"
                     type="search"
                     value={searchInput}
@@ -50,7 +48,7 @@ export default function Navbar() {
             </div>
           )}
 
-          <div className="flex lg:hidden">
+          <div className="flex">
             <button
               className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white"
               onClick={() => toggleShowMenu()}
