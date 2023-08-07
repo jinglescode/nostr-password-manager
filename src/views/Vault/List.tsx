@@ -32,6 +32,7 @@ export default function List() {
       mod: 12345,
       items: {
         item1: {
+          id: "item1",
           ty: ItemType.LOGIN,
           na: "Google",
           login: {
@@ -41,6 +42,7 @@ export default function List() {
           },
         },
         item2: {
+          id: "item2",
           ty: ItemType.LOGIN,
           na: "Nostr",
           login: {
@@ -50,6 +52,7 @@ export default function List() {
           },
         },
         item3: {
+          id: "item3",
           ty: ItemType.LOGIN,
           na: "Nostr1",
           login: {
@@ -59,6 +62,7 @@ export default function List() {
           },
         },
         item4: {
+          id: "item4",
           ty: ItemType.LOGIN,
           na: "Nostr2",
           login: {
@@ -68,6 +72,7 @@ export default function List() {
           },
         },
         item5: {
+          id: "item5",
           ty: ItemType.LOGIN,
           na: "Nostr3",
           login: {
@@ -77,6 +82,7 @@ export default function List() {
           },
         },
         item6: {
+          id: "item6",
           ty: ItemType.LOGIN,
           na: "Nostr4",
           login: {
@@ -86,6 +92,7 @@ export default function List() {
           },
         },
         item7: {
+          id: "item7",
           ty: ItemType.LOGIN,
           na: "Nostr5",
           login: {
@@ -95,6 +102,7 @@ export default function List() {
           },
         },
         item8: {
+          id: "item8",
           ty: ItemType.LOGIN,
           na: "Nostr6",
           login: {
@@ -104,6 +112,7 @@ export default function List() {
           },
         },
         item9: {
+          id: "item9",
           ty: ItemType.LOGIN,
           na: "Nostr7",
           login: {
@@ -113,6 +122,7 @@ export default function List() {
           },
         },
         item10: {
+          id: "item10",
           ty: ItemType.LOGIN,
           na: "Nostr8 Nostr8 Nostr8 Nostr8 Nostr8 Nostr8 Nostr8 Nostr8 Nostr8 Nostr8 Nostr8 Nostr8 Nostr8 Nostr8 ",
           login: {
@@ -122,6 +132,7 @@ export default function List() {
           },
         },
         item11: {
+          id: "item11",
           ty: ItemType.LOGIN,
           na: "Github",
           login: {
@@ -131,6 +142,7 @@ export default function List() {
           },
         },
         item12: {
+          id: "item12",
           ty: ItemType.LOGIN,
           na: "Nostr10",
           login: {
@@ -140,6 +152,7 @@ export default function List() {
           },
         },
         item13: {
+          id: "item13",
           ty: ItemType.LOGIN,
           na: "Nostr11",
           login: {

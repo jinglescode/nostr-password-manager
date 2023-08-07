@@ -32,17 +32,20 @@ export default function Encrypt({
 
     let encryptedString = encryptString(session?.sk, inputPasscode);
 
-    setLocalStorage(StorageKeys.USER_ENCRYPTED_SK, encryptedString);
+    setLocalStorage(StorageKeys.LOCAL_USER_ENCRYPTED_SK, encryptedString);
     const pk = getPublicKeys(session.npub).pk;
-    setLocalStorage(StorageKeys.USER_PK, getPublicKeys(session.npub).pk);
+    setLocalStorage(StorageKeys.LOCAL_USER_PK, getPublicKeys(session.npub).pk);
 
     let user: User = {
       pk: pk,
       npub: session.npub,
+      passcode: inputPasscode,
     };
     setUser(user);
 
-    setSessionStorage(StorageKeys.USER_SK, session?.sk);
+    setSessionStorage(StorageKeys.SESSION_USER_SK, session?.sk);
+    setSessionStorage(StorageKeys.SESSION_USER_PASSCODE, inputPasscode);
+    
     setStep(LoginViews.CONNECTED);
     setTimeout(() => {
       setState(AccountStates.LOGGED_IN);

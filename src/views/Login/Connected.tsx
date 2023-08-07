@@ -13,7 +13,7 @@ export default function Connected() {
   useEffect(() => {
     async function getNpub() {
       if (ndk) {
-        const pk = await getLocalStorage(StorageKeys.USER_PK);
+        const pk = await getLocalStorage(StorageKeys.LOCAL_USER_PK);
         const npub = getPublicKeys(pk).npub;
         setNpub(npub);
       }

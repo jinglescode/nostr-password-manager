@@ -31,7 +31,7 @@ export default function Unlock({ setStep }: { setStep: Function }) {
   useEffect(() => {
     async function getNpub() {
       if (ndk) {
-        const pk = await getLocalStorage(StorageKeys.USER_PK);
+        const pk = await getLocalStorage(StorageKeys.LOCAL_USER_PK);
         const npub = getPublicKeys(pk).npub;
         setNpub(npub);
       }
@@ -42,7 +42,9 @@ export default function Unlock({ setStep }: { setStep: Function }) {
   async function decrypt() {
     const { decryptString } = new StringCrypto();
 
-    const encryptedsk = await getLocalStorage(StorageKeys.USER_ENCRYPTED_SK);
+    const encryptedsk = await getLocalStorage(
+      StorageKeys.LOCAL_USER_ENCRYPTED_SK
+    );
     const sk = decryptString(encryptedsk, inputPasscode);
     tryLogIn(sk);
   }
@@ -51,16 +53,19 @@ export default function Unlock({ setStep }: { setStep: Function }) {
     try {
       setPasscodeIsError(false);
       await loginWithSecret(sk);
-      setSessionStorage(StorageKeys.USER_SK, sk);
 
-      const pk = await getLocalStorage(StorageKeys.USER_PK);
+      const pk = await getLocalStorage(StorageKeys.LOCAL_USER_PK);
       const npub = getPublicKeys(pk).npub;
 
       let user: User = {
         pk: pk,
         npub: npub,
+        passcode: inputPasscode,
       };
       setUser(user);
+
+      setSessionStorage(StorageKeys.SESSION_USER_SK, sk);
+      setSessionStorage(StorageKeys.SESSION_USER_PASSCODE, inputPasscode);
 
       setStep(LoginViews.CONNECTED);
       setTimeout(() => {

@@ -26,21 +26,28 @@ export default function MainView() {
 
   useEffect(() => {
     async function load() {
-      const encryptedsk = await getLocalStorage(StorageKeys.USER_ENCRYPTED_SK);
+      const encryptedsk = await getLocalStorage(
+        StorageKeys.LOCAL_USER_ENCRYPTED_SK
+      );
       console.log(111, { encryptedsk });
       if (encryptedsk && state === AccountStates.NOT_LOGGED_IN) {
-        const sk = await getSessionStorage(StorageKeys.USER_SK);
+        const sk = await getSessionStorage(StorageKeys.SESSION_USER_SK);
         console.log(222, { sk });
         if (sk) {
           const _user = await loginWithSecret(sk);
           if (_user) {
-            const pk = await getLocalStorage(StorageKeys.USER_PK);
+            const passcode = await getSessionStorage(
+              StorageKeys.SESSION_USER_PASSCODE
+            );
+            const pk = await getLocalStorage(StorageKeys.LOCAL_USER_PK);
             const npub = getPublicKeys(pk).npub;
 
             let user: User = {
               pk: pk,
               npub: npub,
+              passcode: passcode,
             };
+            console.log("main view", "user", user);
             setUser(user);
 
             setState(AccountStates.LOGGED_IN);

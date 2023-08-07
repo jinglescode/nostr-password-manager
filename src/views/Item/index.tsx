@@ -15,6 +15,10 @@ import {
   TrashIcon,
 } from "@heroicons/react/20/solid";
 import { useClipboard } from "../../hooks/useCopyClipboard";
+import { useUserVaults } from "../../hooks/useUserVaults";
+import { List } from "../../types/list";
+import { Item } from "../../types/item";
+import { makeId } from "../../utils/strings/makeId";
 
 enum Mode {
   EDIT,
@@ -23,6 +27,8 @@ enum Mode {
 
 export default function ItemView() {
   const { ndk } = useNDK();
+  const { data } = useUserVaults();
+
   const setView = viewStore((state) => state.setView);
   const itemDetails = viewStore((state) => state.itemDetails);
 
@@ -38,6 +44,7 @@ export default function ItemView() {
       setIsNew(true);
       setMode(Mode.EDIT);
       _itemDetails = {
+        id: makeId(),
         [ItemKeys.TYPE]: ItemType.LOGIN,
         [ItemKeys.NAME]: "",
         login: {
@@ -49,6 +56,7 @@ export default function ItemView() {
     }
   }, [itemDetails]);
   console.log(44, "isNew", isNew, itemDetails);
+
   // login
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
 
@@ -73,7 +81,54 @@ export default function ItemView() {
   }
 
   async function save() {
-    setView(Views.VAULT);
+    if (data === undefined) return;
+    if (_itemDetails === undefined) return;
+    if (!validate) return;
+
+    // 1. get list
+
+    // 1a. if no list, create a new list
+    let list: List = data[0];
+    if (data.length === 0) {
+      list = {
+        id: "main",
+        mod: 0,
+        items: {},
+      };
+    }
+
+    // 1b. if has 1 list, use that list
+    // if (data.length === 1) {
+    //   list = data[0];
+    // }
+    // 1c. if has more than 1 list, get from selected list, todo future
+
+    // 2. update item to list
+
+    // 2a. if new item, just append to list
+
+    const item: Item = {
+      id: _itemDetails.id!,
+      [ItemKeys.TYPE]: ItemType.LOGIN,
+      [ItemKeys.NAME]: inputName,
+      login: {
+        [ItemKeys.USERNAME]: inputUsername,
+        [ItemKeys.PASSWORD]: inputPassword,
+        [ItemKeys.URI]: [],
+      },
+    };
+
+    if (isNew) {
+      list.items[makeId()] = item;
+    }
+
+    // 2b. if existing item, update item in list
+    else {
+      list.items[_itemDetails.id] = item;
+    }
+
+    console.log(5, "saving item", item, list);
+    // setView(Views.VAULT);
   }
 
   async function deleteItem() {}

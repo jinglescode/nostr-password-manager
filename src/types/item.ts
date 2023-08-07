@@ -1,6 +1,7 @@
 import { ItemKeys, ItemType } from "../enums/item";
 
 export type Item = {
+  id: string;
   [ItemKeys.TYPE]: ItemType;
   [ItemKeys.NAME]: string;
   login?: {
