@@ -14,6 +14,8 @@ import { AccountStates } from "../../enums/account";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import { Views, viewStore } from "../../stores/view";
+import { User } from "../../types/user";
+import { getPublicKeys } from "../../utils/nostr/getPublicKeys";
 
 export default function Unlock({ setStep }: { setStep: Function }) {
   const { ndk, loginWithSecret } = useNDK();
@@ -22,33 +24,44 @@ export default function Unlock({ setStep }: { setStep: Function }) {
   const [passcodeIsError, setPasscodeIsError] = useState<boolean>(false);
   const setState = accountStore((state) => state.setState);
   const setView = viewStore((state) => state.setView);
+  const setUser = accountStore((state) => state.setUser);
 
   const { getProfile } = useNDK();
 
   useEffect(() => {
-    if (ndk) {
-      getLocalStorage(StorageKeys.USER_NPUB, (npub) => {
-        console.log(22, npub);
+    async function getNpub() {
+      if (ndk) {
+        const pk = await getLocalStorage(StorageKeys.USER_PK);
+        const npub = getPublicKeys(pk).npub;
         setNpub(npub);
-      });
+      }
     }
+    getNpub();
   }, [ndk]);
 
   async function decrypt() {
     const { decryptString } = new StringCrypto();
 
-    getLocalStorage(StorageKeys.USER_ENCRYPTED_SK, (encryptedsk) => {
-      console.log(33, encryptedsk);
-      const sk = decryptString(encryptedsk, inputPasscode);
-      tryLogIn(sk);
-    });
+    const encryptedsk = await getLocalStorage(StorageKeys.USER_ENCRYPTED_SK);
+    const sk = decryptString(encryptedsk, inputPasscode);
+    tryLogIn(sk);
   }
 
   async function tryLogIn(sk: string) {
     try {
       setPasscodeIsError(false);
-      const session = await loginWithSecret(sk);
+      await loginWithSecret(sk);
       setSessionStorage(StorageKeys.USER_SK, sk);
+
+      const pk = await getLocalStorage(StorageKeys.USER_PK);
+      const npub = getPublicKeys(pk).npub;
+
+      let user: User = {
+        pk: pk,
+        npub: npub,
+      };
+      setUser(user);
+
       setStep(LoginViews.CONNECTED);
       setTimeout(() => {
         setState(AccountStates.LOGGED_IN);

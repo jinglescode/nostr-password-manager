@@ -2,6 +2,7 @@ import { useNDK } from "@nostr-dev-kit/ndk-react";
 import { getLocalStorage } from "../../utils/chrome/storage";
 import { useEffect, useState } from "react";
 import { StorageKeys } from "../../enums/storage";
+import { getPublicKeys } from "../../utils/nostr/getPublicKeys";
 
 export default function Connected() {
   const { ndk } = useNDK();
@@ -10,12 +11,14 @@ export default function Connected() {
   const { getProfile } = useNDK();
 
   useEffect(() => {
-    if (ndk) {
-      getLocalStorage(StorageKeys.USER_NPUB, (npub) => {
-        console.log(22, npub);
+    async function getNpub() {
+      if (ndk) {
+        const pk = await getLocalStorage(StorageKeys.USER_PK);
+        const npub = getPublicKeys(pk).npub;
         setNpub(npub);
-      });
+      }
     }
+    getNpub();
   }, [ndk]);
 
   if (npub === undefined) return <></>;

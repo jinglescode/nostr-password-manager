@@ -9,6 +9,8 @@ import { accountStore } from "../../stores/account";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import { Views, viewStore } from "../../stores/view";
+import { getPublicKeys } from "../../utils/nostr/getPublicKeys";
+import { User } from "../../types/user";
 
 export default function Encrypt({
   session,
@@ -21,6 +23,7 @@ export default function Encrypt({
   const [inputPasscode, setInputPasscode] = useState("");
   const setState = accountStore((state) => state.setState);
   const setView = viewStore((state) => state.setView);
+  const setUser = accountStore((state) => state.setUser);
 
   async function encrypt() {
     if (session === undefined) return;
@@ -30,14 +33,21 @@ export default function Encrypt({
     let encryptedString = encryptString(session?.sk, inputPasscode);
 
     setLocalStorage(StorageKeys.USER_ENCRYPTED_SK, encryptedString);
-    setLocalStorage(StorageKeys.USER_NPUB, session.npub);
+    const pk = getPublicKeys(session.npub).pk;
+    setLocalStorage(StorageKeys.USER_PK, getPublicKeys(session.npub).pk);
+
+    let user: User = {
+      pk: pk,
+      npub: session.npub,
+    };
+    setUser(user);
 
     setSessionStorage(StorageKeys.USER_SK, session?.sk);
     setStep(LoginViews.CONNECTED);
     setTimeout(() => {
       setState(AccountStates.LOGGED_IN);
       setView(Views.VAULT);
-    }, 2000);
+    }, 1000);
   }
 
   function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {

@@ -11,30 +11,50 @@ import Roadmap from "./Roadmap";
 import VaultView from "./Vault";
 import ItemView from "./Item";
 import RoadmapView from "./Roadmap";
+import { useNDK } from "@nostr-dev-kit/ndk-react";
+import { User } from "../types/user";
+import { getPublicKeys } from "../utils/nostr/getPublicKeys";
 
 export default function MainView() {
+  const { loginWithSecret } = useNDK();
   const view = viewStore((state) => state.view);
   const setView = viewStore((state) => state.setView);
   const showMenu = viewStore((state) => state.showMenu);
   const state = accountStore((state) => state.state);
   const setState = accountStore((state) => state.setState);
+  const setUser = accountStore((state) => state.setUser);
 
   useEffect(() => {
-    getLocalStorage(StorageKeys.USER_ENCRYPTED_SK, (encryptedsk) => {
+    async function load() {
+      const encryptedsk = await getLocalStorage(StorageKeys.USER_ENCRYPTED_SK);
+      console.log(111, { encryptedsk });
       if (encryptedsk && state === AccountStates.NOT_LOGGED_IN) {
-        getSessionStorage(StorageKeys.USER_SK, (sk) => {
-          if (sk) {
+        const sk = await getSessionStorage(StorageKeys.USER_SK);
+        console.log(222, { sk });
+        if (sk) {
+          const _user = await loginWithSecret(sk);
+          if (_user) {
+            const pk = await getLocalStorage(StorageKeys.USER_PK);
+            const npub = getPublicKeys(pk).npub;
+
+            let user: User = {
+              pk: pk,
+              npub: npub,
+            };
+            setUser(user);
+
             setState(AccountStates.LOGGED_IN);
             setView(Views.VAULT);
-          } else {
-            setState(AccountStates.LOGGED_IN_NO_ACCESS);
-            setView(Views.LOGIN);
           }
-        });
+        } else {
+          setState(AccountStates.LOGGED_IN_NO_ACCESS);
+          setView(Views.LOGIN);
+        }
       } else {
         setView(Views.LOGIN);
       }
-    });
+    }
+    load();
   }, []);
 
   if (view === Views.INIT) return <></>;

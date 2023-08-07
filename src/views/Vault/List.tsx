@@ -165,35 +165,14 @@ export default function List() {
     .filter(filterItem)
     .sort(sort);
 
-  console.log(44, items);
-
-  // let items: ItemLogin[] = [
-  //   {
-  //     type: ItemType.LOGIN,
-  //     name: "Google",
-  //     uri: ["https://www.google.com"],
-  //     username: "jinglescode@gmail.com",
-  //     password: "123456",
-  //   },
-  //   {
-  //     type: ItemType.LOGIN,
-  //     name: "Nostr",
-  //     uri: ["https://nostr.com"],
-  //     username: "laoshu@gmail.com",
-  //     password: "123456",
-  //   },
-  // ];
-
   function sort(a: Item, b: Item) {
     if (!searchInput) {
       if (a.login && b.login) {
         if (currentDomain) {
           if (a.login[ItemKeys.URI].some((v) => v.includes(currentDomain))) {
-            console.log(555, a.login[ItemKeys.URI]);
             return -1;
           }
           if (b.login[ItemKeys.URI].some((v) => v.includes(currentDomain))) {
-            console.log(666, a.login[ItemKeys.URI]);
             return 1;
           }
         } else {
