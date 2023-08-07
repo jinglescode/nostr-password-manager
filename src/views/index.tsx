@@ -29,10 +29,10 @@ export default function MainView() {
       const encryptedsk = await getLocalStorage(
         StorageKeys.LOCAL_USER_ENCRYPTED_SK
       );
-      console.log(111, { encryptedsk });
+
       if (encryptedsk && state === AccountStates.NOT_LOGGED_IN) {
         const sk = await getSessionStorage(StorageKeys.SESSION_USER_SK);
-        console.log(222, { sk });
+
         if (sk) {
           const _user = await loginWithSecret(sk);
           if (_user) {
@@ -47,7 +47,7 @@ export default function MainView() {
               npub: npub,
               passcode: passcode,
             };
-            console.log("main view", "user", user);
+
             setUser(user);
 
             setState(AccountStates.LOGGED_IN);

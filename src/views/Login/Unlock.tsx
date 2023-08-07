@@ -20,7 +20,7 @@ import { getPublicKeys } from "../../utils/nostr/getPublicKeys";
 export default function Unlock({ setStep }: { setStep: Function }) {
   const { ndk, loginWithSecret } = useNDK();
   const [npub, setNpub] = useState<undefined | string>(undefined);
-  const [inputPasscode, setInputPasscode] = useState<string>("");
+  const [inputPasscode, setInputPasscode] = useState<string>("1q2w3e"); //todo remove
   const [passcodeIsError, setPasscodeIsError] = useState<boolean>(false);
   const setState = accountStore((state) => state.setState);
   const setView = viewStore((state) => state.setView);

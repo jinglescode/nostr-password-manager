@@ -61,7 +61,7 @@ export default function VaultView() {
       const decryptedData3 = JSON.parse(decryptedData2!);
       console.log(6, decryptedData3);
     }
-    debug();
+    // debug();
   }, []);
 
   return (

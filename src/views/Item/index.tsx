@@ -19,6 +19,7 @@ import { useUserVaults } from "../../hooks/useUserVaults";
 import { List } from "../../types/list";
 import { Item } from "../../types/item";
 import { makeId } from "../../utils/strings/makeId";
+import { getTabUrl } from "../../utils/chrome/getTabUrl";
 
 enum Mode {
   EDIT,
@@ -30,65 +31,78 @@ export default function ItemView() {
   const { data } = useUserVaults();
 
   const setView = viewStore((state) => state.setView);
+
   const itemDetails = viewStore((state) => state.itemDetails);
 
   const [isNew, setIsNew] = useState<boolean>(false); // is a new item
   const [mode, setMode] = useState<Mode>(Mode.VIEW); // view or edit
-  const [inputName, setinputName] = useState<string>(
-    itemDetails?.[ItemKeys.NAME] || ""
-  );
+  const [editableItem, setEditableItem] = useState<Item | undefined>(undefined);
 
-  let _itemDetails = itemDetails;
   useEffect(() => {
-    if (itemDetails === undefined) {
-      setIsNew(true);
-      setMode(Mode.EDIT);
-      _itemDetails = {
-        id: makeId(),
-        [ItemKeys.TYPE]: ItemType.LOGIN,
-        [ItemKeys.NAME]: "",
-        login: {
-          [ItemKeys.USERNAME]: "",
-          [ItemKeys.PASSWORD]: "",
-          [ItemKeys.URI]: [],
-        },
-      };
+    async function createNewItem() {
+      console.log(6, itemDetails);
+      if (itemDetails) {
+        setEditableItem(itemDetails);
+      } else {
+        let url = "";
+        try {
+          url = (await getTabUrl()) as string;
+        } catch (err) {}
+        console.log(7, url);
+        setIsNew(true);
+        setMode(Mode.EDIT);
+        const newItem = {
+          id: makeId(),
+          [ItemKeys.TYPE]: ItemType.LOGIN,
+          [ItemKeys.NAME]: "",
+          login: {
+            [ItemKeys.USERNAME]: "",
+            [ItemKeys.PASSWORD]: "",
+            [ItemKeys.URI]: [url],
+          },
+        };
+        setEditableItem(newItem);
+      }
     }
+    createNewItem();
   }, [itemDetails]);
-  console.log(44, "isNew", isNew, itemDetails);
 
   // login
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
 
   const { onCopy: copyUser } = useClipboard(
-    _itemDetails?.login?.[ItemKeys.USERNAME] || ""
+    editableItem?.login?.[ItemKeys.USERNAME] || ""
   );
   const { onCopy: copyPassword } = useClipboard(
-    _itemDetails?.login?.[ItemKeys.PASSWORD] || ""
-  );
-
-  const [inputUsername, setinputUsername] = useState<string>(
-    _itemDetails?.login?.[ItemKeys.USERNAME] || ""
-  );
-  const [inputPassword, setinputPassword] = useState<string>(
-    _itemDetails?.login?.[ItemKeys.PASSWORD] || ""
+    editableItem?.login?.[ItemKeys.PASSWORD] || ""
   );
 
   function generatePassword() {}
 
   function validate() {
+    if (editableItem === undefined) return false;
+    if (editableItem[ItemKeys.NAME] === "") return false;
+    //@ts-ignore
+    if (editableItem.login[ItemKeys.USERNAME] === "") return false;
+    //@ts-ignore
+    if (editableItem.login[ItemKeys.PASSWORD] === "") return false;
+    //@ts-ignore
+    if (editableItem.login[ItemKeys.URI].length === 0) return false;
+
     return true;
   }
 
   async function save() {
     if (data === undefined) return;
-    if (_itemDetails === undefined) return;
+    if (editableItem === undefined) return;
     if (!validate) return;
 
     // 1. get list
 
-    // 1a. if no list, create a new list
     let list: List = data[0];
+
+    // 1a. if no list, create a new list
+
     if (data.length === 0) {
       list = {
         id: "main",
@@ -97,71 +111,108 @@ export default function ItemView() {
       };
     }
 
-    // 1b. if has 1 list, use that list
-    // if (data.length === 1) {
-    //   list = data[0];
-    // }
-    // 1c. if has more than 1 list, get from selected list, todo future
+    // 1b. if has more than 1 list, get from selected list, todo future
 
     // 2. update item to list
+    list.items[editableItem.id] = editableItem;
 
-    // 2a. if new item, just append to list
+    console.log(5, "saving item", editableItem);
+    console.log(6, "saving list", list);
 
-    const item: Item = {
-      id: _itemDetails.id!,
-      [ItemKeys.TYPE]: ItemType.LOGIN,
-      [ItemKeys.NAME]: inputName,
-      login: {
-        [ItemKeys.USERNAME]: inputUsername,
-        [ItemKeys.PASSWORD]: inputPassword,
-        [ItemKeys.URI]: [],
-      },
-    };
-
-    if (isNew) {
-      list.items[makeId()] = item;
-    }
-
-    // 2b. if existing item, update item in list
-    else {
-      list.items[_itemDetails.id] = item;
-    }
-
-    console.log(5, "saving item", item, list);
+    // todo save to relay
     // setView(Views.VAULT);
   }
 
+  // todo
   async function deleteItem() {}
 
+  function onChangeFormInput({
+    key,
+    value,
+    isLogin,
+    uriIndex,
+  }: {
+    key: string;
+    value: string;
+    isLogin?: boolean;
+    uriIndex?: number;
+  }) {
+    if (editableItem === undefined) return;
+
+    console.log(3, key, value, isLogin, uriIndex);
+    let _updatedItem = { ...editableItem };
+    if (uriIndex !== undefined) {
+      //@ts-ignore
+      _updatedItem.login[ItemKeys.URI][uriIndex] = value;
+    } else if (isLogin) {
+      //@ts-ignore
+      _updatedItem.login[key] = value;
+    } else {
+      //@ts-ignore
+      _updatedItem[key] = value;
+    }
+    setEditableItem(_updatedItem);
+    console.log(4, _updatedItem);
+  }
+
+  function deleteUri(index: number) {
+    if (editableItem === undefined) return;
+    //@ts-ignore
+    const _updatedItem = { ...editableItem };
+    //@ts-ignore
+    _updatedItem.login[ItemKeys.URI].splice(index, 1);
+    setEditableItem(_updatedItem);
+  }
+
+  function addUriRow() {
+    if (editableItem === undefined) return;
+    //@ts-ignore
+    const _updatedItem = { ...editableItem };
+    //@ts-ignore
+    _updatedItem.login[ItemKeys.URI].push("");
+    setEditableItem(_updatedItem);
+  }
+
+  console.log(9, "editableItem", editableItem);
   return (
     <div className="w-full p-2 space-y-2">
       <Input
         label="Name"
         name="name"
         placeholder="something to identify this item"
-        value={inputName}
-        onChange={(e) => setinputName(e.target.value)}
+        value={editableItem?.[ItemKeys.NAME] || ""}
+        onChange={(e) =>
+          onChangeFormInput({ key: ItemKeys.NAME, value: e.target.value })
+        }
         disabled={mode === Mode.VIEW}
       />
-      {_itemDetails?.[ItemKeys.TYPE] === ItemType.LOGIN && (
+      {editableItem?.[ItemKeys.TYPE] == "lo" && (
         <>
           <Input
             label="Username"
             name="username"
             placeholder="login username"
-            value={inputUsername}
-            onChange={(e) => setinputUsername(e.target.value)}
+            value={editableItem?.login?.[ItemKeys.USERNAME] || ""}
+            onChange={(e) =>
+              onChangeFormInput({
+                key: ItemKeys.USERNAME,
+                value: e.target.value,
+                isLogin: true,
+              })
+            }
             disabled={mode === Mode.VIEW}
             after={
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-                <button
-                  onClick={() => copyUser()}
-                  className="text-gray-400 hover:text-brand-3 active:text-primary"
-                  title="Copy username"
-                >
-                  <DocumentDuplicateIcon className="h-6 w-6" />
-                </button>
-              </div>
+              !isNew && (
+                <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+                  <button
+                    onClick={() => copyUser()}
+                    className="text-gray-400 hover:text-brand-3 active:text-primary"
+                    title="Copy username"
+                  >
+                    <DocumentDuplicateIcon className="h-6 w-6" />
+                  </button>
+                </div>
+              )
             }
           />
           <Input
@@ -169,8 +220,14 @@ export default function ItemView() {
             name="password"
             type={isShowPassword ? "text" : "password"}
             placeholder="login password"
-            value={inputPassword}
-            onChange={(e) => setinputPassword(e.target.value)}
+            value={editableItem?.login?.[ItemKeys.PASSWORD] || ""}
+            onChange={(e) =>
+              onChangeFormInput({
+                key: ItemKeys.PASSWORD,
+                value: e.target.value,
+                isLogin: true,
+              })
+            }
             disabled={mode === Mode.VIEW}
             after={
               <div className="absolute inset-y-0 right-0 flex items-center pr-2">
@@ -183,7 +240,6 @@ export default function ItemView() {
                     <ArrowPathIcon className="h-6 w-6" />
                   </button>
                 )}
-
                 <button
                   onClick={() => setIsShowPassword(!isShowPassword)}
                   className="text-gray-400 hover:text-brand-3 active:text-primary"
@@ -207,6 +263,40 @@ export default function ItemView() {
               </div>
             }
           />
+
+          <label className="block text-sm font-semibold leading-6 text-gray-900">
+            URIs
+          </label>
+          {editableItem?.login?.[ItemKeys.URI].map((uri, index) => {
+            return (
+              <Input
+                value={editableItem?.login?.[ItemKeys.URI][index]!}
+                onChange={(e) =>
+                  onChangeFormInput({
+                    key: ItemKeys.URI,
+                    value: e.target.value,
+                    isLogin: true,
+                    uriIndex: index,
+                  })
+                }
+                placeholder={`URI #${index + 1}`}
+                disabled={mode === Mode.VIEW}
+                after={
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+                    <button
+                      onClick={() => deleteUri(index)}
+                      className="text-gray-400 hover:text-brand-3 active:text-primary"
+                      title="Delete URI"
+                    >
+                      <TrashIcon className="h-6 w-6" />
+                    </button>
+                  </div>
+                }
+              />
+            );
+          })}
+
+          <Button onClick={() => addUriRow()}>Add more URI</Button>
         </>
       )}
 

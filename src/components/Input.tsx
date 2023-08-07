@@ -13,7 +13,7 @@ export default function Input({
   disabled,
   after,
 }: {
-  label: string;
+  label?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
@@ -28,12 +28,14 @@ export default function Input({
   return (
     <div className="grid grid-cols-1">
       <div>
-        <label
-          htmlFor={name}
-          className="block text-sm font-semibold leading-6 text-gray-900"
-        >
-          {label}
-        </label>
+        {label && (
+          <label
+            htmlFor={name}
+            className="block text-sm font-semibold leading-6 text-gray-900"
+          >
+            {label}
+          </label>
+        )}
         <div className="relative">
           <input
             id={name}

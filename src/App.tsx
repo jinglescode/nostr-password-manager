@@ -45,11 +45,7 @@ function App() {
       }}
     >
       <NDKProvider
-        relayUrls={[
-          "wss://relay.damus.io",
-          "wss://relay.snort.social",
-          "wss://purplepag.es",
-        ]}
+        relayUrls={["wss://relay.damus.io", "wss://relay.snort.social"]}
       >
         <Views />
       </NDKProvider>
