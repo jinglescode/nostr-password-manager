@@ -1,9 +1,10 @@
 import { Item } from "./item";
 
-export type List = {
+export type Vault = {
   id: string;
   mod: number;
   items: {
     [key: string]: Item;
   };
+  encryptedItems: string;
 };

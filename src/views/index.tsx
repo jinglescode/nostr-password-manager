@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { Views, viewStore } from "../stores/view";
 import LoginView from "./Login";
@@ -7,13 +7,15 @@ import { getLocalStorage, getSessionStorage } from "../utils/chrome/storage";
 import { accountStore } from "../stores/account";
 import { AccountStates } from "../enums/account";
 import { StorageKeys } from "../enums/storage";
-import Roadmap from "./Roadmap";
 import VaultView from "./Vault";
 import ItemView from "./Item";
 import RoadmapView from "./Roadmap";
 import { useNDK } from "@nostr-dev-kit/ndk-react";
 import { User } from "../types/user";
 import { getPublicKeys } from "../utils/nostr/getPublicKeys";
+import Notification from "../components/Notification";
+import FAQView from "./FAQ";
+import DonateView from "./Donate";
 
 export default function MainView() {
   const { loginWithSecret } = useNDK();
@@ -74,21 +76,16 @@ export default function MainView() {
           <MenuView />
         ) : (
           <>
-            {state === AccountStates.LOGGED_IN ? <SignedIn /> : <LoginView />}
+            {view === Views.LOGIN && <LoginView />}
+            {view === Views.VAULT && <VaultView />}
+            {view === Views.ITEM && <ItemView />}
+            {view === Views.ROADMAP && <RoadmapView />}
+            {view === Views.FAQ && <FAQView />}
+            {view === Views.DONATE && <DonateView />}
           </>
         )}
       </div>
+      <Notification />
     </div>
-  );
-}
-
-function SignedIn() {
-  const view = viewStore((state) => state.view);
-  return (
-    <>
-      {view === Views.VAULT && <VaultView />}
-      {view === Views.ITEM && <ItemView />}
-      {view === Views.ROADMAP && <RoadmapView />}
-    </>
   );
 }

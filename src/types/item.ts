@@ -9,5 +9,5 @@ export type Item = {
     [ItemKeys.PASSWORD]: string;
     [ItemKeys.URI]: string[];
   };
-  listId?: string;
+  vaultId?: string;
 };

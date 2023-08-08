@@ -3,39 +3,38 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import { useNDK } from "@nostr-dev-kit/ndk-react";
 import { Views, viewStore } from "../../stores/view";
-import { ItemKeys, ItemType } from "../../enums/item";
+import { EditItemViews, ItemKeys, ItemType } from "../../enums/item";
 import {
-  ArrowPathIcon,
   CloudArrowUpIcon,
-  DocumentDuplicateIcon,
-  EyeIcon,
-  EyeSlashIcon,
   LockClosedIcon,
   LockOpenIcon,
   TrashIcon,
 } from "@heroicons/react/20/solid";
-import { useClipboard } from "../../hooks/useCopyClipboard";
 import { useUserVaults } from "../../hooks/useUserVaults";
-import { List } from "../../types/list";
 import { Item } from "../../types/item";
 import { makeId } from "../../utils/strings/makeId";
-import { getTabUrl } from "../../utils/chrome/getTabUrl";
-
-enum Mode {
-  EDIT,
-  VIEW,
-}
+import LoginItem from "./LoginItem";
+// import { getTabs } from "../../utils/chrome/getTabs";
+import { Vault } from "../../types/vault";
+import { useUserVaultsPost } from "../../hooks/useUserVaultsPost";
+import { decryptVaults } from "../../utils/encryption/decryptVaults";
+import { accountStore } from "../../stores/account";
+import { getActiveTab } from "../../utils/chrome/getActiveTab";
+import { generatePassword } from "../../utils/strings/passwordGenerator";
 
 export default function ItemView() {
-  const { ndk } = useNDK();
+  const { ndk, signer } = useNDK();
   const { data } = useUserVaults();
 
   const setView = viewStore((state) => state.setView);
-
   const itemDetails = viewStore((state) => state.itemDetails);
+  const setAppNotification = viewStore((state) => state.setAppNotification);
+  const user = accountStore((state) => state.user);
+
+  const { mutate, isSuccess, isError } = useUserVaultsPost();
 
   const [isNew, setIsNew] = useState<boolean>(false); // is a new item
-  const [mode, setMode] = useState<Mode>(Mode.VIEW); // view or edit
+  const [mode, setMode] = useState<EditItemViews>(EditItemViews.VIEW); // view or edit
   const [editableItem, setEditableItem] = useState<Item | undefined>(undefined);
 
   useEffect(() => {
@@ -45,39 +44,53 @@ export default function ItemView() {
         setEditableItem(itemDetails);
       } else {
         let url = "";
-        try {
-          url = (await getTabUrl()) as string;
-        } catch (err) {}
-        console.log(7, url);
-        setIsNew(true);
-        setMode(Mode.EDIT);
+        let name = "";
+
+        const tab = await getActiveTab();
+        console.log(222, tab);
+
+        if (tab) {
+          url = tab.url || "";
+          name = tab.title || "";
+        }
+
+        const password = await generatePassword();
+
         const newItem = {
           id: makeId(),
           [ItemKeys.TYPE]: ItemType.LOGIN,
-          [ItemKeys.NAME]: "",
+          [ItemKeys.NAME]: name,
           login: {
             [ItemKeys.USERNAME]: "",
-            [ItemKeys.PASSWORD]: "",
+            [ItemKeys.PASSWORD]: password,
             [ItemKeys.URI]: [url],
           },
         };
+        setIsNew(true);
         setEditableItem(newItem);
+        setMode(EditItemViews.EDIT);
       }
     }
     createNewItem();
   }, [itemDetails]);
 
-  // login
-  const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
-
-  const { onCopy: copyUser } = useClipboard(
-    editableItem?.login?.[ItemKeys.USERNAME] || ""
-  );
-  const { onCopy: copyPassword } = useClipboard(
-    editableItem?.login?.[ItemKeys.PASSWORD] || ""
-  );
-
-  function generatePassword() {}
+  useEffect(() => {
+    if (isSuccess) {
+      setAppNotification({
+        title: "Success!",
+        message: "Your vault is updated successfully!",
+        type: "success",
+      });
+      setView(Views.VAULT);
+    }
+    if (isError) {
+      setAppNotification({
+        title: "Something went wrong!",
+        message: "Failed to update your vault. Please try again.",
+        type: "error",
+      });
+    }
+  }, [isSuccess, isError]);
 
   function validate() {
     if (editableItem === undefined) return false;
@@ -86,45 +99,63 @@ export default function ItemView() {
     if (editableItem.login[ItemKeys.USERNAME] === "") return false;
     //@ts-ignore
     if (editableItem.login[ItemKeys.PASSWORD] === "") return false;
-    //@ts-ignore
-    if (editableItem.login[ItemKeys.URI].length === 0) return false;
-
     return true;
   }
 
-  async function save() {
+  async function save(isDelete?: boolean) {
     if (data === undefined) return;
     if (editableItem === undefined) return;
-    if (!validate) return;
+    if (user === undefined) return;
+    if (!signer) return;
+
+    if (!validate && !isDelete) return;
 
     // 1. get list
 
-    let list: List = data[0];
+    const decryptedVaults = await decryptVaults({
+      signer,
+      vaults: data,
+      user,
+    });
 
-    // 1a. if no list, create a new list
+    let vault: Vault = {
+      id: "main",
+      mod: 0,
+      items: {},
+      encryptedItems: "",
+    };
 
-    if (data.length === 0) {
-      list = {
-        id: "main",
-        mod: 0,
-        items: {},
-      };
+    // 1a. if 1 vault, get that vault
+
+    if (Object.keys(decryptedVaults).length === 1) {
+      vault = decryptedVaults[Object.keys(decryptedVaults)[0]];
     }
 
     // 1b. if has more than 1 list, get from selected list, todo future
 
     // 2. update item to list
-    list.items[editableItem.id] = editableItem;
+    if (isDelete) {
+      delete vault.items[editableItem.id];
+    } else {
+      vault.items[editableItem.id] = editableItem;
+    }
 
-    console.log(5, "saving item", editableItem);
-    console.log(6, "saving list", list);
+    console.log(5, "item", editableItem);
+    console.log(6, "saving vault", vault);
 
-    // todo save to relay
-    // setView(Views.VAULT);
+    mutate(vault);
   }
 
-  // todo
-  async function deleteItem() {}
+  async function deleteItem() {
+    setAppNotification({
+      title: "Delete item?",
+      message: "Are you sure you want to delete this item?",
+      type: "confirm",
+      onConfirm: () => {
+        save(true);
+      },
+    });
+  }
 
   function onChangeFormInput({
     key,
@@ -139,7 +170,6 @@ export default function ItemView() {
   }) {
     if (editableItem === undefined) return;
 
-    console.log(3, key, value, isLogin, uriIndex);
     let _updatedItem = { ...editableItem };
     if (uriIndex !== undefined) {
       //@ts-ignore
@@ -152,28 +182,8 @@ export default function ItemView() {
       _updatedItem[key] = value;
     }
     setEditableItem(_updatedItem);
-    console.log(4, _updatedItem);
   }
 
-  function deleteUri(index: number) {
-    if (editableItem === undefined) return;
-    //@ts-ignore
-    const _updatedItem = { ...editableItem };
-    //@ts-ignore
-    _updatedItem.login[ItemKeys.URI].splice(index, 1);
-    setEditableItem(_updatedItem);
-  }
-
-  function addUriRow() {
-    if (editableItem === undefined) return;
-    //@ts-ignore
-    const _updatedItem = { ...editableItem };
-    //@ts-ignore
-    _updatedItem.login[ItemKeys.URI].push("");
-    setEditableItem(_updatedItem);
-  }
-
-  console.log(9, "editableItem", editableItem);
   return (
     <div className="w-full p-2 space-y-2">
       <Input
@@ -184,128 +194,25 @@ export default function ItemView() {
         onChange={(e) =>
           onChangeFormInput({ key: ItemKeys.NAME, value: e.target.value })
         }
-        disabled={mode === Mode.VIEW}
+        disabled={mode === EditItemViews.VIEW}
       />
+
       {editableItem?.[ItemKeys.TYPE] == "lo" && (
-        <>
-          <Input
-            label="Username"
-            name="username"
-            placeholder="login username"
-            value={editableItem?.login?.[ItemKeys.USERNAME] || ""}
-            onChange={(e) =>
-              onChangeFormInput({
-                key: ItemKeys.USERNAME,
-                value: e.target.value,
-                isLogin: true,
-              })
-            }
-            disabled={mode === Mode.VIEW}
-            after={
-              !isNew && (
-                <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-                  <button
-                    onClick={() => copyUser()}
-                    className="text-gray-400 hover:text-brand-3 active:text-primary"
-                    title="Copy username"
-                  >
-                    <DocumentDuplicateIcon className="h-6 w-6" />
-                  </button>
-                </div>
-              )
-            }
-          />
-          <Input
-            label="Password"
-            name="password"
-            type={isShowPassword ? "text" : "password"}
-            placeholder="login password"
-            value={editableItem?.login?.[ItemKeys.PASSWORD] || ""}
-            onChange={(e) =>
-              onChangeFormInput({
-                key: ItemKeys.PASSWORD,
-                value: e.target.value,
-                isLogin: true,
-              })
-            }
-            disabled={mode === Mode.VIEW}
-            after={
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-                {mode == Mode.EDIT && (
-                  <button
-                    onClick={() => generatePassword()}
-                    className="text-gray-400 hover:text-brand-3 active:text-primary"
-                    title="Generate password"
-                  >
-                    <ArrowPathIcon className="h-6 w-6" />
-                  </button>
-                )}
-                <button
-                  onClick={() => setIsShowPassword(!isShowPassword)}
-                  className="text-gray-400 hover:text-brand-3 active:text-primary"
-                  title={isShowPassword ? "Hide password" : "Show password"}
-                >
-                  {isShowPassword ? (
-                    <EyeSlashIcon className="h-6 w-6" />
-                  ) : (
-                    <EyeIcon className="h-6 w-6" />
-                  )}
-                </button>
-                {!isNew && (
-                  <button
-                    onClick={() => copyPassword()}
-                    className="text-gray-400 hover:text-brand-3 active:text-primary"
-                    title="Copy password"
-                  >
-                    <DocumentDuplicateIcon className="h-6 w-6" />
-                  </button>
-                )}
-              </div>
-            }
-          />
-
-          <label className="block text-sm font-semibold leading-6 text-gray-900">
-            URIs
-          </label>
-          {editableItem?.login?.[ItemKeys.URI].map((uri, index) => {
-            return (
-              <Input
-                value={editableItem?.login?.[ItemKeys.URI][index]!}
-                onChange={(e) =>
-                  onChangeFormInput({
-                    key: ItemKeys.URI,
-                    value: e.target.value,
-                    isLogin: true,
-                    uriIndex: index,
-                  })
-                }
-                placeholder={`URI #${index + 1}`}
-                disabled={mode === Mode.VIEW}
-                after={
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-                    <button
-                      onClick={() => deleteUri(index)}
-                      className="text-gray-400 hover:text-brand-3 active:text-primary"
-                      title="Delete URI"
-                    >
-                      <TrashIcon className="h-6 w-6" />
-                    </button>
-                  </div>
-                }
-              />
-            );
-          })}
-
-          <Button onClick={() => addUriRow()}>Add more URI</Button>
-        </>
+        <LoginItem
+          editableItem={editableItem}
+          onChangeFormInput={onChangeFormInput}
+          mode={mode}
+          isNew={isNew}
+          setEditableItem={setEditableItem}
+        />
       )}
 
       <div className="mt-20 grid grid-cols-6 gap-2">
-        {mode == Mode.VIEW ? (
+        {mode == EditItemViews.VIEW ? (
           <>
             <Button
               disabled={ndk === undefined}
-              onClick={() => setMode(Mode.EDIT)}
+              onClick={() => setMode(EditItemViews.EDIT)}
               title="Unlock to edit"
             >
               <div className="flex flex-col items-center">
@@ -318,7 +225,7 @@ export default function ItemView() {
           <>
             {!isNew && (
               <Button
-                onClick={() => setMode(Mode.VIEW)}
+                onClick={() => setMode(EditItemViews.VIEW)}
                 title="Lock to exit editing mode"
               >
                 <div className="flex flex-col items-center">

@@ -4,29 +4,7 @@ import {
   WrenchIcon,
 } from "@heroicons/react/20/solid";
 import { Virtuoso } from "react-virtuoso";
-
-const timeline = [
-  {
-    content: "Encryption",
-    datetime: "2020-09-20",
-    state: 0,
-  },
-  {
-    content: "Connect to relay",
-    datetime: "2020-09-20",
-    state: 1,
-  },
-  {
-    content: "Vault, items, menu and roadmap",
-    datetime: "2020-09-20",
-    state: 2,
-  },
-  {
-    content: "Hello World",
-    datetime: "2023-08-05",
-    state: 2,
-  },
-];
+import { ROADMAP } from "../../constants/roadmap";
 
 export default function RoadmapView() {
   function rowRenderer({ index, item }: { index: number; item: any }) {
@@ -38,7 +16,7 @@ export default function RoadmapView() {
       <ul className="h-full">
         <Virtuoso
           style={{ height: "100%" }}
-          data={timeline}
+          data={ROADMAP}
           itemContent={(index, item) => rowRenderer({ index, item })}
         />
       </ul>
@@ -50,7 +28,7 @@ function RoadmapItem({ index, item }: { index: number; item: any }) {
   return (
     <li>
       <div className="relative pb-8">
-        {index !== timeline.length - 1 ? (
+        {index !== ROADMAP.length - 1 ? (
           <span
             className="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200"
             aria-hidden="true"
@@ -67,7 +45,7 @@ function RoadmapItem({ index, item }: { index: number; item: any }) {
                   : "bg-gray-400"
               }`}
             >
-              {item.state === 0 && (
+              {(item.state === 0 || item.state === undefined) && (
                 <EllipsisHorizontalIcon className="h-5 w-5 text-white" />
               )}
               {item.state === 1 && (
@@ -78,10 +56,12 @@ function RoadmapItem({ index, item }: { index: number; item: any }) {
           </div>
           <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
             <div>
-              <p className="text-sm text-gray-500">{item.content}</p>
+              <p className="text-sm text-gray-500">{item.desc}</p>
             </div>
             <div className="whitespace-nowrap text-right text-sm text-gray-500">
-              <time dateTime={item.datetime}>{item.datetime}</time>
+              {item.datetime && (
+                <time dateTime={item.datetime}>{item.datetime}</time>
+              )}
             </div>
           </div>
         </div>

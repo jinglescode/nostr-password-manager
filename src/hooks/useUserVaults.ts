@@ -2,9 +2,7 @@ import { NDKFilter } from "@nostr-dev-kit/ndk";
 import { useNDK } from "@nostr-dev-kit/ndk-react";
 import { useQuery } from "@tanstack/react-query";
 import { accountStore } from "../stores/account";
-import { Item } from "../types/item";
-import { List } from "../types/list";
-import StringCrypto from "string-crypto";
+import { Vault } from "../types/vault";
 
 export function useUserVaults() {
   const { ndk, fetchEvents, signer } = useNDK();
@@ -14,7 +12,6 @@ export function useUserVaults() {
     ["vaults"],
     async () => {
       const ndkUser = await signer?.user();
-      console.log(33, "ndkUser", ndkUser);
 
       if (!ndkUser || !user) return undefined;
 
@@ -27,7 +24,7 @@ export function useUserVaults() {
       const events = await fetchEvents(filter);
       console.log(9999, "events", filter, events.length, events);
 
-      let vaults: List[] = [];
+      let vaults: Vault[] = [];
 
       events.forEach(async (event) => {
         const dTags = event.tags.filter((t) => t[0] === "d");
@@ -37,30 +34,14 @@ export function useUserVaults() {
         const mod = event.created_at;
         const encrypted_items = event.content;
 
-        // decrypt with signer
-        const decryptedItemsSigner = await signer?.decrypt(
-          ndkUser,
-          encrypted_items
-        );
-
-        // decrypt with passcode
-        const { decryptString } = new StringCrypto();
-        const decryptedItemsCode = decryptString(
-          decryptedItemsSigner,
-          user.passcode
-        );
-
-        let vaultItems = JSON.parse(decryptedItemsCode) as {
-          [key: string]: Item;
-        };
-
-        const list: List = {
+        const vault: Vault = {
           id: id,
           mod: mod!,
-          items: vaultItems,
+          items: {},
+          encryptedItems: encrypted_items,
         };
 
-        return list;
+        vaults.push(vault);
       });
 
       console.log(9999, "useUserVault", vaults.length);

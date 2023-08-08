@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { Item } from "../types/item";
+import { AppNotification } from "../types/views";
 
 export enum Views {
   INIT,
@@ -8,6 +9,8 @@ export enum Views {
   ITEM,
   ROADMAP,
   FAQ,
+  DONATE,
+  SETTINGS,
 }
 
 interface SessionState {
@@ -17,6 +20,8 @@ interface SessionState {
   toggleShowMenu: () => void;
   itemDetails: Item | undefined;
   setItemDetails: (item: Item | undefined) => void;
+  appNotification: AppNotification | undefined;
+  setAppNotification: (notification: AppNotification | undefined) => void;
 }
 
 export const viewStore = create<SessionState>()((set, get) => ({
@@ -26,4 +31,7 @@ export const viewStore = create<SessionState>()((set, get) => ({
   toggleShowMenu: () => set({ showMenu: !get().showMenu }),
   itemDetails: undefined,
   setItemDetails: (item: Item | undefined) => set({ itemDetails: item }),
+  appNotification: undefined,
+  setAppNotification: (notification: AppNotification | undefined) =>
+    set({ appNotification: notification }),
 }));

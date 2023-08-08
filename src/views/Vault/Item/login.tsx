@@ -11,6 +11,7 @@ import { Views, viewStore } from "../../../stores/view";
 export default function LoginItem({ item }: { item: Item }) {
   const setView = viewStore((state) => state.setView);
   const setItemDetails = viewStore((state) => state.setItemDetails);
+  const setAppNotification = viewStore((state) => state.setAppNotification);
 
   const { onCopy: copyUser } = useClipboard(
     item.login?.[ItemKeys.USERNAME] || ""
@@ -46,14 +47,26 @@ export default function LoginItem({ item }: { item: Item }) {
             <InformationCircleIcon className="h-6 w-6" />
           </button>
           <button
-            onClick={() => copyUser()}
+            onClick={() => {
+              copyUser();
+              setAppNotification({
+                title: "Username copied to clipboard",
+                type: "success",
+              });
+            }}
             className="text-gray-400 hover:text-brand-3 active:text-primary"
             title="Copy username"
           >
             <UserIcon className="h-6 w-6" />
           </button>
           <button
-            onClick={() => copyPassword()}
+            onClick={() => {
+              copyPassword();
+              setAppNotification({
+                title: "Password copied to clipboard",
+                type: "success",
+              });
+            }}
             className="text-gray-400 hover:text-brand-3 active:text-primary"
             title="Copy password"
           >

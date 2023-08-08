@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Views, viewStore } from "../../stores/view";
 import { accountStore } from "../../stores/account";
 import { AccountStates } from "../../enums/account";
@@ -46,8 +46,18 @@ export default function Navbar() {
                   />
                 </div>
               )}
-              {view === Views.ITEM && <div className="text-white text-center text-lg">Item</div>}
-              {view === Views.ROADMAP && <div className="text-white text-center text-lg">Roadmap</div>}
+              {view === Views.ITEM && (
+                <div className="text-white text-center text-lg">Item</div>
+              )}
+              {view === Views.ROADMAP && (
+                <div className="text-white text-center text-lg">Roadmap</div>
+              )}
+              {view === Views.FAQ && (
+                <div className="text-white text-center text-lg">FAQs</div>
+              )}
+              {view === Views.DONATE && (
+                <div className="text-white text-center text-lg">Donate</div>
+              )}
             </div>
           </div>
 

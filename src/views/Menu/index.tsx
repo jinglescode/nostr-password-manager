@@ -8,11 +8,14 @@ import {
   WrenchScrewdriverIcon,
 } from "@heroicons/react/20/solid";
 import { Views, viewStore } from "../../stores/view";
+import { accountStore } from "../../stores/account";
+import { AccountStates } from "../../enums/account";
 
 export default function MenuView() {
   const setView = viewStore((state) => state.setView);
   const toggleShowMenu = viewStore((state) => state.toggleShowMenu);
   const setItemDetails = viewStore((state) => state.setItemDetails);
+  const state = accountStore((state) => state.state);
 
   function goToView(view: Views) {
     if (view === Views.ITEM) {
@@ -29,12 +32,24 @@ export default function MenuView() {
         <MenuItem
           icon={<PlusIcon className="h-6 w-6" />}
           text="Add"
-          onClick={() => goToView(Views.ITEM)}
+          onClick={() => {
+            if (state === AccountStates.LOGGED_IN) {
+              goToView(Views.ITEM);
+            } else {
+              goToView(Views.LOGIN);
+            }
+          }}
         />
         <MenuItem
           icon={<RectangleStackIcon className="h-6 w-6" />}
           text="Vault"
-          onClick={() => goToView(Views.VAULT)}
+          onClick={() => {
+            if (state === AccountStates.LOGGED_IN) {
+              goToView(Views.VAULT);
+            } else {
+              goToView(Views.LOGIN);
+            }
+          }}
         />
         <MenuItem
           icon={<RocketLaunchIcon className="h-6 w-6" />}
@@ -49,11 +64,12 @@ export default function MenuView() {
         <MenuItem
           icon={<WrenchScrewdriverIcon className="h-6 w-6" />}
           text="Settings"
+          onClick={() => goToView(Views.SETTINGS)}
         />
-        <MenuItem icon={<GiftIcon className="h-6 w-6" />} text="Donate" />
         <MenuItem
-          icon={<InformationCircleIcon className="h-6 w-6" />}
-          text="About"
+          icon={<GiftIcon className="h-6 w-6" />}
+          text="Donate"
+          onClick={() => window.open(`https://getalby.com/p/vault`)}
         />
       </div>
     </div>

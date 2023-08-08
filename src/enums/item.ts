@@ -12,3 +12,8 @@ export enum ItemKeys {
   PASSWORD = "pw",
   URI = "ur",
 }
+
+export enum EditItemViews {
+  EDIT,
+  VIEW,
+}
