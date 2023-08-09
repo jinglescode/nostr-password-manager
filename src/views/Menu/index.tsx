@@ -1,6 +1,5 @@
 import {
   GiftIcon,
-  InformationCircleIcon,
   ListBulletIcon,
   PlusIcon,
   RectangleStackIcon,
@@ -21,7 +20,6 @@ export default function MenuView() {
     if (view === Views.ITEM) {
       setItemDetails(undefined);
     }
-
     setView(view);
     toggleShowMenu();
   }
@@ -29,17 +27,6 @@ export default function MenuView() {
   return (
     <div className="bg-brand-4 rounded-b-lg pb-4 px-4">
       <div className="grid grid-cols-4 gap-4">
-        <MenuItem
-          icon={<PlusIcon className="h-6 w-6" />}
-          text="Add"
-          onClick={() => {
-            if (state === AccountStates.LOGGED_IN) {
-              goToView(Views.ITEM);
-            } else {
-              goToView(Views.LOGIN);
-            }
-          }}
-        />
         <MenuItem
           icon={<RectangleStackIcon className="h-6 w-6" />}
           text="Vault"
@@ -50,6 +37,14 @@ export default function MenuView() {
               goToView(Views.LOGIN);
             }
           }}
+        />
+        <MenuItem
+          icon={<PlusIcon className="h-6 w-6" />}
+          text="Add"
+          onClick={() => {
+            goToView(Views.ITEM);
+          }}
+          disabled={state !== AccountStates.LOGGED_IN}
         />
         <MenuItem
           icon={<RocketLaunchIcon className="h-6 w-6" />}
@@ -65,22 +60,29 @@ export default function MenuView() {
           icon={<WrenchScrewdriverIcon className="h-6 w-6" />}
           text="Settings"
           onClick={() => goToView(Views.SETTINGS)}
+          disabled={state !== AccountStates.LOGGED_IN}
         />
         <MenuItem
           icon={<GiftIcon className="h-6 w-6" />}
           text="Donate"
-          onClick={() => window.open(`https://getalby.com/p/vault`)}
+          onClick={() => {
+            toggleShowMenu();
+            window.open(`https://getalby.com/p/vault`);
+          }}
         />
       </div>
     </div>
   );
 }
 
-function MenuItem({ icon, text, onClick }: any) {
+function MenuItem({ icon, text, onClick, disabled }: any) {
   return (
     <button
       onClick={onClick}
-      className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-brand-2 hover:text-white"
+      className={`relative inline-flex items-center justify-center rounded-md p-2 ${
+        disabled ? "text-gray-600" : "text-gray-400"
+      } ${!disabled && "hover:bg-brand-2 hover:text-white"}`}
+      disabled={disabled}
     >
       <div className="flex flex-col items-center">
         {icon}

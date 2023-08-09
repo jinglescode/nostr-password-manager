@@ -10,12 +10,17 @@ import { getActiveTab } from "../../utils/chrome/getActiveTab";
 import LoginItem from "./Item/login";
 import { Virtuoso } from "react-virtuoso";
 import { decryptVaults } from "../../utils/encryption/decryptVaults";
+import { Views, viewStore } from "../../stores/view";
+import { getSessionStorage } from "../../utils/chrome/storage";
+import { StorageKeys } from "../../enums/storage";
 
 export default function VaultView() {
   const { data: vaults } = useUserVaults();
 
   const user = accountStore((state) => state.user);
   const { signer } = useNDK();
+  const setView = viewStore((state) => state.setView);
+  const setAppNotification = viewStore((state) => state.setAppNotification);
 
   const [decryptedVaults, setDecryptedVaults] = useState<{
     [vaultId: string]: Vault;
@@ -30,7 +35,6 @@ export default function VaultView() {
     async function load() {
       const tab = await getActiveTab();
       if (tab && tab.url) {
-        console.log(11111, tab)
         let __url = new URL(tab.url);
         let _domain = __url.hostname;
         _domain = _domain.replace("www.", "");
@@ -42,10 +46,28 @@ export default function VaultView() {
 
   useEffect(() => {
     async function decryptData() {
-      if (vaults && signer && user) {
-        const _decryptedVaults = await decryptVaults({ signer, vaults, user });
-        //@ts-ignore
-        setDecryptedVaults(_decryptedVaults);
+      if (vaults && signer) {
+
+        const passcode = await getSessionStorage(
+          StorageKeys.SESSION_USER_PASSCODE
+        );
+
+        await decryptVaults({
+          signer,
+          vaults,
+          passcode: passcode,
+        })
+          .then((decryptedVaults) => {
+            setDecryptedVaults(decryptedVaults);
+          })
+          .catch((e) => {
+            setAppNotification({
+              title: "Error decrypting vaults",
+              message:
+                "The passcode you have enter is incorrect. Check FAQ for details.",
+              type: "error",
+            });
+          });
       }
     }
     decryptData();
@@ -85,13 +107,6 @@ export default function VaultView() {
   function filterItem(item: Item) {
     if (item[ItemKeys.TYPE] === ItemType.LOGIN && item.login) {
       if (!searchInput) {
-        // if (currentDomain) {
-        //   if (item.login[ItemKeys.URI].some((v) => v.includes(currentDomain))) {
-        //     return true;
-        //   }
-        // } else {
-        //   return true;
-        // }
         return true;
       } else {
         const _searchInput = searchInput.trim().toLowerCase();
@@ -118,6 +133,18 @@ export default function VaultView() {
   function rowRenderer({ index, item }: { index: number; item: Item }) {
     return <LoginItem key={index} item={item} />;
   }
+
+  if (items.length === 0)
+    return (
+      <div className="flex flex-col items-center justify-center h-full">
+        <p className="text-md">No items in vault</p>
+        <p className="mt-2 text-sm leading-6 text-brand-2">
+          <a onClick={() => setView(Views.ITEM)} className="cursor-pointer">
+            Add item<span> &rarr;</span>
+          </a>
+        </p>
+      </div>
+    );
 
   return (
     <>

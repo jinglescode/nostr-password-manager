@@ -5,10 +5,8 @@ import { StorageKeys } from "../../enums/storage";
 import { getPublicKeys } from "../../utils/nostr/getPublicKeys";
 
 export default function Connected() {
-  const { ndk } = useNDK();
+  const { ndk, getProfile } = useNDK();
   const [npub, setNpub] = useState<undefined | string>(undefined);
-
-  const { getProfile } = useNDK();
 
   useEffect(() => {
     async function getNpub() {

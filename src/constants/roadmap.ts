@@ -1,5 +1,8 @@
 export const ROADMAP = [
   {
+    desc: "Store all kinds of items",
+  },
+  {
     desc: "NIP07 login",
   },
   {
@@ -8,8 +11,8 @@ export const ROADMAP = [
     state: 2,
   },
   {
-    desc: "Majority of user interface",
-    datetime: "2023-08-06",
+    desc: "Majority of user interface done",
+    datetime: "2023-08-07",
     state: 2,
   },
   {

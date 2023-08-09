@@ -39,7 +39,6 @@ export default function Encrypt({
     let user: User = {
       pk: pk,
       npub: session.npub,
-      passcode: inputPasscode,
     };
     setUser(user);
 

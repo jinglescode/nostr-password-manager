@@ -14,4 +14,25 @@ export const FAQS = [
     answer:
       "No. As a zero-knowledge encryption product, there is no way to retrieve or reset your passcode. Both your passcode and your NOSTR secret to needed to decrypt your data.",
   },
+  {
+    question: "Where can I see the source code?",
+    answer: (
+      <>
+        This project is open source, and you can browse the code on{" "}
+        <a
+          className="text-brand-2 hover:text-primary"
+          href="https://github.com/jinglescode/nostr-password-manager"
+          target="_blank"
+        >
+          GitHub
+        </a>
+        .
+      </>
+    ),
+  },
+  {
+    question: "Error decrypting vaults",
+    answer:
+      "You need to enter the same passcode you have used previously (or other devices) to encrypt your vaults. You have to disconnect and reconnect your account. You may change your passcode after successfully encrypted your vaults.",
+  },
 ];

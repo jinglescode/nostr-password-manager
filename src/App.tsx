@@ -8,6 +8,7 @@ import {
   Persister,
 } from "@tanstack/react-query-persist-client";
 import { QueryClient } from "@tanstack/react-query";
+import { useSettingsStore } from "./stores/settings";
 
 export function createPersister(key = "nostr-password-manager") {
   return {
@@ -37,6 +38,8 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  const relays = useSettingsStore((state) => state.relays);
+
   return (
     <PersistQueryClientProvider
       client={queryClient}
@@ -45,7 +48,7 @@ function App() {
       }}
     >
       <NDKProvider
-        relayUrls={["wss://relay.damus.io", "wss://relay.snort.social"]}
+        relayUrls={relays}
       >
         <Views />
       </NDKProvider>

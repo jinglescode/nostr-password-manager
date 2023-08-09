@@ -23,7 +23,6 @@ export default function LoginWithSK({
       setIsError(false);
       const session = await loginWithSecret(inputSk);
       if (session) {
-        console.log(session);
         setSession(session);
         setStep(LoginViews.ENCRYPT);
       }
@@ -40,7 +39,9 @@ export default function LoginWithSK({
     }
   }
 
-  async function createAccount() {}
+  async function createAccount() {
+    setStep(LoginViews.NEWACCOUNT);
+  }
 
   return (
     <>

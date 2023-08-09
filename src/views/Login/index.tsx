@@ -6,6 +6,7 @@ import Unlock from "./Unlock";
 import Connected from "./Connected";
 import { LoginViews } from "../../enums/views";
 import { AccountStates } from "../../enums/account";
+import NewAccount from "./NewAccount";
 
 export default function LoginView() {
   const [step, setStep] = useState<LoginViews>(LoginViews.INIT);
@@ -41,6 +42,9 @@ export default function LoginView() {
       )}
       {step === LoginViews.UNLOCK && <Unlock setStep={setStep} />}
       {step === LoginViews.CONNECTED && <Connected />}
+      {step === LoginViews.NEWACCOUNT && (
+        <NewAccount setSession={setSession} setStep={setStep} />
+      )}
     </div>
   );
 }

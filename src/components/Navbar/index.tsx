@@ -30,33 +30,39 @@ export default function Navbar() {
 
           <div className="flex flex-1 justify-center px-2">
             <div className="w-full max-w-lg">
-              {state == AccountStates.LOGGED_IN && view === Views.VAULT && (
-                <div className="relative">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    id="search"
-                    name="search"
-                    className="block w-full rounded-md border-0 bg-brand-3 py-1.5 pl-10 pr-3 text-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus:outline-none"
-                    placeholder="Search vault"
-                    type="search"
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                  />
-                </div>
-              )}
-              {view === Views.ITEM && (
-                <div className="text-white text-center text-lg">Item</div>
-              )}
-              {view === Views.ROADMAP && (
-                <div className="text-white text-center text-lg">Roadmap</div>
-              )}
-              {view === Views.FAQ && (
-                <div className="text-white text-center text-lg">FAQs</div>
-              )}
-              {view === Views.DONATE && (
-                <div className="text-white text-center text-lg">Donate</div>
+              {!showMenu && (
+                <>
+                  {state == AccountStates.LOGGED_IN && view === Views.VAULT && (
+                    <div className="relative">
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+                      </div>
+                      <input
+                        id="search"
+                        name="search"
+                        className="block w-full rounded-md border-0 bg-brand-3 py-1.5 pl-10 pr-3 text-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus:outline-none"
+                        placeholder="Search vault"
+                        type="search"
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
+                      />
+                    </div>
+                  )}
+                  {view === Views.ITEM && (
+                    <div className="text-white text-center text-lg">Item</div>
+                  )}
+                  {view === Views.ROADMAP && (
+                    <div className="text-white text-center text-lg">
+                      Roadmap
+                    </div>
+                  )}
+                  {view === Views.FAQ && (
+                    <div className="text-white text-center text-lg">FAQs</div>
+                  )}
+                  {view === Views.DONATE && (
+                    <div className="text-white text-center text-lg">Donate</div>
+                  )}
+                </>
               )}
             </div>
           </div>

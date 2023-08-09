@@ -85,7 +85,6 @@ export default function LoginItem({
             <div className="absolute inset-y-0 right-0 flex items-center pr-2">
               <button
                 onClick={() => {
-                  console.log(44444);
                   copyUser();
                   setAppNotification({
                     title: "Username copied to clipboard",
@@ -187,8 +186,9 @@ export default function LoginItem({
           />
         );
       })}
-
-      <Button onClick={() => addUriRow()}>Add more URI</Button>
+      {mode == EditItemViews.EDIT && (
+        <Button onClick={() => addUriRow()}>Add more URI</Button>
+      )}
     </>
   );
 }

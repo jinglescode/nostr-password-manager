@@ -16,6 +16,7 @@ import { getPublicKeys } from "../utils/nostr/getPublicKeys";
 import Notification from "../components/Notification";
 import FAQView from "./FAQ";
 import DonateView from "./Donate";
+import SettingsView from "./Settings";
 
 export default function MainView() {
   const { loginWithSecret } = useNDK();
@@ -47,7 +48,6 @@ export default function MainView() {
             let user: User = {
               pk: pk,
               npub: npub,
-              passcode: passcode,
             };
 
             setUser(user);
@@ -82,6 +82,7 @@ export default function MainView() {
             {view === Views.ROADMAP && <RoadmapView />}
             {view === Views.FAQ && <FAQView />}
             {view === Views.DONATE && <DonateView />}
+            {view === Views.SETTINGS && <SettingsView />}
           </>
         )}
       </div>

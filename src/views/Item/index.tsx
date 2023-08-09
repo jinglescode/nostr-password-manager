@@ -21,6 +21,10 @@ import { decryptVaults } from "../../utils/encryption/decryptVaults";
 import { accountStore } from "../../stores/account";
 import { getActiveTab } from "../../utils/chrome/getActiveTab";
 import { generatePassword } from "../../utils/strings/passwordGenerator";
+import { encryptVault } from "../../utils/encryption/encryptVault";
+import { NDKEvent } from "@nostr-dev-kit/ndk";
+import { getSessionStorage } from "../../utils/chrome/storage";
+import { StorageKeys } from "../../enums/storage";
 
 export default function ItemView() {
   const { ndk, signer } = useNDK();
@@ -39,7 +43,6 @@ export default function ItemView() {
 
   useEffect(() => {
     async function createNewItem() {
-      console.log(6, itemDetails);
       if (itemDetails) {
         setEditableItem(itemDetails);
       } else {
@@ -47,7 +50,6 @@ export default function ItemView() {
         let name = "";
 
         const tab = await getActiveTab();
-        console.log(222, tab);
 
         if (tab) {
           url = tab.url || "";
@@ -112,10 +114,12 @@ export default function ItemView() {
 
     // 1. get list
 
+    const passcode = await getSessionStorage(StorageKeys.SESSION_USER_PASSCODE);
+
     const decryptedVaults = await decryptVaults({
       signer,
       vaults: data,
-      user,
+      passcode: passcode,
     });
 
     let vault: Vault = {
@@ -131,8 +135,6 @@ export default function ItemView() {
       vault = decryptedVaults[Object.keys(decryptedVaults)[0]];
     }
 
-    // 1b. if has more than 1 list, get from selected list, todo future
-
     // 2. update item to list
     if (isDelete) {
       delete vault.items[editableItem.id];
@@ -140,10 +142,20 @@ export default function ItemView() {
       vault.items[editableItem.id] = editableItem;
     }
 
-    console.log(5, "item", editableItem);
-    console.log(6, "saving vault", vault);
+    // create NDK event
 
-    mutate(vault);
+    const encryptedItems = await encryptVault({
+      vault,
+      signer,
+      passcode: passcode,
+    });
+
+    const event = new NDKEvent();
+    event.kind = 34567;
+    event.content = encryptedItems;
+    event.tags = [["d", vault.id]];
+
+    mutate(event);
   }
 
   async function deleteItem() {
@@ -225,7 +237,12 @@ export default function ItemView() {
           <>
             {!isNew && (
               <Button
-                onClick={() => setMode(EditItemViews.VIEW)}
+                onClick={() => {
+                  if (itemDetails) {
+                    setEditableItem({ ...itemDetails });
+                  }
+                  setMode(EditItemViews.VIEW);
+                }}
                 title="Lock to exit editing mode"
               >
                 <div className="flex flex-col items-center">

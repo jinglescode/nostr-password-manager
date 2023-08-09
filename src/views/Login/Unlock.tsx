@@ -16,11 +16,12 @@ import Input from "../../components/Input";
 import { Views, viewStore } from "../../stores/view";
 import { User } from "../../types/user";
 import { getPublicKeys } from "../../utils/nostr/getPublicKeys";
+import { useSettingsStore } from "../../stores/settings";
 
 export default function Unlock({ setStep }: { setStep: Function }) {
   const { ndk, loginWithSecret } = useNDK();
   const [npub, setNpub] = useState<undefined | string>(undefined);
-  const [inputPasscode, setInputPasscode] = useState<string>("1q2w3e"); //todo remove
+  const [inputPasscode, setInputPasscode] = useState<string>("");
   const [passcodeIsError, setPasscodeIsError] = useState<boolean>(false);
   const setState = accountStore((state) => state.setState);
   const setView = viewStore((state) => state.setView);
@@ -60,7 +61,6 @@ export default function Unlock({ setStep }: { setStep: Function }) {
       let user: User = {
         pk: pk,
         npub: npub,
-        passcode: inputPasscode,
       };
       setUser(user);
 
@@ -80,6 +80,7 @@ export default function Unlock({ setStep }: { setStep: Function }) {
   function forgetAccount() {
     clearLocalStorage();
     clearSessionStorage();
+    useSettingsStore.persist.clearStorage();
     setStep(LoginViews.SK);
   }
 
@@ -113,7 +114,7 @@ export default function Unlock({ setStep }: { setStep: Function }) {
             : ""}
         </h2>
         <p className="mt-2 text-lg leading-8 text-gray-600">
-          Enter a passcode to unlock.
+          Enter your passcode to unlock.
         </p>
       </div>
       <div className="mx-auto max-w-xl mt-20">

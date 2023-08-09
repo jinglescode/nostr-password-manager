@@ -4,4 +4,10 @@ export enum LoginViews {
   ENCRYPT,
   UNLOCK,
   CONNECTED,
+  NEWACCOUNT,
+}
+
+export enum SettingViews {
+  SECURITY,
+  NOSTR,
 }

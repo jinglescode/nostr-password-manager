@@ -1,29 +1,27 @@
 {
   "version": "1.0.0",
+  "name": "Vault (Password Manager on NOSTR)",
+  "description": "A decentralized password manager where your passwords are encrypted by your keys and stored on relays.",
+  "author": "Jingles (jingles.dev)",
   "manifest_version": 3,
-  "name": "NOSTR Password Manager",
-  "description": "A password manager where your passwords are encryped by your keys and stored on relays.",
   "action": {
     "default_popup": "index.html",
-    "default_title": "NOSTR Password Manager"
+    "default_title": "Vault"
   },
   "icons": {
-    "128": "images/rounded-512.png"
+    "128": "images/rounded-128.png",
+    "48": "images/rounded-48.png",
+    "32": "images/rounded-32.png"
   },
-  "permissions": ["tabs", "storage", "webNavigation", "scripting"],
-  "host_permissions": ["https://*/*", "http://*/*"],
+  "permissions": ["tabs", "storage"],
   "background": {
     "service_worker": "scripts/background.js"
   },
   "content_scripts": [
     {
-      "matches": [
-        "<all_urls>"
-      ],
+      "matches": ["<all_urls>"],
       "run_at": "document_idle",
-      "js": [
-        "scripts/contentScript.js"
-      ]
+      "js": ["scripts/contentScript.js"]
     }
   ]
 }
