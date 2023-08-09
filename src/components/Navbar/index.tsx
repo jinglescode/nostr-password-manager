@@ -62,6 +62,11 @@ export default function Navbar() {
                   {view === Views.DONATE && (
                     <div className="text-white text-center text-lg">Donate</div>
                   )}
+                  {view === Views.SETTINGS && (
+                    <div className="text-white text-center text-lg">
+                      Settings
+                    </div>
+                  )}
                 </>
               )}
             </div>

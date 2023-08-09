@@ -1,6 +1,8 @@
 import {
+  ArrowTopRightOnSquareIcon,
   InformationCircleIcon,
   KeyIcon,
+  SparklesIcon,
   UserIcon,
 } from "@heroicons/react/20/solid";
 import { Item } from "../../../types/item";
@@ -20,9 +22,41 @@ export default function LoginItem({ item }: { item: Item }) {
     item.login?.[ItemKeys.PASSWORD] || ""
   );
 
+  const hasUri =
+    (item.login &&
+      item.login[ItemKeys.URI] &&
+      item.login[ItemKeys.URI].length > 0) ||
+    false;
+
   function viewItem() {
     setItemDetails(item);
     setView(Views.ITEM);
+  }
+
+  function openSite() {
+    if (hasUri) {
+      window.open(item.login?.[ItemKeys.URI][0], "_blank");
+    }
+  }
+
+  async function fillForms() {
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      lastFocusedWindow: true,
+    });
+    if (tab && tab.id) {
+      await chrome.tabs.sendMessage(
+        tab.id,
+        {
+          type: "FILLFORM",
+          payload: {
+            username: item.login?.[ItemKeys.USERNAME],
+            password: item.login?.[ItemKeys.PASSWORD],
+          },
+        },
+        (response) => {}
+      );
+    }
   }
 
   if (item.login === undefined) return <></>;
@@ -45,6 +79,13 @@ export default function LoginItem({ item }: { item: Item }) {
             title="View item"
           >
             <InformationCircleIcon className="h-6 w-6" />
+          </button>
+          <button
+            onClick={() => fillForms()}
+            className="text-gray-400 hover:text-brand-3 active:text-primary"
+            title="Try to fill forms"
+          >
+            <SparklesIcon className="h-6 w-6" />
           </button>
           <button
             onClick={() => {
@@ -72,6 +113,15 @@ export default function LoginItem({ item }: { item: Item }) {
           >
             <KeyIcon className="h-6 w-6" />
           </button>
+          {hasUri && (
+            <button
+              onClick={() => openSite()}
+              className="text-gray-400 hover:text-brand-3 active:text-primary"
+              title="Open site"
+            >
+              <ArrowTopRightOnSquareIcon className="h-6 w-6" />
+            </button>
+          )}
         </div>
       </div>
     </div>

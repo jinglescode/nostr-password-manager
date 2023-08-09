@@ -1,5 +1,6 @@
 import SettingsNostrRelay from "./relay";
 import SettingsNostrAccount from "./account";
+import SettingsNostrData from "./data";
 
 export default function SettingsNostrView() {
   return (
@@ -12,6 +13,7 @@ export default function SettingsNostrView() {
       <dl className="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
         <SettingsNostrAccount />
         <SettingsNostrRelay />
+        <SettingsNostrData />
       </dl>
     </div>
   );
