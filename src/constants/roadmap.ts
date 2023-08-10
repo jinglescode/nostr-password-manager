@@ -1,5 +1,14 @@
 export const ROADMAP = [
   {
+    desc: "Vault's relay server",
+  },
+  {
+    desc: "Import from existing password managers and export user data",
+  },
+  {
+    desc: "Multiple vaults to handle limits.",
+  },
+  {
     desc: "Internationalization",
   },
   {

@@ -45,7 +45,7 @@ export default function Input({
               isError
                 ? "ring-red-300 focus:ring-red-500"
                 : "ring-brand-2 focus:ring-primary"
-            } ${(after || isError) && "pr-10"}`}
+            } ${(after || isError) && "pr-12"}`}
             placeholder={placeholder}
             value={value}
             onChange={onChange}

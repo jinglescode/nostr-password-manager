@@ -151,7 +151,11 @@ export default function Encrypt({
         )}
         <div className="mt-10">
           <Button disabled={inputPasscode.length < 6} onClick={() => encrypt()}>
-            Access
+            {firstNewPassInput == undefined ? (
+              <>Continue</>
+            ) : (
+              <>Encrypt and Access</>
+            )}
           </Button>
         </div>
       </div>

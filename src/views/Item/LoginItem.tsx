@@ -173,15 +173,19 @@ export default function LoginItem({
             placeholder={`URI #${index + 1}`}
             disabled={mode === EditItemViews.VIEW}
             after={
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-                <button
-                  onClick={() => deleteUri(index)}
-                  className="text-gray-400 hover:text-brand-3 active:text-primary"
-                  title="Delete URI"
-                >
-                  <TrashIcon className="h-6 w-6" />
-                </button>
-              </div>
+              <>
+                {mode == EditItemViews.EDIT && (
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+                    <button
+                      onClick={() => deleteUri(index)}
+                      className="text-gray-400 hover:text-brand-3 active:text-primary"
+                      title="Delete URI"
+                    >
+                      <TrashIcon className="h-6 w-6" />
+                    </button>
+                  </div>
+                )}
+              </>
             }
           />
         );

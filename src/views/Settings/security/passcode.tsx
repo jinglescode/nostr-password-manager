@@ -112,7 +112,10 @@ export default function SettingsAccountPasscode() {
       const event = new NDKEvent();
       event.kind = 34567;
       event.content = encryptedItems;
-      event.tags = [["d", vault.id]];
+      event.tags = [
+        ["d", vault.id],
+        ["v", "1"],
+      ];
 
       mutate(event);
     }

@@ -97,8 +97,20 @@ export default function VaultView() {
           if (b.login[ItemKeys.URI].some((v) => v.includes(currentDomain))) {
             return 1;
           }
-        } else {
-          return 0;
+        }
+      }
+      if (a.login) {
+        if (currentDomain) {
+          if (a.login[ItemKeys.URI].some((v) => v.includes(currentDomain))) {
+            return -1;
+          }
+        }
+      }
+      if (b.login) {
+        if (currentDomain) {
+          if (b.login[ItemKeys.URI].some((v) => v.includes(currentDomain))) {
+            return 1;
+          }
         }
       }
     }

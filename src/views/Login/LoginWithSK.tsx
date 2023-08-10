@@ -49,10 +49,10 @@ export default function LoginWithSK({
           src={chrome.runtime.getURL("/images/rounded-512.png")}
         />
         <h2 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          NOSTR Password Manager
+          Vault
         </h2>
         <p className="mt-2 text-lg leading-8 text-gray-600">
-          Secure your passwords and notes, encrypted by your key and a passcode.
+          Secure your passwords and notes, encrypted by your key and passcode.
         </p>
       </div>
       <div className="mx-auto mt-16 max-w-xl sm:mt-20">
@@ -86,7 +86,7 @@ export default function LoginWithSK({
           </Button>
           <p className="mt-4 text-sm leading-6 text-brand-2">
             <a onClick={() => createAccount()} className="cursor-pointer">
-              Create account<span> &rarr;</span>
+              Create your key<span> &rarr;</span>
             </a>
           </p>
         </div>

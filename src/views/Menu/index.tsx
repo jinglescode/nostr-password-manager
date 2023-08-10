@@ -65,10 +65,7 @@ export default function MenuView() {
         <MenuItem
           icon={<GiftIcon className="h-6 w-6" />}
           text="Donate"
-          onClick={() => {
-            toggleShowMenu();
-            window.open(`https://getalby.com/p/vault`);
-          }}
+          onClick={() => goToView(Views.DONATE)}
         />
       </div>
     </div>
