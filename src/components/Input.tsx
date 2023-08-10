@@ -45,14 +45,14 @@ export default function Input({
               isError
                 ? "ring-red-300 focus:ring-red-500"
                 : "ring-brand-2 focus:ring-primary"
-            }`}
+            } ${(after || isError) && "pr-10"}`}
             placeholder={placeholder}
             value={value}
             onChange={onChange}
             onKeyUp={onKeyUp}
             disabled={disabled}
           />
-          {after && after}
+          {after && !isError && after}
           {isError && (
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
               <ExclamationCircleIcon
@@ -63,9 +63,7 @@ export default function Input({
           )}
         </div>
         {isError && (
-          <p className="mt-2 text-sm text-red-600">
-            {isErrorMessage}
-          </p>
+          <p className="mt-2 text-sm text-red-600">{isErrorMessage}</p>
         )}
       </div>
     </div>

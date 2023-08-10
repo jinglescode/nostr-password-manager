@@ -3,10 +3,17 @@ export const ROADMAP = [
     desc: "Internationalization",
   },
   {
-    desc: "Store all kinds of items",
+    desc: "NIP07 login",
   },
   {
-    desc: "NIP07 login",
+    desc: "Version 1.0 approved on Google Web Store!",
+    datetime: "2023-08-10",
+    state: 2,
+  },
+  {
+    desc: "Settings, passcode and data management",
+    datetime: "2023-08-10",
+    state: 2,
   },
   {
     desc: "NOSTR and encryption",

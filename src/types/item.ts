@@ -9,5 +9,8 @@ export type Item = {
     [ItemKeys.PASSWORD]: string;
     [ItemKeys.URI]: string[];
   };
+  note?: {
+    [ItemKeys.TEXT]: string;
+  };
   vaultId?: string;
 };

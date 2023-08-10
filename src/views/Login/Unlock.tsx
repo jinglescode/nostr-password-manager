@@ -89,6 +89,9 @@ export default function Unlock({ setStep }: { setStep: Function }) {
   }
 
   function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (passcodeIsError) {
+      setPasscodeIsError(false);
+    }
     if (e.key === "Enter" || e.keyCode === 13) {
       decrypt();
     }
@@ -130,6 +133,16 @@ export default function Unlock({ setStep }: { setStep: Function }) {
           isError={passcodeIsError}
           isErrorMessage="Passcode incorrect."
           onKeyUp={(e) => handleKeyUp(e)}
+          after={
+            <div
+              className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5 cursor-pointer"
+              onClick={() => decrypt()}
+            >
+              <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">
+                enter
+              </kbd>
+            </div>
+          }
         />
         <div className="mt-10">
           <Button disabled={inputPasscode.length < 6} onClick={() => decrypt()}>

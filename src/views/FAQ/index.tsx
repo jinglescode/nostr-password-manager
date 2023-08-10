@@ -28,7 +28,7 @@ export default function FAQView() {
                   </Disclosure.Button>
                 </dt>
                 <Disclosure.Panel as="dd" className="mt-2 pr-12">
-                  <p className="text-base leading-7 text-gray-600">
+                  <p className="text-gray-600 text-sm">
                     {faq.answer}
                   </p>
                 </Disclosure.Panel>

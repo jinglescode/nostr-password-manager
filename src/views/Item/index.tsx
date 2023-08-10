@@ -14,7 +14,6 @@ import { useUserVaults } from "../../hooks/useUserVaults";
 import { Item } from "../../types/item";
 import { makeId } from "../../utils/strings/makeId";
 import LoginItem from "./LoginItem";
-// import { getTabs } from "../../utils/chrome/getTabs";
 import { Vault } from "../../types/vault";
 import { useUserVaultsPost } from "../../hooks/useUserVaultsPost";
 import { decryptVaults } from "../../utils/encryption/decryptVaults";
@@ -25,6 +24,8 @@ import { encryptVault } from "../../utils/encryption/encryptVault";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { getSessionStorage } from "../../utils/chrome/storage";
 import { StorageKeys } from "../../enums/storage";
+import SelectItemType from "./SelectItemType";
+import NoteItem from "./NoteItem";
 
 export default function ItemView() {
   const { ndk, signer } = useNDK();
@@ -58,7 +59,7 @@ export default function ItemView() {
 
         const password = await generatePassword();
 
-        const newItem = {
+        const newItem: Item = {
           id: makeId(),
           [ItemKeys.TYPE]: ItemType.LOGIN,
           [ItemKeys.NAME]: name,
@@ -66,6 +67,9 @@ export default function ItemView() {
             [ItemKeys.USERNAME]: "",
             [ItemKeys.PASSWORD]: password,
             [ItemKeys.URI]: [url],
+          },
+          note: {
+            [ItemKeys.TEXT]: "",
           },
         };
         setIsNew(true);
@@ -96,11 +100,25 @@ export default function ItemView() {
 
   function validate() {
     if (editableItem === undefined) return false;
+
+    if (editableItem[ItemKeys.TYPE] === undefined) return false;
+
     if (editableItem[ItemKeys.NAME] === "") return false;
-    //@ts-ignore
-    if (editableItem.login[ItemKeys.USERNAME] === "") return false;
-    //@ts-ignore
-    if (editableItem.login[ItemKeys.PASSWORD] === "") return false;
+
+    if (editableItem[ItemKeys.TYPE] == ItemType.LOGIN) {
+      if (editableItem.login === undefined) return false;
+
+      if (editableItem[ItemKeys.NAME] === "") return false;
+      if (editableItem.login[ItemKeys.USERNAME] === "") return false;
+      if (editableItem.login[ItemKeys.PASSWORD] === "") return false;
+    }
+
+    if (editableItem[ItemKeys.TYPE] == ItemType.NOTE) {
+      if (editableItem.note === undefined) return false;
+
+      if (editableItem.note[ItemKeys.TEXT] === "") return false;
+    }
+
     return true;
   }
 
@@ -139,6 +157,28 @@ export default function ItemView() {
     if (isDelete) {
       delete vault.items[editableItem.id];
     } else {
+      // // basic clean up on the item
+      // if its login type
+      if (
+        editableItem[ItemKeys.TYPE] === ItemType.LOGIN &&
+        editableItem.login
+      ) {
+        delete editableItem.note;
+        editableItem.login[ItemKeys.USERNAME] =
+          editableItem.login[ItemKeys.USERNAME].trim();
+        editableItem.login[ItemKeys.PASSWORD] =
+          editableItem.login[ItemKeys.PASSWORD].trim();
+      }
+      // if is note type
+      else if (
+        editableItem[ItemKeys.TYPE] === ItemType.NOTE &&
+        editableItem.note
+      ) {
+        delete editableItem.login;
+        editableItem.note[ItemKeys.TEXT] =
+          editableItem.note[ItemKeys.TEXT].trim();
+      }
+
       vault.items[editableItem.id] = editableItem;
     }
 
@@ -173,11 +213,13 @@ export default function ItemView() {
     key,
     value,
     isLogin,
+    isNote,
     uriIndex,
   }: {
     key: string;
     value: string;
     isLogin?: boolean;
+    isNote?: boolean;
     uriIndex?: number;
   }) {
     if (editableItem === undefined) return;
@@ -189,6 +231,9 @@ export default function ItemView() {
     } else if (isLogin) {
       //@ts-ignore
       _updatedItem.login[key] = value;
+    } else if (isNote) {
+      //@ts-ignore
+      _updatedItem.note[key] = value;
     } else {
       //@ts-ignore
       _updatedItem[key] = value;
@@ -198,6 +243,12 @@ export default function ItemView() {
 
   return (
     <div className="w-full p-2 space-y-2">
+      {isNew && mode === EditItemViews.EDIT && editableItem && (
+        <SelectItemType
+          itemType={editableItem[ItemKeys.TYPE]}
+          setEditableItem={setEditableItem}
+        />
+      )}
       <Input
         label="Name"
         name="name"
@@ -216,6 +267,14 @@ export default function ItemView() {
           mode={mode}
           isNew={isNew}
           setEditableItem={setEditableItem}
+        />
+      )}
+
+      {editableItem?.[ItemKeys.TYPE] == "no" && (
+        <NoteItem
+          editableItem={editableItem}
+          onChangeFormInput={onChangeFormInput}
+          mode={mode}
         />
       )}
 

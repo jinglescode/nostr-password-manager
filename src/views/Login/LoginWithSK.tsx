@@ -34,8 +34,6 @@ export default function LoginWithSK({
   function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter" || e.keyCode === 13) {
       login();
-      //@ts-ignore
-      e.target.blur();
     }
   }
 
@@ -68,6 +66,16 @@ export default function LoginWithSK({
           isError={isError}
           isErrorMessage="Invalid secret key"
           onKeyUp={(e) => handleKeyUp(e)}
+          after={
+            <div
+              className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5 cursor-pointer"
+              onClick={() => login()}
+            >
+              <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">
+                enter
+              </kbd>
+            </div>
+          }
         />
         <div className="mt-10">
           <Button

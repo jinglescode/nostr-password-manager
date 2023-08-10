@@ -1,110 +1,136 @@
-window.nostr = {
-  _requests: {},
-  _pubkey: null,
+/**
+ * window.nostr NIP07 login
+ * inspiration: https://github.com/fiatjaf/nos2x/blob/master/extension/content-script.js
+ */
 
-  async getPublicKey() {
-    if (this._pubkey) return this._pubkey
-    this._pubkey = await this._call('getPublicKey', {})
-    return this._pubkey
-  },
+// window.nostr = {
+//   _requests: {},
+//   _pubkey: null,
 
-  async signEvent(event) {
-    return this._call('signEvent', {event})
-  },
+//   async getPublicKey() {
+//     if (this._pubkey) return this._pubkey
+//     this._pubkey = await this._call('getPublicKey', {})
+//     return this._pubkey
+//   },
 
-  async getRelays() {
-    return this._call('getRelays', {})
-  },
+//   async signEvent(event) {
+//     return this._call('signEvent', {event})
+//   },
 
-  nip04: {
-    async encrypt(peer, plaintext) {
-      return window.nostr._call('nip04.encrypt', {peer, plaintext})
-    },
+//   async getRelays() {
+//     return this._call('getRelays', {})
+//   },
 
-    async decrypt(peer, ciphertext) {
-      return window.nostr._call('nip04.decrypt', {peer, ciphertext})
-    }
-  },
+//   nip04: {
+//     async encrypt(peer, plaintext) {
+//       return window.nostr._call('nip04.encrypt', {peer, plaintext})
+//     },
 
-  _call(type, params) {
-    let id = Math.random().toString().slice(-4)
-    console.log(
-      '%c[vault:%c' +
-        id +
-        '%c]%c calling %c' +
-        type +
-        '%c with %c' +
-        JSON.stringify(params || {}),
-      'background-color:#f1b912;font-weight:bold;color:white',
-      'background-color:#f1b912;font-weight:bold;color:#a92727',
-      'background-color:#f1b912;color:white;font-weight:bold',
-      'color:auto',
-      'font-weight:bold;color:#08589d;font-family:monospace',
-      'color:auto',
-      'font-weight:bold;color:#90b12d;font-family:monospace'
-    )
-    return new Promise((resolve, reject) => {
-      this._requests[id] = {resolve, reject}
-      window.postMessage(
-        {
-          id,
-          ext: 'vault',
-          type,
-          params
-        },
-        '*'
-      )
-    })
-  }
-}
+//     async decrypt(peer, ciphertext) {
+//       return window.nostr._call('nip04.decrypt', {peer, ciphertext})
+//     }
+//   },
 
-window.addEventListener('message', message => {
-  if (
-    !message.data ||
-    message.data.response === null ||
-    message.data.response === undefined ||
-    message.data.ext !== 'vault' ||
-    !window.nostr._requests[message.data.id]
-  )
-    return
+//   _call(type, params) {
+//     let id = Math.random().toString().slice(-4)
+//     console.log(
+//       '%c[vault:%c' +
+//         id +
+//         '%c]%c calling %c' +
+//         type +
+//         '%c with %c' +
+//         JSON.stringify(params || {}),
+//       'background-color:#f1b912;font-weight:bold;color:white',
+//       'background-color:#f1b912;font-weight:bold;color:#a92727',
+//       'background-color:#f1b912;color:white;font-weight:bold',
+//       'color:auto',
+//       'font-weight:bold;color:#08589d;font-family:monospace',
+//       'color:auto',
+//       'font-weight:bold;color:#90b12d;font-family:monospace'
+//     )
+//     return new Promise((resolve, reject) => {
+//       this._requests[id] = {resolve, reject}
+//       window.postMessage(
+//         {
+//           id,
+//           ext: 'vault',
+//           type,
+//           params
+//         },
+//         '*'
+//       )
+//     })
+//   }
+// }
 
-  if (message.data.response.error) {
-    let error = new Error('vault: ' + message.data.response.error.message)
-    error.stack = message.data.response.error.stack
-    window.nostr._requests[message.data.id].reject(error)
-  } else {
-    window.nostr._requests[message.data.id].resolve(message.data.response)
-  }
+// window.addEventListener('message', message => {
+//   if (
+//     !message.data ||
+//     message.data.response === null ||
+//     message.data.response === undefined ||
+//     message.data.ext !== 'vault' ||
+//     !window.nostr._requests[message.data.id]
+//   )
+//     return
 
-  console.log(
-    '%c[vault:%c' +
-      message.data.id +
-      '%c]%c result: %c' +
-      JSON.stringify(
-        message?.data?.response || message?.data?.response?.error?.message || {}
-      ),
-    'background-color:#f1b912;font-weight:bold;color:white',
-    'background-color:#f1b912;font-weight:bold;color:#a92727',
-    'background-color:#f1b912;color:white;font-weight:bold',
-    'color:auto',
-    'font-weight:bold;color:#08589d'
-  )
+//   if (message.data.response.error) {
+//     let error = new Error('vault: ' + message.data.response.error.message)
+//     error.stack = message.data.response.error.stack
+//     window.nostr._requests[message.data.id].reject(error)
+//   } else {
+//     window.nostr._requests[message.data.id].resolve(message.data.response)
+//   }
 
-  delete window.nostr._requests[message.data.id]
-})
+//   console.log(
+//     '%c[vault:%c' +
+//       message.data.id +
+//       '%c]%c result: %c' +
+//       JSON.stringify(
+//         message?.data?.response || message?.data?.response?.error?.message || {}
+//       ),
+//     'background-color:#f1b912;font-weight:bold;color:white',
+//     'background-color:#f1b912;font-weight:bold;color:#a92727',
+//     'background-color:#f1b912;color:white;font-weight:bold',
+//     'color:auto',
+//     'font-weight:bold;color:#08589d'
+//   )
 
-// hack to replace nostr:nprofile.../etc links with something else
-let replacing = null
-document.addEventListener('mousedown', replaceNostrSchemeLink)
-async function replaceNostrSchemeLink(e) {
-  if (e.target.tagName !== 'A' || !e.target.href.startsWith('nostr:')) return
-  if (replacing === false) return
+//   delete window.nostr._requests[message.data.id]
+// })
 
-  let response = await window.nostr._call('replaceURL', {url: e.target.href})
-  if (response === false) {
-    replacing = false
-    return
-  }
+// // hack to replace nostr:nprofile.../etc links with something else
+// let replacing = null
+// document.addEventListener('mousedown', replaceNostrSchemeLink)
+// async function replaceNostrSchemeLink(e) {
+//   if (e.target.tagName !== 'A' || !e.target.href.startsWith('nostr:')) return
+//   if (replacing === false) return
 
-  e.target.href = response
-}
+//   let response = await window.nostr._call('replaceURL', {url: e.target.href})
+//   if (response === false) {
+//     replacing = false
+//     return
+//   }
+
+//   e.target.href = response
+// }
+
+// to be on manifest:
+
+// ,
+//   "background": {
+//     "service_worker": "scripts/background.js"
+//   },
+//   "content_scripts": [
+//     {
+//       "matches": ["<all_urls>"],
+//       "js": ["scripts/contentScript.js"],
+//       "all_frames": true,
+//       "run_at": "document_idle"
+//     }
+//   ],
+//   "web_accessible_resources": [
+//     {
+//       "resources": ["scripts/nostr-provider.js"],
+//       "matches": ["https://*/*", "http://*/*", "http://localhost:*/*"]
+//     }
+//   ]

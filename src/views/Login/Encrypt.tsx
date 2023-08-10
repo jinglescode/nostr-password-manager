@@ -56,30 +56,34 @@ export default function Encrypt({
     }, 1000);
   }
 
+  function processInput() {
+    if (inputPasscode.length < 6) {
+      setAppNotification({
+        title: "Passcode too short",
+        message: "Passcode must be at least 6 characters.",
+        type: "error",
+      });
+      return;
+    }
+
+    if (firstNewPassInput == undefined) {
+      setFirstNewPassInput(inputPasscode);
+    } else if (firstNewPassInput == inputPasscode) {
+      encrypt();
+    } else if (firstNewPassInput != inputPasscode) {
+      setAppNotification({
+        title: "Passcode not match",
+        message: "Please try again.",
+        type: "error",
+      });
+    }
+
+    setInputPasscode("");
+  }
+
   function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter" || e.keyCode === 13) {
-      if (inputPasscode.length < 6) {
-        setAppNotification({
-          title: "Passcode too short",
-          message: "Passcode must be at least 6 characters.",
-          type: "error",
-        });
-        return;
-      }
-
-      if (firstNewPassInput == undefined) {
-        setFirstNewPassInput(inputPasscode);
-      } else if (firstNewPassInput == inputPasscode) {
-        encrypt();
-      } else if (firstNewPassInput != inputPasscode) {
-        setAppNotification({
-          title: "Passcode not match",
-          message: "Please try again.",
-          type: "error",
-        });
-      }
-
-      setInputPasscode("");
+      processInput();
     }
   }
 
@@ -121,6 +125,16 @@ export default function Encrypt({
           value={inputPasscode}
           onChange={(e) => setInputPasscode(e.target.value)}
           onKeyUp={(e) => handleKeyUp(e)}
+          after={
+            <div
+              className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5 cursor-pointer"
+              onClick={() => processInput()}
+            >
+              <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">
+                enter
+              </kbd>
+            </div>
+          }
         />
         {firstNewPassInput !== undefined && (
           <p className="mt-4 text-sm leading-6 text-brand-2">

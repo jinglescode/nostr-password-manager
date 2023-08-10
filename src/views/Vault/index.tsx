@@ -14,6 +14,7 @@ import { Views, viewStore } from "../../stores/view";
 import { getSessionStorage } from "../../utils/chrome/storage";
 import { StorageKeys } from "../../enums/storage";
 import { ArrowPathIcon, ArrowRightIcon } from "@heroicons/react/20/solid";
+import NoteItem from "./Item/note";
 
 export default function VaultView() {
   const { data: vaults, refetch, isFetching } = useUserVaults();
@@ -105,33 +106,43 @@ export default function VaultView() {
   }
 
   function filterItem(item: Item) {
+    if (!searchInput) {
+      return true;
+    }
+
+    const _searchInput = searchInput.trim().toLowerCase();
+
+    // check name
+    if (item[ItemKeys.NAME].toLowerCase().includes(_searchInput)) return true;
+
+    // check login
     if (item[ItemKeys.TYPE] === ItemType.LOGIN && item.login) {
-      if (!searchInput) {
+      if (item.login[ItemKeys.USERNAME].toLowerCase().includes(_searchInput))
         return true;
-      } else {
-        const _searchInput = searchInput.trim().toLowerCase();
+      if (item.login[ItemKeys.URI].some((v) => v.includes(_searchInput)))
+        return true;
+    }
 
-        if (item[ItemKeys.NAME].toLowerCase().includes(_searchInput)) {
-          return true;
-        }
-
-        if (
-          item.login[ItemKeys.USERNAME].toLowerCase().includes(_searchInput)
-        ) {
-          return true;
-        }
-
-        if (item.login[ItemKeys.URI].some((v) => v.includes(_searchInput))) {
-          return true;
-        }
-      }
+    // check note
+    if (item[ItemKeys.TYPE] === ItemType.NOTE && item.note) {
+      if (item.note[ItemKeys.TEXT].toLowerCase().includes(_searchInput))
+        return true;
     }
 
     return false;
   }
 
   function rowRenderer({ index, item }: { index: number; item: Item }) {
-    return <LoginItem key={index} item={item} />;
+    return (
+      <>
+        {item[ItemKeys.TYPE] === ItemType.LOGIN && item.login && (
+          <LoginItem key={index} item={item} />
+        )}
+        {item[ItemKeys.TYPE] === ItemType.NOTE && item.note && (
+          <NoteItem key={index} item={item} />
+        )}
+      </>
+    );
   }
 
   if (items.length === 0)

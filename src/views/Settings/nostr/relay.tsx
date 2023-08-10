@@ -14,18 +14,22 @@ export default function SettingsNostrRelay() {
 
   const [editRelay, setEditRelay] = useState<boolean>(false);
   const [inputRelay, setInputRelay] = useState<string>("");
-  
+
+  function processInput() {
+    let updatedRelaySet = [...relays];
+    updatedRelaySet.push(inputRelay);
+    setRelays(updatedRelaySet);
+    setAppNotification({
+      title: "Relay added",
+      message: "Will only take effect after reopen.",
+      type: "success",
+    });
+    setInputRelay("");
+  }
+
   function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter" || e.keyCode === 13) {
-      let updatedRelaySet = [...relays];
-      updatedRelaySet.push(inputRelay);
-      setRelays(updatedRelaySet);
-      setAppNotification({
-        title: "Relay added",
-        message: "Will only take effect after reopen.",
-        type: "success",
-      });
-      setInputRelay("");
+      processInput();
     }
   }
 
@@ -75,6 +79,16 @@ export default function SettingsNostrRelay() {
               placeholder={`wss://relay.example.com`}
               disabled={!ndk}
               onKeyUp={handleKeyUp}
+              after={
+                <div
+                  className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5 cursor-pointer"
+                  onClick={() => processInput()}
+                >
+                  <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">
+                    enter
+                  </kbd>
+                </div>
+              }
             />
           )}
         </>

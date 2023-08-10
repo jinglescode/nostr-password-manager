@@ -122,43 +122,47 @@ export default function SettingsAccountPasscode() {
     }
   }
 
-  async function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") {
-      if (input.length < 6) {
-        setAppNotification({
-          title: "Passcode too short",
-          message: "Passcode must be at least 6 characters.",
-          type: "error",
-        });
-        return;
-      }
+  async function processInput() {
+    if (input.length < 6) {
+      setAppNotification({
+        title: "Passcode too short",
+        message: "Passcode must be at least 6 characters.",
+        type: "error",
+      });
+      return;
+    }
 
-      if (existingPassInput === undefined) {
-        const passcode = await getSessionStorage(
-          StorageKeys.SESSION_USER_PASSCODE
-        );
+    if (existingPassInput === undefined) {
+      const passcode = await getSessionStorage(
+        StorageKeys.SESSION_USER_PASSCODE
+      );
 
-        if (input === passcode) {
-          setExistingPassInput(input);
-        } else {
-          setAppNotification({
-            title: "Wrong passcode",
-            message: "Please try again.",
-            type: "error",
-          });
-        }
-      } else if (firstNewPassInput == undefined) {
-        setFirstNewPassInput(input);
-      } else if (firstNewPassInput == input) {
-        processUpdate();
-      } else if (firstNewPassInput != input) {
+      if (input === passcode) {
+        setExistingPassInput(input);
+      } else {
         setAppNotification({
-          title: "Passcode not match",
+          title: "Wrong passcode",
           message: "Please try again.",
           type: "error",
         });
       }
-      setInput("");
+    } else if (firstNewPassInput == undefined) {
+      setFirstNewPassInput(input);
+    } else if (firstNewPassInput == input) {
+      processUpdate();
+    } else if (firstNewPassInput != input) {
+      setAppNotification({
+        title: "Passcode not match",
+        message: "Please try again.",
+        type: "error",
+      });
+    }
+    setInput("");
+  }
+
+  function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      processInput();
     }
   }
 
@@ -183,6 +187,16 @@ export default function SettingsAccountPasscode() {
                 disabled={!ndk || !signer || !data || !user}
                 onKeyUp={handleKeyUp}
                 type="password"
+                after={
+                  <div
+                    className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5 cursor-pointer"
+                    onClick={() => processInput()}
+                  >
+                    <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">
+                      enter
+                    </kbd>
+                  </div>
+                }
               />
               {firstNewPassInput !== undefined && (
                 <p className="mt-4 text-sm leading-6 text-brand-2">

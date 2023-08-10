@@ -74,13 +74,6 @@ export default function LoginItem({ item }: { item: Item }) {
         </div>
         <div className="flex-none text-gray-500 flex items-center">
           <button
-            onClick={() => viewItem()}
-            className="text-gray-400 hover:text-brand-3 active:text-primary"
-            title="View item"
-          >
-            <InformationCircleIcon className="h-6 w-6" />
-          </button>
-          <button
             onClick={() => fillForms()}
             className="text-gray-400 hover:text-brand-3 active:text-primary"
             title="Try to fill forms"
@@ -122,6 +115,13 @@ export default function LoginItem({ item }: { item: Item }) {
               <ArrowTopRightOnSquareIcon className="h-6 w-6" />
             </button>
           )}
+          <button
+            onClick={() => viewItem()}
+            className="text-gray-400 hover:text-brand-3 active:text-primary"
+            title="View item"
+          >
+            <InformationCircleIcon className="h-6 w-6" />
+          </button>
         </div>
       </div>
     </div>

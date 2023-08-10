@@ -6,18 +6,16 @@ export default function SettingItem({
 }: {
   label: string;
   value: React.ReactNode;
-  buttonLabel?: string | undefined;
+  buttonLabel?: React.ReactNode | string | undefined;
   buttonOnClick: Function;
 }) {
   return (
     <div className="pt-6 sm:flex">
-      <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+      <dt className="text-base font-semibold leading-7 text-gray-900">
         {label}
       </dt>
       <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-        <div className="text-gray-900 text-ellipsis overflow-x-hidden w-full">
-          {value}
-        </div>
+        <div className="text-gray-900 w-full overflow-x-hidden p-1">{value}</div>
         {buttonLabel && (
           <button
             type="button"

@@ -8,6 +8,7 @@ import {
 } from "../../../utils/chrome/storage";
 import SettingItem from "../SettingItem";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 
 export default function SettingsNostrAccount() {
   const { getProfile } = useNDK();
@@ -15,30 +16,38 @@ export default function SettingsNostrAccount() {
   const user = accountStore((state) => state.user);
   const setAppNotification = viewStore((state) => state.setAppNotification);
   const queryClient = useQueryClient();
+  const [fullProfileInfo, setFullProfileInfo] = useState<boolean>(false);
 
   return (
     <SettingItem
       label="Connected account"
       value={
         <>
-          {user?.npub && (
-            <>
-              {getProfile(user.npub).displayName ? (
-                <>
-                  {getProfile(user.npub).displayName}
-                  <br />
-                </>
-              ) : getProfile(user.npub).name ? (
-                <>
-                  {getProfile(user.npub).name}
-                  <br />
-                </>
-              ) : (
-                <></>
-              )}
-            </>
-          )}
-          {user?.npub}
+          <div
+            className={`overflow-x-hidden  ${
+              fullProfileInfo ? "break-all" : "text-ellipsis"
+            }`}
+            onClick={() => setFullProfileInfo(!fullProfileInfo)}
+          >
+            {user?.npub && (
+              <>
+                {getProfile(user.npub).displayName ? (
+                  <>
+                    {getProfile(user.npub).displayName}
+                    <br />
+                  </>
+                ) : getProfile(user.npub).name ? (
+                  <>
+                    {getProfile(user.npub).name}
+                    <br />
+                  </>
+                ) : (
+                  <></>
+                )}
+              </>
+            )}
+            {user?.npub}
+          </div>
         </>
       }
       buttonLabel="Disconnect"

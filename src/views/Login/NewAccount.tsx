@@ -79,7 +79,7 @@ export default function NewAccount({
           }
         />
         <div className="mt-10">
-          <Button onClick={() => handleNext()}>Continue</Button>
+          <Button onClick={() => handleNext()}>I've copied this key</Button>
         </div>
       </div>
     </>

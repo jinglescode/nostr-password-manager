@@ -23,7 +23,7 @@ export function useUserVaults() {
       };
 
       const events = await fetchEvents(filter);
-      console.log(9999, "useUserVaults", events.length, events);
+      // console.log(9999, "useUserVaults", events.length, events);
 
       let vaults: Vault[] = [];
 
@@ -57,6 +57,7 @@ export function useUserVaults() {
     },
     {
       enabled: !!ndk && !!user,
+      staleTime: 1000 * 60 * 5,
     }
   );
 

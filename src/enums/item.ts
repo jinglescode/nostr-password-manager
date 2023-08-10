@@ -11,6 +11,7 @@ export enum ItemKeys {
   USERNAME = "un",
   PASSWORD = "pw",
   URI = "ur",
+  TEXT = "tx",
 }
 
 export enum EditItemViews {

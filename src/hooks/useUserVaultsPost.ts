@@ -9,7 +9,7 @@ export function useUserVaultsPost() {
   return useMutation(
     async (event: NDKEvent) => {
       const success = await signPublishEvent(event);
-      console.log(9999, "useUserVaultsPost", event);
+      // console.log(9999, "useUserVaultsPost", event);
       if (success) return event;
       return undefined;
     },
