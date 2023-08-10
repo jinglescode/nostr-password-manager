@@ -1,6 +1,6 @@
 import { useNDK } from "@nostr-dev-kit/ndk-react";
 import { useState } from "react";
-import { setLocalStorage, setSessionStorage } from "../../utils/chrome/storage";
+import { setSessionStorage, setSyncStorage } from "../../utils/chrome/storage";
 import StringCrypto from "string-crypto";
 import { LoginViews } from "../../enums/views";
 import { StorageKeys } from "../../enums/storage";
@@ -20,10 +20,14 @@ export default function Encrypt({
   setStep: Function;
 }) {
   const { getProfile } = useNDK();
+  const [firstNewPassInput, setFirstNewPassInput] = useState<
+    string | undefined
+  >(undefined);
   const [inputPasscode, setInputPasscode] = useState("");
   const setState = accountStore((state) => state.setState);
   const setView = viewStore((state) => state.setView);
   const setUser = accountStore((state) => state.setUser);
+  const setAppNotification = viewStore((state) => state.setAppNotification);
 
   async function encrypt() {
     if (session === undefined) return;
@@ -32,9 +36,9 @@ export default function Encrypt({
 
     let encryptedString = encryptString(session?.sk, inputPasscode);
 
-    setLocalStorage(StorageKeys.LOCAL_USER_ENCRYPTED_SK, encryptedString);
+    setSyncStorage(StorageKeys.LOCAL_USER_ENCRYPTED_SK, encryptedString);
     const pk = getPublicKeys(session.npub).pk;
-    setLocalStorage(StorageKeys.LOCAL_USER_PK, getPublicKeys(session.npub).pk);
+    setSyncStorage(StorageKeys.LOCAL_USER_PK, getPublicKeys(session.npub).pk);
 
     let user: User = {
       pk: pk,
@@ -44,7 +48,7 @@ export default function Encrypt({
 
     setSessionStorage(StorageKeys.SESSION_USER_SK, session?.sk);
     setSessionStorage(StorageKeys.SESSION_USER_PASSCODE, inputPasscode);
-    
+
     setStep(LoginViews.CONNECTED);
     setTimeout(() => {
       setState(AccountStates.LOGGED_IN);
@@ -54,9 +58,28 @@ export default function Encrypt({
 
   function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter" || e.keyCode === 13) {
-      encrypt();
-      //@ts-ignore
-      e.target.blur();
+      if (inputPasscode.length < 6) {
+        setAppNotification({
+          title: "Passcode too short",
+          message: "Passcode must be at least 6 characters.",
+          type: "error",
+        });
+        return;
+      }
+
+      if (firstNewPassInput == undefined) {
+        setFirstNewPassInput(inputPasscode);
+      } else if (firstNewPassInput == inputPasscode) {
+        encrypt();
+      } else if (firstNewPassInput != inputPasscode) {
+        setAppNotification({
+          title: "Passcode not match",
+          message: "Please try again.",
+          type: "error",
+        });
+      }
+
+      setInputPasscode("");
     }
   }
 
@@ -87,7 +110,11 @@ export default function Encrypt({
       </div>
       <div className="mx-auto mt-16 max-w-xl sm:mt-20">
         <Input
-          label="Passcode to encrypt your key"
+          label={
+            firstNewPassInput === undefined
+              ? "Passcode to encrypt your key"
+              : "Repeat your passcode"
+          }
           type="password"
           name="passcode"
           placeholder="at least 6 characters"
@@ -95,6 +122,19 @@ export default function Encrypt({
           onChange={(e) => setInputPasscode(e.target.value)}
           onKeyUp={(e) => handleKeyUp(e)}
         />
+        {firstNewPassInput !== undefined && (
+          <p className="mt-4 text-sm leading-6 text-brand-2">
+            <a
+              onClick={() => {
+                setFirstNewPassInput(undefined);
+                setInputPasscode("");
+              }}
+              className="cursor-pointer"
+            >
+              Re-enter passcode
+            </a>
+          </p>
+        )}
         <div className="mt-10">
           <Button disabled={inputPasscode.length < 6} onClick={() => encrypt()}>
             Access

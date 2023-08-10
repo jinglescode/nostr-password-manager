@@ -11,10 +11,10 @@ import { encryptVault } from "../../../utils/encryption/encryptVault";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { useUserVaultsPost } from "../../../hooks/useUserVaultsPost";
 import {
-  getLocalStorage,
   getSessionStorage,
-  setLocalStorage,
+  getSyncStorage,
   setSessionStorage,
+  setSyncStorage,
 } from "../../../utils/chrome/storage";
 import { StorageKeys } from "../../../enums/storage";
 import StringCrypto from "string-crypto";
@@ -48,6 +48,7 @@ export default function SettingsAccountPasscode() {
     }
   }, [isSuccess, isError]);
 
+  // update existing passcode and sk
   async function processUpdatePart2() {
     if (!firstNewPassInput) return;
 
@@ -55,7 +56,7 @@ export default function SettingsAccountPasscode() {
 
     const passcode = await getSessionStorage(StorageKeys.SESSION_USER_PASSCODE);
 
-    const oldEncryptedSK = await getLocalStorage(
+    const oldEncryptedSK = await getSyncStorage(
       StorageKeys.LOCAL_USER_ENCRYPTED_SK
     );
 
@@ -65,7 +66,7 @@ export default function SettingsAccountPasscode() {
 
     let newEncryptedSK = encryptString(sk, firstNewPassInput);
 
-    setLocalStorage(StorageKeys.LOCAL_USER_ENCRYPTED_SK, newEncryptedSK);
+    setSyncStorage(StorageKeys.LOCAL_USER_ENCRYPTED_SK, newEncryptedSK);
     setSessionStorage(StorageKeys.SESSION_USER_PASSCODE, firstNewPassInput);
 
     // close
@@ -88,30 +89,37 @@ export default function SettingsAccountPasscode() {
 
     const passcode = await getSessionStorage(StorageKeys.SESSION_USER_PASSCODE);
 
-    const decryptedVaults = await decryptVaults({
-      signer,
-      vaults: data,
-      passcode: passcode,
-    });
+    // if have data to decrypt
+    if (data.length > 0) {
+      const decryptedVaults = await decryptVaults({
+        signer,
+        vaults: data,
+        passcode: passcode,
+      });
 
-    // future: handle multiple vaults
-    let vault: Vault = decryptedVaults[Object.keys(decryptedVaults)[0]];
+      // future: handle multiple vaults
+      let vault: Vault = decryptedVaults[Object.keys(decryptedVaults)[0]];
 
-    // encrypt with new passcode
-    const encryptedItems = await encryptVault({
-      vault,
-      signer,
-      passcode: firstNewPassInput,
-    });
+      // encrypt with new passcode
+      const encryptedItems = await encryptVault({
+        vault,
+        signer,
+        passcode: firstNewPassInput,
+      });
 
-    // sync nostr data
+      // sync nostr data
 
-    const event = new NDKEvent();
-    event.kind = 34567;
-    event.content = encryptedItems;
-    event.tags = [["d", vault.id]];
+      const event = new NDKEvent();
+      event.kind = 34567;
+      event.content = encryptedItems;
+      event.tags = [["d", vault.id]];
 
-    mutate(event);
+      mutate(event);
+    }
+    // if no data to decrypt, just update passcode
+    else {
+      processUpdatePart2();
+    }
   }
 
   async function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -139,7 +147,7 @@ export default function SettingsAccountPasscode() {
             type: "error",
           });
         }
-      } else if (firstNewPassInput === undefined) {
+      } else if (firstNewPassInput == undefined) {
         setFirstNewPassInput(input);
       } else if (firstNewPassInput == input) {
         processUpdate();
@@ -160,21 +168,36 @@ export default function SettingsAccountPasscode() {
       value={
         <>
           {isEdit ? (
-            <Input
-              label={
-                existingPassInput === undefined
-                  ? "Existing passcode"
-                  : firstNewPassInput === undefined
-                  ? "New passcode"
-                  : "Repeat your new passcode"
-              }
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder={`At least 6 characters`}
-              disabled={!ndk || !signer || !data || !user}
-              onKeyUp={handleKeyUp}
-              type="password"
-            />
+            <>
+              <Input
+                label={
+                  existingPassInput === undefined
+                    ? "Existing passcode"
+                    : firstNewPassInput === undefined
+                    ? "New passcode"
+                    : "Repeat your new passcode"
+                }
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder={`At least 6 characters`}
+                disabled={!ndk || !signer || !data || !user}
+                onKeyUp={handleKeyUp}
+                type="password"
+              />
+              {firstNewPassInput !== undefined && (
+                <p className="mt-4 text-sm leading-6 text-brand-2">
+                  <a
+                    onClick={() => {
+                      setFirstNewPassInput(undefined);
+                      setInput("");
+                    }}
+                    className="cursor-pointer"
+                  >
+                    Re-enter passcode
+                  </a>
+                </p>
+              )}
+            </>
           ) : (
             <p>Passcode is needed to decrypt your data.</p>
           )}

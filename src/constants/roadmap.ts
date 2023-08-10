@@ -1,5 +1,8 @@
 export const ROADMAP = [
   {
+    desc: "Internationalization",
+  },
+  {
     desc: "Store all kinds of items",
   },
   {

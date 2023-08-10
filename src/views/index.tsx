@@ -3,7 +3,10 @@ import Navbar from "../components/Navbar";
 import { Views, viewStore } from "../stores/view";
 import LoginView from "./Login";
 import MenuView from "./Menu";
-import { getLocalStorage, getSessionStorage } from "../utils/chrome/storage";
+import {
+  getSessionStorage,
+  getSyncStorage,
+} from "../utils/chrome/storage";
 import { accountStore } from "../stores/account";
 import { AccountStates } from "../enums/account";
 import { StorageKeys } from "../enums/storage";
@@ -29,7 +32,7 @@ export default function MainView() {
 
   useEffect(() => {
     async function load() {
-      const encryptedsk = await getLocalStorage(
+      const encryptedsk = await getSyncStorage(
         StorageKeys.LOCAL_USER_ENCRYPTED_SK
       );
 
@@ -39,10 +42,7 @@ export default function MainView() {
         if (sk) {
           const _user = await loginWithSecret(sk);
           if (_user) {
-            const passcode = await getSessionStorage(
-              StorageKeys.SESSION_USER_PASSCODE
-            );
-            const pk = await getLocalStorage(StorageKeys.LOCAL_USER_PK);
+            const pk = await getSyncStorage(StorageKeys.LOCAL_USER_PK);
             const npub = getPublicKeys(pk).npub;
 
             let user: User = {

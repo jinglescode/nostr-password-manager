@@ -29,3 +29,19 @@ export function setSessionStorage(key: string, value: any) {
 export function clearSessionStorage() {
   chrome.storage.session.clear();
 }
+
+export function getSyncStorage(key: string): any {
+  return new Promise(function (resolve, reject) {
+    chrome.storage.sync.get([key], (result) => {
+      resolve(result[key]);
+    });
+  });
+}
+
+export function setSyncStorage(key: string, value: any) {
+  chrome.storage.sync.set({ [key]: value }, () => {});
+}
+
+export function clearSyncStorage() {
+  chrome.storage.sync.clear();
+}

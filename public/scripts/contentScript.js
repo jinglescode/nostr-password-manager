@@ -11,20 +11,10 @@
 // For more information on Content Scripts,
 // See https://developer.chrome.com/extensions/content_scripts
 
-// Communicate with background file by sending a message
-// chrome.runtime.sendMessage(
-//   {
-//     type: "ATYPEHERE",
-//     payload: {
-//       message: "DATA",
-//     },
-//   },
-//   (response) => {
-//     console.log(response.message);
-//   }
-// );
-
-// Listen for message
+/**
+ * autofill login forms
+ * could be inspiration: https://github.com/bitwarden/clients/blob/38e4ba087930e491628435201b4796fb4bfe8463/src/services/autofill.service.ts
+ */
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === "FILLFORM") {
     autofill(request.payload.username, request.payload.password);
@@ -36,7 +26,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-// could be inspiration: https://github.com/bitwarden/clients/blob/38e4ba087930e491628435201b4796fb4bfe8463/src/services/autofill.service.ts
 function autofill(username, password) {
   var inputs = document.getElementsByTagName("input");
 
@@ -67,3 +56,58 @@ function autofill(username, password) {
     }
   }
 }
+
+/**
+ * window.nostr NIP07 login
+ * inspiration: https://github.com/fiatjaf/nos2x/blob/master/extension/content-script.js
+ */
+
+// import browser from "webextension-polyfill";
+
+// // inject script into page
+// let script = document.createElement("script");
+// script.setAttribute("async", "false");
+// script.setAttribute("type", "text/javascript");
+// script.setAttribute("src", browser.runtime.getURL("nostr-provider.js"));
+// document.head.appendChild(script);
+
+// // listen for messages from that script
+// window.addEventListener("message", async (message) => {
+//   if (message.source !== window) return;
+//   if (!message.data) return;
+//   if (!message.data.params) return;
+//   if (message.data.ext !== "vault") return;
+
+//   // pass on to background
+//   var response;
+//   try {
+//     response = await browser.runtime.sendMessage({
+//       type: message.data.type,
+//       params: message.data.params,
+//       host: location.host,
+//     });
+//   } catch (error) {
+//     response = { error };
+//   }
+
+//   // return response
+//   // window.postMessage(
+//   //   {id: message.data.id, ext: 'vault', response},
+//   //   message.origin
+//   // )
+// });
+
+
+
+// Communicate with background file by sending a message
+// chrome.runtime.sendMessage(
+//   {
+//     type: "ATYPEHERE",
+//     payload: {
+//       message: "DATA",
+//     },
+//   },
+//   (response) => {
+//     console.log(response.message);
+//   }
+// );

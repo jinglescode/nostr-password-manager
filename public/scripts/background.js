@@ -6,5 +6,7 @@
 // See https://developer.chrome.com/extensions/background_pages
 
 chrome.runtime.onMessage.addListener(
-  async (request, sender, sendResponse) => {}
+  async (request, sender, sendResponse) => {
+    console.log('background request:', request)
+  }
 );

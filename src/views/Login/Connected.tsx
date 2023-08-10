@@ -1,5 +1,5 @@
 import { useNDK } from "@nostr-dev-kit/ndk-react";
-import { getLocalStorage } from "../../utils/chrome/storage";
+import { getSyncStorage } from "../../utils/chrome/storage";
 import { useEffect, useState } from "react";
 import { StorageKeys } from "../../enums/storage";
 import { getPublicKeys } from "../../utils/nostr/getPublicKeys";
@@ -11,7 +11,7 @@ export default function Connected() {
   useEffect(() => {
     async function getNpub() {
       if (ndk) {
-        const pk = await getLocalStorage(StorageKeys.LOCAL_USER_PK);
+        const pk = await getSyncStorage(StorageKeys.LOCAL_USER_PK);
         const npub = getPublicKeys(pk).npub;
         setNpub(npub);
       }

@@ -13,9 +13,10 @@ import { decryptVaults } from "../../utils/encryption/decryptVaults";
 import { Views, viewStore } from "../../stores/view";
 import { getSessionStorage } from "../../utils/chrome/storage";
 import { StorageKeys } from "../../enums/storage";
+import { ArrowPathIcon, ArrowRightIcon } from "@heroicons/react/20/solid";
 
 export default function VaultView() {
-  const { data: vaults } = useUserVaults();
+  const { data: vaults, refetch, isFetching } = useUserVaults();
 
   const user = accountStore((state) => state.user);
   const { signer } = useNDK();
@@ -47,7 +48,6 @@ export default function VaultView() {
   useEffect(() => {
     async function decryptData() {
       if (vaults && signer) {
-
         const passcode = await getSessionStorage(
           StorageKeys.SESSION_USER_PASSCODE
         );
@@ -139,8 +139,31 @@ export default function VaultView() {
       <div className="flex flex-col items-center justify-center h-full">
         <p className="text-md">No items in vault</p>
         <p className="mt-2 text-sm leading-6 text-brand-2">
-          <a onClick={() => setView(Views.ITEM)} className="cursor-pointer">
-            Add item<span> &rarr;</span>
+          <a
+            onClick={() => setView(Views.ITEM)}
+            className="cursor-pointer flex items-center"
+          >
+            Add Item
+            <ArrowRightIcon className={`inline-block w-4 h-4 ml-1`} />
+          </a>
+        </p>
+        <p className="mt-2 text-sm leading-6 text-brand-2">
+          <a
+            onClick={() => !isFetching && refetch()}
+            className={`cursor-pointer flex items-center`}
+          >
+            {isFetching ? (
+              <>
+                Fetching Data
+                <ArrowPathIcon
+                  className={`inline-block w-4 h-4 ml-1 ${
+                    isFetching && "animate-spin"
+                  }`}
+                />
+              </>
+            ) : (
+              <>Refetch Data</>
+            )}
           </a>
         </p>
       </div>

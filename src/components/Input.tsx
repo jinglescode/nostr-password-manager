@@ -63,7 +63,7 @@ export default function Input({
           )}
         </div>
         {isError && (
-          <p className="mt-2 text-sm text-red-600" id="email-error">
+          <p className="mt-2 text-sm text-red-600">
             {isErrorMessage}
           </p>
         )}

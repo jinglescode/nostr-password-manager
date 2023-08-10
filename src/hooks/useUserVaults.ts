@@ -1,12 +1,13 @@
 import { NDKFilter } from "@nostr-dev-kit/ndk";
 import { useNDK } from "@nostr-dev-kit/ndk-react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { accountStore } from "../stores/account";
 import { Vault } from "../types/vault";
 
 export function useUserVaults() {
   const { ndk, fetchEvents, signer } = useNDK();
   const user = accountStore((state) => state.user);
+  const queryClient = useQueryClient();
 
   const { status, data, error, isFetching, refetch } = useQuery(
     ["vaults"],
@@ -43,6 +44,14 @@ export function useUserVaults() {
 
         vaults.push(vault);
       });
+
+      // if empty, check if local has data
+      if (vaults.length === 0) {
+        const existingData = queryClient.getQueryData(["vaults"]);
+        if (existingData) {
+          vaults = existingData as Vault[];
+        }
+      }
 
       return vaults;
     },

@@ -4,15 +4,17 @@ import { Views, viewStore } from "../../../stores/view";
 import {
   clearLocalStorage,
   clearSessionStorage,
+  clearSyncStorage,
 } from "../../../utils/chrome/storage";
 import SettingItem from "../SettingItem";
-import { useSettingsStore } from "../../../stores/settings";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function SettingsNostrAccount() {
   const { getProfile } = useNDK();
   const setView = viewStore((state) => state.setView);
   const user = accountStore((state) => state.user);
   const setAppNotification = viewStore((state) => state.setAppNotification);
+  const queryClient = useQueryClient();
 
   return (
     <SettingItem
@@ -41,9 +43,12 @@ export default function SettingsNostrAccount() {
       }
       buttonLabel="Disconnect"
       buttonOnClick={() => {
+        // clear memory
         clearLocalStorage();
         clearSessionStorage();
-        useSettingsStore.persist.clearStorage();
+        clearSyncStorage();
+        queryClient.clear();
+
         setView(Views.LOGIN);
         setAppNotification({
           title: "Account disconnected",

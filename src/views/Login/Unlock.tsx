@@ -2,7 +2,8 @@ import { useNDK } from "@nostr-dev-kit/ndk-react";
 import {
   clearLocalStorage,
   clearSessionStorage,
-  getLocalStorage,
+  clearSyncStorage,
+  getSyncStorage,
   setSessionStorage,
 } from "../../utils/chrome/storage";
 import StringCrypto from "string-crypto";
@@ -16,7 +17,7 @@ import Input from "../../components/Input";
 import { Views, viewStore } from "../../stores/view";
 import { User } from "../../types/user";
 import { getPublicKeys } from "../../utils/nostr/getPublicKeys";
-import { useSettingsStore } from "../../stores/settings";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Unlock({ setStep }: { setStep: Function }) {
   const { ndk, loginWithSecret } = useNDK();
@@ -26,13 +27,13 @@ export default function Unlock({ setStep }: { setStep: Function }) {
   const setState = accountStore((state) => state.setState);
   const setView = viewStore((state) => state.setView);
   const setUser = accountStore((state) => state.setUser);
-
+  const queryClient = useQueryClient();
   const { getProfile } = useNDK();
 
   useEffect(() => {
     async function getNpub() {
       if (ndk) {
-        const pk = await getLocalStorage(StorageKeys.LOCAL_USER_PK);
+        const pk = await getSyncStorage(StorageKeys.LOCAL_USER_PK);
         const npub = getPublicKeys(pk).npub;
         setNpub(npub);
       }
@@ -43,7 +44,7 @@ export default function Unlock({ setStep }: { setStep: Function }) {
   async function decrypt() {
     const { decryptString } = new StringCrypto();
 
-    const encryptedsk = await getLocalStorage(
+    const encryptedsk = await getSyncStorage(
       StorageKeys.LOCAL_USER_ENCRYPTED_SK
     );
     const sk = decryptString(encryptedsk, inputPasscode);
@@ -55,7 +56,7 @@ export default function Unlock({ setStep }: { setStep: Function }) {
       setPasscodeIsError(false);
       await loginWithSecret(sk);
 
-      const pk = await getLocalStorage(StorageKeys.LOCAL_USER_PK);
+      const pk = await getSyncStorage(StorageKeys.LOCAL_USER_PK);
       const npub = getPublicKeys(pk).npub;
 
       let user: User = {
@@ -75,20 +76,21 @@ export default function Unlock({ setStep }: { setStep: Function }) {
     } catch (e) {
       setPasscodeIsError(true);
     }
+    setInputPasscode("");
   }
 
   function forgetAccount() {
+    // clear memory
     clearLocalStorage();
     clearSessionStorage();
-    useSettingsStore.persist.clearStorage();
+    clearSyncStorage();
+    queryClient.clear();
     setStep(LoginViews.SK);
   }
 
   function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter" || e.keyCode === 13) {
       decrypt();
-      //@ts-ignore
-      e.target.blur();
     }
   }
 

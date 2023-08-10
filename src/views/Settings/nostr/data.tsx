@@ -33,6 +33,7 @@ export default function SettingsNostrData() {
               </div>
             );
           })}
+          {!isFetching && data?.length === 0 && <>No data</>}
         </>
       }
       buttonLabel={isFetching ? "Fetching..." : "Refetch"}
