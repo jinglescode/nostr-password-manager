@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.container {
+  width: 375px;
+  height: 600px;
+  cursor: default;
+}

@@ -1,0 +1,17 @@
+{
+  "version": "1.0.1",
+  "name": "Vault (Password Manager on NOSTR)",
+  "description": "Free, open source, and decentralized. Vault utilizes zero-knowledge encryption and stores data on NOSTR network.",
+  "author": "Jingles (jingles.dev)",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Vault"
+  },
+  "icons": {
+    "128": "images/rounded-128.png",
+    "48": "images/rounded-48.png",
+    "32": "images/rounded-32.png"
+  },
+  "permissions": ["tabs", "storage"]
+}
