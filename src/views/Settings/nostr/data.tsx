@@ -16,42 +16,52 @@ export default function SettingsNostrData() {
 
   return (
     <SettingItem
-      label="Your data on NOSTR network"
+      label={chrome.i18n.getMessage("settings_user_nostr_data")}
       value={
         <>
           {data?.map((vault, i) => {
             return (
               <div key={vault.id}>
-                <p title="This is an identifier">
-                  <span className="text-brand-black leading-4">Vault name: </span>
+                <p title={chrome.i18n.getMessage("settings_vault_name_tip")}>
+                  <span className="text-brand-black leading-4">
+                    {chrome.i18n.getMessage("settings_vault_name")}:{" "}
+                  </span>
                   <span className="text-brand-gray-light">{vault.id}</span>
                 </p>
-                <p title="There are different size limit for different relays for how long a 'content' can be">
-                  <span className="text-brand-black leading-4">Data size: </span>
+                <p title={chrome.i18n.getMessage("settings_vault_size_tip")}>
+                  <span className="text-brand-black leading-4">
+                    {chrome.i18n.getMessage("settings_vault_size")}:{" "}
+                  </span>
                   <span className="text-brand-gray-light">
                     {vault.encryptedItems.length}
                   </span>
                 </p>
-                <p title="Data last updated on NOSTR network">
-                  <span className="text-brand-black leading-4">Updated: </span>
+                <p title={chrome.i18n.getMessage("settings_vault_updated_tip")}>
+                  <span className="text-brand-black leading-4">
+                    {chrome.i18n.getMessage("settings_vault_updated")}:{" "}
+                  </span>
                   <span className="text-brand-gray-light">
                     <time dateTime={(vault.mod * 1000).toString()}>
                       {new Date(vault.mod * 1000).toDateString()}
-                    </time>{" "}
-                    at{" "}
+                    </time>
+                    ,{" "}
                     <time dateTime={(vault.mod * 1000).toString()}>
                       {new Date(vault.mod * 1000).toLocaleTimeString()}
                     </time>
                   </span>
                 </p>
                 {lastSyncAt && (
-                  <p title="Data last synced to your device">
-                    <span className="text-brand-black leading-4">Synced: </span>
+                  <p
+                    title={chrome.i18n.getMessage("settings_vault_synced_tip")}
+                  >
+                    <span className="text-brand-black leading-4">
+                      {chrome.i18n.getMessage("settings_vault_synced")}:{" "}
+                    </span>
                     <span className="text-brand-gray-light">
                       <time dateTime={lastSyncAt.toString()}>
                         {new Date(lastSyncAt).toDateString()}
-                      </time>{" "}
-                      at{" "}
+                      </time>
+                      ,{" "}
                       <time dateTime={lastSyncAt.toString()}>
                         {new Date(lastSyncAt).toLocaleTimeString()}
                       </time>
@@ -61,7 +71,9 @@ export default function SettingsNostrData() {
               </div>
             );
           })}
-          {!isFetching && data?.length === 0 && <>No data</>}
+          {!isFetching &&
+            data?.length === 0 &&
+            chrome.i18n.getMessage("settings_vault_no_data")}
         </>
       }
       buttonLabel={
@@ -72,7 +84,7 @@ export default function SettingsNostrData() {
             />
           </div>
         ) : (
-          "Refetch"
+          chrome.i18n.getMessage("settings_vault_refetch")
         )
       }
       buttonOnClick={() => !isFetching && refetch()}

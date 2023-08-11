@@ -63,9 +63,10 @@ export default function VaultView() {
           })
           .catch((e) => {
             setAppNotification({
-              title: "Error decrypting vaults",
-              message:
-                "The passcode you have enter is incorrect. Check FAQ for details.",
+              title: chrome.i18n.getMessage("notification_error_decrypt_vault"),
+              message: chrome.i18n.getMessage(
+                "notification_error_decrypt_vault_message"
+              ),
               type: "error",
             });
           });
@@ -160,13 +161,13 @@ export default function VaultView() {
   if (items.length === 0)
     return (
       <div className="flex flex-col items-center justify-center h-full">
-        <p className="text-md">No items in vault</p>
+        <p className="text-md">{chrome.i18n.getMessage("vault_no_items")}</p>
         <p className="mt-2">
           <a
             onClick={() => setView(Views.ITEM)}
             className="cursor-pointer flex items-center text-brand-2 hover:text-primary text-sm leading-6"
           >
-            Add Item
+            {chrome.i18n.getMessage("vault_add_item")}
             <ArrowRightIcon className={`inline-block w-4 h-4 ml-1`} />
           </a>
         </p>
@@ -177,7 +178,7 @@ export default function VaultView() {
           >
             {isFetching ? (
               <>
-                Fetching Data
+                {chrome.i18n.getMessage("vault_fetching_data")}
                 <ArrowPathIcon
                   className={`inline-block w-4 h-4 ml-1 ${
                     isFetching && "animate-spin"
@@ -185,7 +186,7 @@ export default function VaultView() {
                 />
               </>
             ) : (
-              <>Refetch Data</>
+              <> {chrome.i18n.getMessage("vault_refetch_data")}</>
             )}
           </a>
         </p>

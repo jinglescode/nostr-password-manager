@@ -5,11 +5,11 @@ import SettingsSecurityView from "./security";
 
 const navigationItems = [
   {
-    name: "NOSTR",
+    name: chrome.i18n.getMessage("settings_header_nostr"),
     view: SettingViews.NOSTR,
   },
   {
-    name: "Security",
+    name: chrome.i18n.getMessage("settings_header_security"),
     view: SettingViews.SECURITY,
   },
 ];

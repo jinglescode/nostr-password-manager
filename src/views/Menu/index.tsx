@@ -29,7 +29,7 @@ export default function MenuView() {
       <div className="grid grid-cols-4 gap-4">
         <MenuItem
           icon={<RectangleStackIcon className="h-6 w-6" />}
-          text="Vault"
+          text={chrome.i18n.getMessage("nav_vault")}
           onClick={() => {
             if (state === AccountStates.LOGGED_IN) {
               goToView(Views.VAULT);
@@ -40,7 +40,7 @@ export default function MenuView() {
         />
         <MenuItem
           icon={<PlusIcon className="h-6 w-6" />}
-          text="Add"
+          text={chrome.i18n.getMessage("nav_add")}
           onClick={() => {
             goToView(Views.ITEM);
           }}
@@ -48,23 +48,23 @@ export default function MenuView() {
         />
         <MenuItem
           icon={<RocketLaunchIcon className="h-6 w-6" />}
-          text="Roadmap"
+          text={chrome.i18n.getMessage("nav_roadmap")}
           onClick={() => goToView(Views.ROADMAP)}
         />
         <MenuItem
           icon={<ListBulletIcon className="h-6 w-6" />}
-          text="FAQ"
+          text={chrome.i18n.getMessage("nav_faqs")}
           onClick={() => goToView(Views.FAQ)}
         />
         <MenuItem
           icon={<WrenchScrewdriverIcon className="h-6 w-6" />}
-          text="Settings"
+          text={chrome.i18n.getMessage("nav_settings")}
           onClick={() => goToView(Views.SETTINGS)}
           disabled={state !== AccountStates.LOGGED_IN}
         />
         <MenuItem
           icon={<HeartIcon className="h-6 w-6" />}
-          text="Support"
+          text={chrome.i18n.getMessage("nav_support")}
           onClick={() => goToView(Views.SUPPORT)}
         />
       </div>

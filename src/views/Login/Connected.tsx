@@ -33,12 +33,20 @@ export default function Connected() {
           }
         />
         <h2 className="mt-2 text-2xl font-bold tracking-tight text-brand-black sm:text-4xl">
-          Welcome{" "}
+          {chrome.i18n.getMessage(
+            "info_welcome_user",
+            getProfile(npub).displayName
+              ? getProfile(npub).displayName
+              : getProfile(npub).name
+              ? getProfile(npub).name
+              : ""
+          )}
+          {/* Welcome{" "}
           {getProfile(npub).displayName
             ? getProfile(npub).displayName
             : getProfile(npub).name
             ? getProfile(npub).name
-            : ""}
+            : ""} */}
         </h2>
         <p className="mt-2 text-lg leading-8 text-gray-600">
           You are connected.

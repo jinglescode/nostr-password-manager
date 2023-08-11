@@ -16,7 +16,6 @@ export default function Navbar() {
   const view = viewStore((state) => state.view);
   const setView = viewStore((state) => state.setView);
   const itemDetails = viewStore((state) => state.itemDetails);
-  console.log("itemDetails", itemDetails);
 
   return (
     <div className="bg-brand-4">
@@ -42,7 +41,7 @@ export default function Navbar() {
                       </div>
                       <input
                         className="block w-full rounded-md border-0 bg-brand-3 py-1.5 pl-10 pr-3 text-brand-gray-light placeholder:text-brand-gray-light sm:text-sm sm:leading-6 focus:outline-none"
-                        placeholder="Search vault"
+                        placeholder={chrome.i18n.getMessage("nav_search_vault")}
                         type="search"
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
@@ -54,31 +53,33 @@ export default function Navbar() {
                       {itemDetails ? (
                         <>
                           {itemDetails[ItemKeys.TYPE] == ItemType.LOGIN &&
-                            "Login"}
+                            chrome.i18n.getMessage("nav_login")}
                           {itemDetails[ItemKeys.TYPE] == ItemType.NOTE &&
-                            "Note"}
+                            chrome.i18n.getMessage("nav_note")}
                         </>
                       ) : (
-                        <>New Item</>
+                        chrome.i18n.getMessage("nav_new_item")
                       )}
                     </div>
                   )}
                   {view === Views.ROADMAP && (
                     <div className="text-white text-center text-lg">
-                      Roadmap
+                      {chrome.i18n.getMessage("nav_roadmap")}
                     </div>
                   )}
                   {view === Views.FAQ && (
-                    <div className="text-white text-center text-lg">FAQs</div>
+                    <div className="text-white text-center text-lg">
+                      {chrome.i18n.getMessage("nav_faqs")}
+                    </div>
                   )}
                   {view === Views.SUPPORT && (
                     <div className="text-white text-center text-lg">
-                      Support
+                      {chrome.i18n.getMessage("nav_support")}
                     </div>
                   )}
                   {view === Views.SETTINGS && (
                     <div className="text-white text-center text-lg">
-                      Settings
+                      {chrome.i18n.getMessage("nav_settings")}
                     </div>
                   )}
                 </>

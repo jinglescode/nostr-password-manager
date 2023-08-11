@@ -34,19 +34,19 @@ export default function NoteItem({ item }: { item: Item }) {
             onClick={() => {
               copyNote();
               setAppNotification({
-                title: "Note copied to clipboard",
+                title: chrome.i18n.getMessage("notification_note_copied"),
                 type: "success",
               });
             }}
             className="text-brand-gray-light hover:text-primary"
-            title="Copy note"
+            title={chrome.i18n.getMessage("button_copy_note")}
           >
             <DocumentDuplicateIcon className="h-6 w-6" />
           </button>
           <button
             onClick={() => viewItem()}
             className="text-brand-gray-light hover:text-primary"
-            title="View item"
+            title={chrome.i18n.getMessage("button_view_item")}
           >
             <InformationCircleIcon className="h-6 w-6" />
           </button>

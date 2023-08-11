@@ -14,7 +14,7 @@ export default function NoteItem({
   return (
     <>
       <Textarea
-        label="Your note"
+        label={chrome.i18n.getMessage("form_note")}
         value={editableItem?.note?.[ItemKeys.TEXT] || ""}
         onChange={(e) =>
           onChangeFormInput({
@@ -23,7 +23,7 @@ export default function NoteItem({
             isNote: true,
           })
         }
-        placeholder="need something remembered?"
+        placeholder={chrome.i18n.getMessage("form_note_placeholder")}
         name="note"
         rows={6}
         disabled={mode === EditItemViews.VIEW}

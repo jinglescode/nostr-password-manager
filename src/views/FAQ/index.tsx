@@ -1,8 +1,10 @@
 import { Disclosure } from "@headlessui/react";
 import { MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
 import { FAQS } from "../../constants/faqs";
+import { useEffect } from "react";
 
 export default function FAQView() {
+
   return (
     <div className="w-full h-full">
       <dl className="mx-4 space-y-2 divide-y divide-gray-900/10 pb-2">

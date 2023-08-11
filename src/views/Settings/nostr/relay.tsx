@@ -28,7 +28,7 @@ export default function SettingsNostrRelay() {
   }
 
   function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter" || e.keyCode === 13) {
+    if (e.key === "Enter") {
       processInput();
     }
   }

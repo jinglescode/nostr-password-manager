@@ -32,7 +32,7 @@ export default function LoginWithSK({
   }
 
   function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter" || e.keyCode === 13) {
+    if (e.key === "Enter") {
       login();
     }
   }
@@ -49,22 +49,22 @@ export default function LoginWithSK({
           src={chrome.runtime.getURL("/images/rounded-512.png")}
         />
         <h2 className="mt-2 text-2xl font-bold tracking-tight text-brand-black sm:text-4xl">
-          Vault
+          {chrome.i18n.getMessage("app_name")}
         </h2>
         <p className="mt-2 text-lg leading-8 text-gray-600">
-          Secure your passwords and notes, encrypted by your key and passcode.
+          {chrome.i18n.getMessage("app_about_short")}
         </p>
       </div>
       <div className="mx-auto mt-16 max-w-xl sm:mt-20">
         <Input
-          label="NOSTR Secret Key"
+          label={chrome.i18n.getMessage("form_secret_key")}
           type="password"
           name="sk"
           placeholder="nsec..."
           value={inputSk}
           onChange={(e) => setInputSk(e.target.value)}
           isError={isError}
-          isErrorMessage="Invalid secret key"
+          isErrorMessage={chrome.i18n.getMessage("form_invalid_secret_key")}
           onKeyUp={(e) => handleKeyUp(e)}
           after={
             <div
@@ -82,11 +82,15 @@ export default function LoginWithSK({
             disabled={ndk === undefined || inputSk.length === 0}
             onClick={() => login()}
           >
-            Connect
+            {chrome.i18n.getMessage("button_connect")}
           </Button>
           <p className="mt-4">
-            <a onClick={() => createAccount()} className="cursor-pointer text-brand-2 hover:text-primary text-sm leading-6">
-              Create your key<span> &rarr;</span>
+            <a
+              onClick={() => createAccount()}
+              className="cursor-pointer text-brand-2 hover:text-primary text-sm leading-6"
+            >
+              {chrome.i18n.getMessage("button_create_secret_key")}
+              <span> &rarr;</span>
             </a>
           </p>
         </div>

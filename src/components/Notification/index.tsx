@@ -40,8 +40,6 @@ export default function Notification() {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          {/* <>
-            {appNotification && ( */}
           <div className="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
             <div className="p-4">
               <div className="flex items-start">
@@ -71,7 +69,7 @@ export default function Notification() {
                   </p>
                   {appNotification?.message && (
                     <p className="mt-1 text-sm text-brand-gray-light">
-                      {appNotification?.message}
+                      {appNotification.message}
                     </p>
                   )}
 
@@ -86,7 +84,7 @@ export default function Notification() {
                             appNotification?.onConfirm();
                         }}
                       >
-                        Accept
+                        {chrome.i18n.getMessage("notification_accept")}
                       </button>
                       <button
                         type="button"
@@ -95,7 +93,7 @@ export default function Notification() {
                           setAppNotification(undefined);
                         }}
                       >
-                        Decline
+                        {chrome.i18n.getMessage("notification_decline")}
                       </button>
                     </div>
                   )}
@@ -108,15 +106,12 @@ export default function Notification() {
                       setAppNotification(undefined);
                     }}
                   >
-                    <span className="sr-only">Close</span>
                     <XMarkIcon className="h-5 w-5" aria-hidden="true" />
                   </button>
                 </div>
               </div>
             </div>
           </div>
-          {/* )}
-          </> */}
         </Transition>
       </div>
     </div>

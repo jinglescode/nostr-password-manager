@@ -20,7 +20,7 @@ export default function SettingsNostrAccount() {
 
   return (
     <SettingItem
-      label="Connected account"
+      label={chrome.i18n.getMessage("settings_connected_account")}
       value={
         <>
           <div
@@ -50,7 +50,7 @@ export default function SettingsNostrAccount() {
           </div>
         </>
       }
-      buttonLabel="Disconnect"
+      buttonLabel={chrome.i18n.getMessage("button_disconnect")}
       buttonOnClick={() => {
         // clear memory
         clearLocalStorage();
@@ -60,7 +60,7 @@ export default function SettingsNostrAccount() {
 
         setView(Views.LOGIN);
         setAppNotification({
-          title: "Account disconnected",
+          title: chrome.i18n.getMessage("notification_account_disconnected"),
           type: "success",
         });
       }}

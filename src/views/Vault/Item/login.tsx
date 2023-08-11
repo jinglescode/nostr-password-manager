@@ -76,7 +76,7 @@ export default function LoginItem({ item }: { item: Item }) {
           <button
             onClick={() => fillForms()}
             className="text-brand-gray-light hover:text-primary"
-            title="Try to fill forms"
+            title={chrome.i18n.getMessage("button_fill_forms")}
           >
             <SparklesIcon className="h-6 w-6" />
           </button>
@@ -84,12 +84,12 @@ export default function LoginItem({ item }: { item: Item }) {
             onClick={() => {
               copyUser();
               setAppNotification({
-                title: "Username copied to clipboard",
+                title: chrome.i18n.getMessage("notification_username_copied"),
                 type: "success",
               });
             }}
             className="text-brand-gray-light hover:text-primary"
-            title="Copy username"
+            title={chrome.i18n.getMessage("notification_copy_username")}
           >
             <UserIcon className="h-6 w-6" />
           </button>
@@ -97,12 +97,12 @@ export default function LoginItem({ item }: { item: Item }) {
             onClick={() => {
               copyPassword();
               setAppNotification({
-                title: "Password copied to clipboard",
+                title: chrome.i18n.getMessage("notification_password_copied"),
                 type: "success",
               });
             }}
             className="text-brand-gray-light hover:text-primary"
-            title="Copy password"
+            title={chrome.i18n.getMessage("notification_copy_password")}
           >
             <KeyIcon className="h-6 w-6" />
           </button>
@@ -110,7 +110,7 @@ export default function LoginItem({ item }: { item: Item }) {
             <button
               onClick={() => openSite()}
               className="text-brand-gray-light hover:text-primary"
-              title="Open site"
+              title={chrome.i18n.getMessage("button_open_site")}
             >
               <ArrowTopRightOnSquareIcon className="h-6 w-6" />
             </button>
@@ -118,7 +118,7 @@ export default function LoginItem({ item }: { item: Item }) {
           <button
             onClick={() => viewItem()}
             className="text-brand-gray-light hover:text-primary"
-            title="View item"
+            title={chrome.i18n.getMessage("button_view_item")}
           >
             <InformationCircleIcon className="h-6 w-6" />
           </button>

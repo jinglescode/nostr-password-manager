@@ -92,7 +92,7 @@ export default function Unlock({ setStep }: { setStep: Function }) {
     if (passcodeIsError) {
       setPasscodeIsError(false);
     }
-    if (e.key === "Enter" || e.keyCode === 13) {
+    if (e.key === "Enter") {
       decrypt();
     }
   }
@@ -119,19 +119,21 @@ export default function Unlock({ setStep }: { setStep: Function }) {
             : ""}
         </h2>
         <p className="mt-2 text-lg leading-8 text-gray-600">
-          Enter your passcode to unlock.
+          {chrome.i18n.getMessage("info_enter_passcode_unlock")}
         </p>
       </div>
       <div className="mx-auto max-w-xl mt-20">
         <Input
-          label="Passcode to decrypt your key"
+          label={chrome.i18n.getMessage("form_passcode_decrypt_key")}
           type="password"
           name="passcode"
-          placeholder="at least 6 characters"
+          placeholder={chrome.i18n.getMessage("form_passcode_6_chars")}
           value={inputPasscode}
           onChange={(e) => setInputPasscode(e.target.value)}
           isError={passcodeIsError}
-          isErrorMessage="Passcode incorrect."
+          isErrorMessage={chrome.i18n.getMessage(
+            "form_error_passcode_incorrect"
+          )}
           onKeyUp={(e) => handleKeyUp(e)}
           after={
             <div
@@ -146,11 +148,15 @@ export default function Unlock({ setStep }: { setStep: Function }) {
         />
         <div className="mt-10">
           <Button disabled={inputPasscode.length < 6} onClick={() => decrypt()}>
-            Access
+            {chrome.i18n.getMessage("button_continue")}
           </Button>
           <p className="mt-4">
-            <a onClick={() => forgetAccount()} className="cursor-pointer text-brand-2 hover:text-primary text-sm leading-6">
-              Connect another account<span> &rarr;</span>
+            <a
+              onClick={() => forgetAccount()}
+              className="cursor-pointer text-brand-2 hover:text-primary text-sm leading-6"
+            >
+              {chrome.i18n.getMessage("button_connect_another_account")}
+              <span> &rarr;</span>
             </a>
           </p>
         </div>

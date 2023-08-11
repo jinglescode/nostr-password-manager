@@ -83,16 +83,16 @@ export default function ItemView() {
   useEffect(() => {
     if (isSuccess) {
       setAppNotification({
-        title: "Success!",
-        message: "Your vault is updated successfully!",
+        title: chrome.i18n.getMessage("notification_success"),
+        message: chrome.i18n.getMessage("notification_vault_updated_success"),
         type: "success",
       });
       setView(Views.VAULT);
     }
     if (isError) {
       setAppNotification({
-        title: "Something went wrong!",
-        message: "Failed to update your vault. Please try again.",
+        title: chrome.i18n.getMessage("notification_something_wrong"),
+        message: chrome.i18n.getMessage("notification_vault_updated_fail"),
         type: "error",
       });
     }
@@ -203,8 +203,8 @@ export default function ItemView() {
 
   async function deleteItem() {
     setAppNotification({
-      title: "Delete item?",
-      message: "Are you sure you want to delete this item?",
+      title: chrome.i18n.getMessage("notification_delete_item"),
+      message: chrome.i18n.getMessage("notification_delete_item_message"),
       type: "confirm",
       onConfirm: () => {
         save(true);
@@ -253,9 +253,9 @@ export default function ItemView() {
         />
       )}
       <Input
-        label="Name"
+        label={chrome.i18n.getMessage("form_name")}
         name="name"
-        placeholder="something to identify this item"
+        placeholder={chrome.i18n.getMessage("form_name_placeholder")}
         value={editableItem?.[ItemKeys.NAME] || ""}
         onChange={(e) =>
           onChangeFormInput({ key: ItemKeys.NAME, value: e.target.value })
@@ -287,11 +287,13 @@ export default function ItemView() {
             <Button
               disabled={ndk === undefined}
               onClick={() => setMode(EditItemViews.EDIT)}
-              title="Unlock to edit"
+              title={chrome.i18n.getMessage("button_unlock_edit")}
             >
               <div className="flex flex-col items-center">
                 <LockClosedIcon className="h-4 w-4" />
-                <span className="text-xs">Edit</span>
+                <span className="text-xs">
+                  {chrome.i18n.getMessage("button_edit")}
+                </span>
               </div>
             </Button>
           </>
@@ -305,33 +307,39 @@ export default function ItemView() {
                   }
                   setMode(EditItemViews.VIEW);
                 }}
-                title="Lock to exit editing mode"
+                title={chrome.i18n.getMessage("button_lock_edit")}
               >
                 <div className="flex flex-col items-center">
                   <LockOpenIcon className="h-4 w-4" />
-                  <span className="text-xs">Lock</span>
+                  <span className="text-xs">
+                    {chrome.i18n.getMessage("button_lock")}
+                  </span>
                 </div>
               </Button>
             )}
             <Button
               disabled={ndk === undefined || !validate()}
               onClick={() => save()}
-              title="Save changes"
+              title={chrome.i18n.getMessage("button_save_changes")}
             >
               <div className="flex flex-col items-center">
                 <CloudArrowUpIcon className="h-4 w-4" />
-                <span className="text-xs">Save</span>
+                <span className="text-xs">
+                  {chrome.i18n.getMessage("button_save")}
+                </span>
               </div>
             </Button>
             {!isNew && (
               <Button
                 onClick={() => deleteItem()}
                 className="bg-red-800 hover:bg-red-600"
-                title="Delete item"
+                title={chrome.i18n.getMessage("button_delete_item")}
               >
                 <div className="flex flex-col items-center">
                   <TrashIcon className="h-4 w-4" />
-                  <span className="text-xs">Delete</span>
+                  <span className="text-xs">
+                    {chrome.i18n.getMessage("button_delete")}
+                  </span>
                 </div>
               </Button>
             )}

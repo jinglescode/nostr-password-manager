@@ -82,7 +82,7 @@ export default function Encrypt({
   }
 
   function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter" || e.keyCode === 13) {
+    if (e.key === "Enter") {
       processInput();
     }
   }
@@ -101,27 +101,29 @@ export default function Encrypt({
           }
         />
         <h2 className="mt-2 text-2xl font-bold tracking-tight text-brand-black sm:text-4xl">
-          Welcome{" "}
-          {getProfile(session.npub).displayName
-            ? getProfile(session.npub).displayName
-            : getProfile(session.npub).name
-            ? getProfile(session.npub).name
-            : ""}
+          {chrome.i18n.getMessage(
+            "info_welcome_user",
+            getProfile(session.npub).displayName
+              ? getProfile(session.npub).displayName
+              : getProfile(session.npub).name
+              ? getProfile(session.npub).name
+              : ""
+          )}
         </h2>
         <p className="mt-2 text-lg leading-8 text-gray-600">
-          Enter a passcode to encrypt your key.
+          {chrome.i18n.getMessage("info_passcode_encrypt_key")}
         </p>
       </div>
       <div className="mx-auto mt-16 max-w-xl sm:mt-20">
         <Input
           label={
             firstNewPassInput === undefined
-              ? "Passcode to encrypt your key"
-              : "Repeat your passcode"
+              ? chrome.i18n.getMessage("info_passcode_encrypt_key")
+              : chrome.i18n.getMessage("form_repeat_passcode")
           }
           type="password"
           name="passcode"
-          placeholder="at least 6 characters"
+          placeholder={chrome.i18n.getMessage("form_passcode_6_chars")}
           value={inputPasscode}
           onChange={(e) => setInputPasscode(e.target.value)}
           onKeyUp={(e) => handleKeyUp(e)}
@@ -145,17 +147,15 @@ export default function Encrypt({
               }}
               className="cursor-pointer text-brand-2 hover:text-primary text-sm leading-6"
             >
-              Re-enter passcode
+              {chrome.i18n.getMessage("button_enter_another_passcode")}
             </a>
           </p>
         )}
         <div className="mt-10">
           <Button disabled={inputPasscode.length < 6} onClick={() => encrypt()}>
-            {firstNewPassInput == undefined ? (
-              <>Continue</>
-            ) : (
-              <>Encrypt and Access</>
-            )}
+            {firstNewPassInput == undefined
+              ? chrome.i18n.getMessage("button_continue")
+              : chrome.i18n.getMessage("button_encrypt_access")}
           </Button>
         </div>
       </div>

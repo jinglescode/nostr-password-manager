@@ -11,13 +11,13 @@ const itemTypes: {
   };
 } = {
   [ItemType.LOGIN]: {
-    label: "Login",
-    desc: "username and password",
+    label: chrome.i18n.getMessage("nav_login"),
+    desc: chrome.i18n.getMessage("info_login"),
     key: ItemType.LOGIN,
   },
   [ItemType.NOTE]: {
-    label: "Note",
-    desc: "short notes about anything",
+    label: chrome.i18n.getMessage("nav_note"),
+    desc: chrome.i18n.getMessage("info_note"),
     key: ItemType.NOTE,
   },
 };
@@ -38,7 +38,7 @@ export default function SelectItemType({
       {({ open }) => (
         <>
           <Listbox.Label className="block text-sm font-medium leading-6 text-brand-black">
-            Item Type
+            {chrome.i18n.getMessage("form_item_type")}
           </Listbox.Label>
           <div className="relative mt-2">
             <Listbox.Button className="block w-full rounded-md border-0 px-3.5 py-2 text-brand-black shadow-sm ring-1 ring-inset placeholder:text-brand-gray-light sm:text-sm sm:leading-6 ring-brand-2 focus:ring-primary">

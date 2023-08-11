@@ -45,15 +45,15 @@ export default function NewAccount({
           src={chrome.runtime.getURL("/images/rounded-512.png")}
         />
         <h2 className="mt-2 text-2xl font-bold tracking-tight text-brand-black sm:text-4xl">
-          New Account
+          {chrome.i18n.getMessage("info_new_account")}
         </h2>
         <p className="mt-2 text-lg leading-8 text-gray-600">
-          This is your secret key, keep it safe!
+          {chrome.i18n.getMessage("info_keep_key_safe")}
         </p>
       </div>
       <div className="mx-auto mt-16 max-w-xl sm:mt-20">
         <Input
-          label="Your Secret Key"
+          label={chrome.i18n.getMessage("form_your_secret_key")}
           type="text"
           name="sk"
           placeholder=""
@@ -66,12 +66,12 @@ export default function NewAccount({
                 onClick={() => {
                   copySk();
                   setAppNotification({
-                    title: "Secret key copied to clipboard",
+                    title: chrome.i18n.getMessage("notification_secret_key"),
                     type: "success",
                   });
                 }}
                 className="text-brand-gray-light hover:text-brand-3 active:text-primary"
-                title="Copy secret key"
+                title={chrome.i18n.getMessage("button_copy_secret_key")}
               >
                 <DocumentDuplicateIcon className="h-6 w-6" />
               </button>
@@ -79,7 +79,9 @@ export default function NewAccount({
           }
         />
         <div className="mt-10">
-          <Button onClick={() => handleNext()}>I've copied this key</Button>
+          <Button onClick={() => handleNext()}>
+            {chrome.i18n.getMessage("button_have_copied_key")}
+          </Button>
         </div>
       </div>
     </>

@@ -1,29 +1,10 @@
-const items = [
-  {
-    name: "Tip Directly",
-    description:
-      "You can tip directly to the project by sending SATS.",
-    href: "https://getalby.com/p/vault",
-  },
-  {
-    name: "Geyser Fund",
-    description:
-      "Join the global community to support project on Geyser Fund, a crowdfunding platform. The funds will be used to pay for contributors and and bounties.",
-    href: "https://geyser.fund/project/vault/",
-  },
-  {
-    name: "Star the GitHub Repo",
-    description:
-      "Starring a repository shows appreciation for the work. Many of GitHub's repository rankings depend on the number of stars a repository has. In addition, Explore GitHub shows popular repositories based on the number of stars they have, so by staring it, you help NOSTR and freedom tech become more popular.",
-    href: "https://github.com/jinglescode/nostr-password-manager",
-  },
-];
+import { SUPPORT } from "../../constants/support";
 
 export default function SupportView() {
   return (
     <div className="w-full h-full p-2 space-y-2">
       <dl className="grid max-w-xl grid-cols-1 gap-y-4">
-        {items.map((item, i) => (
+        {SUPPORT.map((item, i) => (
           <Item item={item} key={i} />
         ))}
       </dl>
