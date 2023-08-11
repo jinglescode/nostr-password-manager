@@ -44,7 +44,7 @@ export default function NewAccount({
           className="h-16 mx-auto"
           src={chrome.runtime.getURL("/images/rounded-512.png")}
         />
-        <h2 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+        <h2 className="mt-2 text-2xl font-bold tracking-tight text-brand-black sm:text-4xl">
           New Account
         </h2>
         <p className="mt-2 text-lg leading-8 text-gray-600">
@@ -70,7 +70,7 @@ export default function NewAccount({
                     type: "success",
                   });
                 }}
-                className="text-gray-400 hover:text-brand-3 active:text-primary"
+                className="text-brand-gray-light hover:text-brand-3 active:text-primary"
                 title="Copy secret key"
               >
                 <DocumentDuplicateIcon className="h-6 w-6" />

@@ -10,12 +10,12 @@ export default function SettingItem({
   buttonOnClick: Function;
 }) {
   return (
-    <div className="pt-6 sm:flex">
-      <dt className="text-base font-semibold leading-7 text-gray-900">
+    <div className="pt-2 sm:flex">
+      <dt className="text-base font-semibold leading-7 text-brand-black">
         {label}
       </dt>
-      <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-        <div className="text-gray-900 w-full overflow-x-hidden p-1">{value}</div>
+      <dd className="mt-1 flex justify-between gap-x-4 sm:mt-0 sm:flex-auto">
+        <div className="text-brand-black w-full overflow-x-hidden p-1">{value}</div>
         {buttonLabel && (
           <button
             type="button"

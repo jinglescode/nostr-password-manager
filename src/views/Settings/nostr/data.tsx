@@ -23,18 +23,18 @@ export default function SettingsNostrData() {
             return (
               <div key={vault.id}>
                 <p title="This is an identifier">
-                  <span className="text-gray-900 leading-4">Vault name: </span>
-                  <span className="text-gray-500">{vault.id}</span>
+                  <span className="text-brand-black leading-4">Vault name: </span>
+                  <span className="text-brand-gray-light">{vault.id}</span>
                 </p>
                 <p title="There are different size limit for different relays for how long a 'content' can be">
-                  <span className="text-gray-900 leading-4">Data size: </span>
-                  <span className="text-gray-500">
+                  <span className="text-brand-black leading-4">Data size: </span>
+                  <span className="text-brand-gray-light">
                     {vault.encryptedItems.length}
                   </span>
                 </p>
                 <p title="Data last updated on NOSTR network">
-                  <span className="text-gray-900 leading-4">Updated: </span>
-                  <span className="text-gray-500">
+                  <span className="text-brand-black leading-4">Updated: </span>
+                  <span className="text-brand-gray-light">
                     <time dateTime={(vault.mod * 1000).toString()}>
                       {new Date(vault.mod * 1000).toDateString()}
                     </time>{" "}
@@ -46,8 +46,8 @@ export default function SettingsNostrData() {
                 </p>
                 {lastSyncAt && (
                   <p title="Data last synced to your device">
-                    <span className="text-gray-900 leading-4">Synced: </span>
-                    <span className="text-gray-500">
+                    <span className="text-brand-black leading-4">Synced: </span>
+                    <span className="text-brand-gray-light">
                       <time dateTime={lastSyncAt.toString()}>
                         {new Date(lastSyncAt).toDateString()}
                       </time>{" "}

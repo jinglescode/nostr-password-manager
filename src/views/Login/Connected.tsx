@@ -32,7 +32,7 @@ export default function Connected() {
               : chrome.runtime.getURL("/images/rounded-512.png")
           }
         />
-        <h2 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+        <h2 className="mt-2 text-2xl font-bold tracking-tight text-brand-black sm:text-4xl">
           Welcome{" "}
           {getProfile(npub).displayName
             ? getProfile(npub).displayName

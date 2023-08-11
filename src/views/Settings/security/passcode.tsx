@@ -195,20 +195,20 @@ export default function SettingsAccountPasscode() {
                     className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5 cursor-pointer"
                     onClick={() => processInput()}
                   >
-                    <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">
+                    <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-brand-gray-light">
                       enter
                     </kbd>
                   </div>
                 }
               />
               {firstNewPassInput !== undefined && (
-                <p className="mt-4 text-sm leading-6 text-brand-2">
+                <p className="mt-4">
                   <a
                     onClick={() => {
                       setFirstNewPassInput(undefined);
                       setInput("");
                     }}
-                    className="cursor-pointer"
+                    className="cursor-pointer text-brand-2 hover:text-primary text-sm leading-6"
                   >
                     Re-enter passcode
                   </a>

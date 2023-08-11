@@ -19,7 +19,7 @@ export default function Textarea({
     <>
       <label
         htmlFor={name}
-        className="block text-sm font-medium leading-6 text-gray-900"
+        className="block text-sm font-medium leading-6 text-brand-black"
       >
         {label}
       </label>
@@ -28,7 +28,7 @@ export default function Textarea({
           rows={rows}
           name={name}
           id={name}
-          className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-brand-2 focus:ring-primary placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+          className="block w-full rounded-md border-0 px-2 py-1.5 text-brand-black shadow-sm ring-1 ring-inset ring-brand-2 focus:ring-primary placeholder:text-brand-gray-light sm:text-sm sm:leading-6"
           placeholder={placeholder}
           value={value}
           onChange={onChange}

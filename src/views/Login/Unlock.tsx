@@ -22,7 +22,7 @@ import { useQueryClient } from "@tanstack/react-query";
 export default function Unlock({ setStep }: { setStep: Function }) {
   const { ndk, loginWithSecret } = useNDK();
   const [npub, setNpub] = useState<undefined | string>(undefined);
-  const [inputPasscode, setInputPasscode] = useState<string>("");
+  const [inputPasscode, setInputPasscode] = useState<string>("1q2w3e");
   const [passcodeIsError, setPasscodeIsError] = useState<boolean>(false);
   const setState = accountStore((state) => state.setState);
   const setView = viewStore((state) => state.setView);
@@ -110,7 +110,7 @@ export default function Unlock({ setStep }: { setStep: Function }) {
               : chrome.runtime.getURL("/images/rounded-512.png")
           }
         />
-        <h2 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+        <h2 className="mt-2 text-2xl font-bold tracking-tight text-brand-black sm:text-4xl">
           Welcome{" "}
           {getProfile(npub).displayName
             ? getProfile(npub).displayName
@@ -138,7 +138,7 @@ export default function Unlock({ setStep }: { setStep: Function }) {
               className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5 cursor-pointer"
               onClick={() => decrypt()}
             >
-              <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">
+              <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-brand-gray-light">
                 enter
               </kbd>
             </div>
@@ -148,8 +148,8 @@ export default function Unlock({ setStep }: { setStep: Function }) {
           <Button disabled={inputPasscode.length < 6} onClick={() => decrypt()}>
             Access
           </Button>
-          <p className="mt-4 text-sm leading-6 text-brand-2">
-            <a onClick={() => forgetAccount()} className="cursor-pointer">
+          <p className="mt-4">
+            <a onClick={() => forgetAccount()} className="cursor-pointer text-brand-2 hover:text-primary text-sm leading-6">
               Connect another account<span> &rarr;</span>
             </a>
           </p>

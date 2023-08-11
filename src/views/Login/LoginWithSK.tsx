@@ -48,7 +48,7 @@ export default function LoginWithSK({
           className="h-16 mx-auto"
           src={chrome.runtime.getURL("/images/rounded-512.png")}
         />
-        <h2 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+        <h2 className="mt-2 text-2xl font-bold tracking-tight text-brand-black sm:text-4xl">
           Vault
         </h2>
         <p className="mt-2 text-lg leading-8 text-gray-600">
@@ -71,7 +71,7 @@ export default function LoginWithSK({
               className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5 cursor-pointer"
               onClick={() => login()}
             >
-              <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">
+              <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-brand-gray-light">
                 enter
               </kbd>
             </div>
@@ -84,8 +84,8 @@ export default function LoginWithSK({
           >
             Connect
           </Button>
-          <p className="mt-4 text-sm leading-6 text-brand-2">
-            <a onClick={() => createAccount()} className="cursor-pointer">
+          <p className="mt-4">
+            <a onClick={() => createAccount()} className="cursor-pointer text-brand-2 hover:text-primary text-sm leading-6">
               Create your key<span> &rarr;</span>
             </a>
           </p>

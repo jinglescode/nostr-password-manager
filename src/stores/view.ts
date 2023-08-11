@@ -9,7 +9,7 @@ export enum Views {
   ITEM,
   ROADMAP,
   FAQ,
-  DONATE,
+  SUPPORT,
   SETTINGS,
 }
 

@@ -1,5 +1,5 @@
 import {
-  GiftIcon,
+  HeartIcon,
   ListBulletIcon,
   PlusIcon,
   RectangleStackIcon,
@@ -63,9 +63,9 @@ export default function MenuView() {
           disabled={state !== AccountStates.LOGGED_IN}
         />
         <MenuItem
-          icon={<GiftIcon className="h-6 w-6" />}
-          text="Donate"
-          onClick={() => goToView(Views.DONATE)}
+          icon={<HeartIcon className="h-6 w-6" />}
+          text="Support"
+          onClick={() => goToView(Views.SUPPORT)}
         />
       </div>
     </div>
@@ -77,8 +77,8 @@ function MenuItem({ icon, text, onClick, disabled }: any) {
     <button
       onClick={onClick}
       className={`relative inline-flex items-center justify-center rounded-md p-2 ${
-        disabled ? "text-gray-600" : "text-gray-400"
-      } ${!disabled && "hover:bg-brand-2 hover:text-white"}`}
+        disabled ? "text-gray-600" : "text-brand-gray-light"
+      } ${!disabled && "hover:text-primary"}`}
       disabled={disabled}
     >
       <div className="flex flex-col items-center">

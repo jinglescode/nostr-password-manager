@@ -8,6 +8,7 @@ import {
   DocumentDuplicateIcon,
   EyeIcon,
   EyeSlashIcon,
+  QuestionMarkCircleIcon,
   TrashIcon,
 } from "@heroicons/react/20/solid";
 import Button from "../../components/Button";
@@ -91,7 +92,7 @@ export default function LoginItem({
                     type: "success",
                   });
                 }}
-                className="text-gray-400 hover:text-brand-3 active:text-primary"
+                className="text-brand-gray-light hover:text-primary"
                 title="Copy username"
               >
                 <DocumentDuplicateIcon className="h-6 w-6" />
@@ -119,7 +120,7 @@ export default function LoginItem({
             {mode == EditItemViews.EDIT && (
               <button
                 onClick={() => generateNewPassword()}
-                className="text-gray-400 hover:text-brand-3 active:text-primary"
+                className="text-brand-gray-light hover:text-primary"
                 title="Generate password"
               >
                 <ArrowPathIcon className="h-6 w-6" />
@@ -127,7 +128,7 @@ export default function LoginItem({
             )}
             <button
               onClick={() => setIsShowPassword(!isShowPassword)}
-              className="text-gray-400 hover:text-brand-3 active:text-primary"
+              className="text-brand-gray-light hover:text-primary"
               title={isShowPassword ? "Hide password" : "Show password"}
             >
               {isShowPassword ? (
@@ -145,7 +146,7 @@ export default function LoginItem({
                     type: "success",
                   });
                 }}
-                className="text-gray-400 hover:text-brand-3 active:text-primary"
+                className="text-brand-gray-light hover:text-primary"
                 title="Copy password"
               >
                 <DocumentDuplicateIcon className="h-6 w-6" />
@@ -155,9 +156,17 @@ export default function LoginItem({
         }
       />
 
-      <label className="block text-sm font-semibold leading-6 text-gray-900">
-        URIs
-      </label>
+      <div className="flex justify-between">
+        <label className="block text-sm font-semibold leading-6 text-brand-black">
+          URIs
+        </label>
+        <span
+          className="text-sm leading-6 text-gray-500"
+          title="When you are on this URI, this login will rank on top."
+        >
+          <QuestionMarkCircleIcon className="h-4 w-4 inline-block text-brand-gray" />
+        </span>
+      </div>
       {editableItem?.login?.[ItemKeys.URI].map((uri, index) => {
         return (
           <Input
@@ -178,7 +187,7 @@ export default function LoginItem({
                   <div className="absolute inset-y-0 right-0 flex items-center pr-2">
                     <button
                       onClick={() => deleteUri(index)}
-                      className="text-gray-400 hover:text-brand-3 active:text-primary"
+                      className="text-brand-gray-light hover:text-primary"
                       title="Delete URI"
                     >
                       <TrashIcon className="h-6 w-6" />

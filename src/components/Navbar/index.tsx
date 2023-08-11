@@ -4,6 +4,7 @@ import { Views, viewStore } from "../../stores/view";
 import { accountStore } from "../../stores/account";
 import { AccountStates } from "../../enums/account";
 import { searchStore } from "../../stores/search";
+import { ItemKeys, ItemType } from "../../enums/item";
 
 export default function Navbar() {
   const showMenu = viewStore((state) => state.showMenu);
@@ -14,6 +15,8 @@ export default function Navbar() {
 
   const view = viewStore((state) => state.view);
   const setView = viewStore((state) => state.setView);
+  const itemDetails = viewStore((state) => state.itemDetails);
+  console.log("itemDetails", itemDetails);
 
   return (
     <div className="bg-brand-4">
@@ -30,17 +33,15 @@ export default function Navbar() {
 
           <div className="flex flex-1 justify-center px-2">
             <div className="w-full max-w-lg">
-              {!showMenu && (
+              {!showMenu ? (
                 <>
                   {state == AccountStates.LOGGED_IN && view === Views.VAULT && (
                     <div className="relative">
                       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+                        <MagnifyingGlassIcon className="h-5 w-5 text-brand-gray-light" />
                       </div>
                       <input
-                        id="search"
-                        name="search"
-                        className="block w-full rounded-md border-0 bg-brand-3 py-1.5 pl-10 pr-3 text-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus:outline-none"
+                        className="block w-full rounded-md border-0 bg-brand-3 py-1.5 pl-10 pr-3 text-brand-gray-light placeholder:text-brand-gray-light sm:text-sm sm:leading-6 focus:outline-none"
                         placeholder="Search vault"
                         type="search"
                         value={searchInput}
@@ -49,7 +50,18 @@ export default function Navbar() {
                     </div>
                   )}
                   {view === Views.ITEM && (
-                    <div className="text-white text-center text-lg">Item</div>
+                    <div className="text-white text-center text-lg">
+                      {itemDetails ? (
+                        <>
+                          {itemDetails[ItemKeys.TYPE] == ItemType.LOGIN &&
+                            "Login"}
+                          {itemDetails[ItemKeys.TYPE] == ItemType.NOTE &&
+                            "Note"}
+                        </>
+                      ) : (
+                        <>New Item</>
+                      )}
+                    </div>
                   )}
                   {view === Views.ROADMAP && (
                     <div className="text-white text-center text-lg">
@@ -59,8 +71,10 @@ export default function Navbar() {
                   {view === Views.FAQ && (
                     <div className="text-white text-center text-lg">FAQs</div>
                   )}
-                  {view === Views.DONATE && (
-                    <div className="text-white text-center text-lg">Donate</div>
+                  {view === Views.SUPPORT && (
+                    <div className="text-white text-center text-lg">
+                      Support
+                    </div>
                   )}
                   {view === Views.SETTINGS && (
                     <div className="text-white text-center text-lg">
@@ -68,6 +82,8 @@ export default function Navbar() {
                     </div>
                   )}
                 </>
+              ) : (
+                <></>
               )}
             </div>
           </div>
@@ -75,14 +91,14 @@ export default function Navbar() {
           <div className="flex">
             {view === Views.ITEM ? (
               <button
-                className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-brand-2 hover:text-white"
+                className="relative inline-flex items-center justify-center rounded-md p-2 text-brand-gray-light hover:text-primary"
                 onClick={() => setView(Views.VAULT)}
               >
                 <XMarkIcon className="block h-6 w-6" />
               </button>
             ) : (
               <button
-                className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-brand-2 hover:text-white"
+                className="relative inline-flex items-center justify-center rounded-md p-2 text-brand-gray-light hover:text-primary"
                 onClick={() => toggleShowMenu()}
               >
                 {showMenu ? (

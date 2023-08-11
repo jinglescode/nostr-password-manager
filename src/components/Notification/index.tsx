@@ -66,11 +66,11 @@ export default function Notification() {
                   )}
                 </div>
                 <div className="ml-3 w-0 flex-1 pt-0.5">
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-sm font-medium text-brand-black">
                     {appNotification?.title}
                   </p>
                   {appNotification?.message && (
-                    <p className="mt-1 text-sm text-gray-500">
+                    <p className="mt-1 text-sm text-brand-gray-light">
                       {appNotification?.message}
                     </p>
                   )}
@@ -90,7 +90,7 @@ export default function Notification() {
                       </button>
                       <button
                         type="button"
-                        className="ml-3 inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                        className="ml-3 inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-brand-black shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                         onClick={() => {
                           setAppNotification(undefined);
                         }}
@@ -103,7 +103,7 @@ export default function Notification() {
                 <div className="ml-4 flex flex-shrink-0">
                   <button
                     type="button"
-                    className="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="inline-flex rounded-md bg-white text-brand-gray-light hover:text-brand-gray-light focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     onClick={() => {
                       setAppNotification(undefined);
                     }}

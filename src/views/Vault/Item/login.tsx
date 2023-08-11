@@ -62,20 +62,20 @@ export default function LoginItem({ item }: { item: Item }) {
   if (item.login === undefined) return <></>;
 
   return (
-    <div className="whitespace-nowrap text-sm py-2 overflow-x-hidden">
-      <div className="flex items-center mx-4">
+    <div className="whitespace-nowrap text-sm overflow-x-hidden">
+      <div className="flex items-center mx-4 h-14 py-2">
         <div className="flex-grow overflow-x-hidden">
-          <p className="font-medium text-gray-900 text-ellipsis overflow-x-hidden">
+          <p className="font-medium text-brand-black text-ellipsis overflow-x-hidden">
             {item[ItemKeys.NAME]}
           </p>
-          <p className="text-gray-500 text-ellipsis overflow-x-hidden">
+          <p className="text-brand-gray text-ellipsis overflow-x-hidden">
             {item.login[ItemKeys.USERNAME]}
           </p>
         </div>
-        <div className="flex-none text-gray-500 flex items-center">
+        <div className="flex-none flex items-center">
           <button
             onClick={() => fillForms()}
-            className="text-gray-400 hover:text-brand-3 active:text-primary"
+            className="text-brand-gray-light hover:text-primary"
             title="Try to fill forms"
           >
             <SparklesIcon className="h-6 w-6" />
@@ -88,7 +88,7 @@ export default function LoginItem({ item }: { item: Item }) {
                 type: "success",
               });
             }}
-            className="text-gray-400 hover:text-brand-3 active:text-primary"
+            className="text-brand-gray-light hover:text-primary"
             title="Copy username"
           >
             <UserIcon className="h-6 w-6" />
@@ -101,7 +101,7 @@ export default function LoginItem({ item }: { item: Item }) {
                 type: "success",
               });
             }}
-            className="text-gray-400 hover:text-brand-3 active:text-primary"
+            className="text-brand-gray-light hover:text-primary"
             title="Copy password"
           >
             <KeyIcon className="h-6 w-6" />
@@ -109,7 +109,7 @@ export default function LoginItem({ item }: { item: Item }) {
           {hasUri && (
             <button
               onClick={() => openSite()}
-              className="text-gray-400 hover:text-brand-3 active:text-primary"
+              className="text-brand-gray-light hover:text-primary"
               title="Open site"
             >
               <ArrowTopRightOnSquareIcon className="h-6 w-6" />
@@ -117,7 +117,7 @@ export default function LoginItem({ item }: { item: Item }) {
           )}
           <button
             onClick={() => viewItem()}
-            className="text-gray-400 hover:text-brand-3 active:text-primary"
+            className="text-brand-gray-light hover:text-primary"
             title="View item"
           >
             <InformationCircleIcon className="h-6 w-6" />
