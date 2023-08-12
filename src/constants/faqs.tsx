@@ -2,7 +2,7 @@ export const FAQS = [
   {
     question: "How are my data stored?",
     answer:
-      "Your passwords are stored on NOSTR relays, and they are encrypted twice; once by your passcode, and once by your NOSTR secret key. Your data are synced and stored encrypted on your devices. They will only be decrypted when you enter your passcode.",
+      "Your passwords are stored on NOSTR relays, and they are encrypted twice; once by your passcode (using PBKDF2 for key derivation and AES), and once by your NOSTR secret key. Your data are synced and stored encrypted on your devices. They will only be decrypted when you enter your passcode.",
   },
   {
     question: "Will I lose my data if I lose my secret key?",

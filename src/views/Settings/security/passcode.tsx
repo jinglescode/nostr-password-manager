@@ -41,8 +41,8 @@ export default function SettingsAccountPasscode() {
     }
     if (isError) {
       setAppNotification({
-        title: "Something went wrong!",
-        message: "Failed to update your vault. Please try again.",
+        title: chrome.i18n.getMessage("notification_something_wrong"),
+        message: chrome.i18n.getMessage("notification_vault_updated_fail"),
         type: "error",
       });
     }
@@ -71,8 +71,8 @@ export default function SettingsAccountPasscode() {
 
     // close
     setAppNotification({
-      title: "Passcode updated",
-      message: "Use your new passcode to unlock your vault.",
+      title: chrome.i18n.getMessage("notification_passcode_updated"),
+      message: chrome.i18n.getMessage("notification_passcode_updated_message"),
       type: "success",
     });
 
@@ -128,8 +128,10 @@ export default function SettingsAccountPasscode() {
   async function processInput() {
     if (input.length < 6) {
       setAppNotification({
-        title: "Passcode too short",
-        message: "Passcode must be at least 6 characters.",
+        title: chrome.i18n.getMessage("notification_passcode_too_short"),
+        message: chrome.i18n.getMessage(
+          "notification_passcode_too_short_message"
+        ),
         type: "error",
       });
       return;
@@ -144,8 +146,10 @@ export default function SettingsAccountPasscode() {
         setExistingPassInput(input);
       } else {
         setAppNotification({
-          title: "Wrong passcode",
-          message: "Please try again.",
+          title: chrome.i18n.getMessage("notification_passcode_wrong"),
+          message: chrome.i18n.getMessage(
+            "notification_passcode_wrong_message"
+          ),
           type: "error",
         });
       }
@@ -155,8 +159,10 @@ export default function SettingsAccountPasscode() {
       processUpdate();
     } else if (firstNewPassInput != input) {
       setAppNotification({
-        title: "Passcode not match",
-        message: "Please try again.",
+        title: chrome.i18n.getMessage("notification_passcode_not_match"),
+        message: chrome.i18n.getMessage(
+          "notification_passcode_not_match_message"
+        ),
         type: "error",
       });
     }
@@ -171,7 +177,7 @@ export default function SettingsAccountPasscode() {
 
   return (
     <SettingItem
-      label="Passcode"
+      label={chrome.i18n.getMessage("settings_passcode")}
       value={
         <>
           {isEdit ? (
@@ -179,14 +185,14 @@ export default function SettingsAccountPasscode() {
               <Input
                 label={
                   existingPassInput === undefined
-                    ? "Existing passcode"
+                    ? chrome.i18n.getMessage("form_existing_passcode")
                     : firstNewPassInput === undefined
-                    ? "New passcode"
-                    : "Repeat your new passcode"
+                    ? chrome.i18n.getMessage("form_new_passcode")
+                    : chrome.i18n.getMessage("form_new_passcode_repeat")
                 }
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder={`At least 6 characters`}
+                placeholder={chrome.i18n.getMessage("form_passcode_6_chars")}
                 disabled={!ndk || !signer || !data || !user}
                 onKeyUp={handleKeyUp}
                 type="password"
@@ -195,32 +201,32 @@ export default function SettingsAccountPasscode() {
                     className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5 cursor-pointer"
                     onClick={() => processInput()}
                   >
-                    <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">
+                    <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-brand-gray-light">
                       enter
                     </kbd>
                   </div>
                 }
               />
               {firstNewPassInput !== undefined && (
-                <p className="mt-4 text-sm leading-6 text-brand-2">
+                <p className="mt-4">
                   <a
                     onClick={() => {
                       setFirstNewPassInput(undefined);
                       setInput("");
                     }}
-                    className="cursor-pointer"
+                    className="cursor-pointer text-brand-2 hover:text-primary text-sm leading-6"
                   >
-                    Re-enter passcode
+                    {chrome.i18n.getMessage("settings_reenter_passcode")}
                   </a>
                 </p>
               )}
             </>
           ) : (
-            <p>Passcode is needed to decrypt your data.</p>
+            <p>{chrome.i18n.getMessage("settings_passcode_tip")}</p>
           )}
         </>
       }
-      buttonLabel={isEdit ? undefined : "Update"}
+      buttonLabel={isEdit ? undefined : chrome.i18n.getMessage("button_update")}
       buttonOnClick={() => {
         setIsEdit(!isEdit);
       }}

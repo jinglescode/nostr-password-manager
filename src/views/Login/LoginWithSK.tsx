@@ -32,7 +32,7 @@ export default function LoginWithSK({
   }
 
   function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter" || e.keyCode === 13) {
+    if (e.key === "Enter") {
       login();
     }
   }
@@ -48,30 +48,30 @@ export default function LoginWithSK({
           className="h-16 mx-auto"
           src={chrome.runtime.getURL("/images/rounded-512.png")}
         />
-        <h2 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          Vault
+        <h2 className="mt-2 text-2xl font-bold tracking-tight text-brand-black sm:text-4xl">
+          {chrome.i18n.getMessage("app_name")}
         </h2>
         <p className="mt-2 text-lg leading-8 text-gray-600">
-          Secure your passwords and notes, encrypted by your key and passcode.
+          {chrome.i18n.getMessage("app_about_short")}
         </p>
       </div>
       <div className="mx-auto mt-16 max-w-xl sm:mt-20">
         <Input
-          label="NOSTR Secret Key"
+          label={chrome.i18n.getMessage("form_secret_key")}
           type="password"
           name="sk"
           placeholder="nsec..."
           value={inputSk}
           onChange={(e) => setInputSk(e.target.value)}
           isError={isError}
-          isErrorMessage="Invalid secret key"
+          isErrorMessage={chrome.i18n.getMessage("form_invalid_secret_key")}
           onKeyUp={(e) => handleKeyUp(e)}
           after={
             <div
               className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5 cursor-pointer"
               onClick={() => login()}
             >
-              <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">
+              <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-brand-gray-light">
                 enter
               </kbd>
             </div>
@@ -81,12 +81,17 @@ export default function LoginWithSK({
           <Button
             disabled={ndk === undefined || inputSk.length === 0}
             onClick={() => login()}
+            hasGradientBackground={true}
           >
-            Connect
+            {chrome.i18n.getMessage("button_connect")}
           </Button>
-          <p className="mt-4 text-sm leading-6 text-brand-2">
-            <a onClick={() => createAccount()} className="cursor-pointer">
-              Create your key<span> &rarr;</span>
+          <p className="mt-4">
+            <a
+              onClick={() => createAccount()}
+              className="cursor-pointer text-brand-2 hover:text-primary text-sm leading-6"
+            >
+              {chrome.i18n.getMessage("button_create_secret_key")}
+              <span> &rarr;</span>
             </a>
           </p>
         </div>

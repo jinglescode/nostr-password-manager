@@ -1,0 +1,358 @@
+{
+  "extension_name": {
+    "message": "Vault (Password Manager on NOSTR)"
+  },
+  "extension_description": {
+    "message": "Free, open source, and decentralized. Vault utilizes zero-knowledge encryption and stores data on NOSTR network."
+  },
+  "app_name": {
+    "message": "Vault"
+  },
+  "app_about_short": {
+    "message": "Secure your passwords and notes, encrypted by your key and passcode."
+  },
+  "form_secret_key": {
+    "message": "NOSTR Secret Key"
+  },
+  "form_invalid_secret_key": {
+    "message": "Invalid secret key"
+  },
+  "button_connect": {
+    "message": "Connect"
+  },
+  "button_create_secret_key": {
+    "message": "Create your key"
+  },
+  "info_welcome_user": {
+    "message": "Welcome $username$",
+    "placeholders": {
+      "username": {
+        "content": "$1"
+      }
+    }
+  },
+  "info_passcode_encrypt_key": {
+    "message": "Enter a passcode to encrypt your key."
+  },
+  "form_passcode_encrypt_key": {
+    "message": "Passcode to encrypt your key"
+  },
+  "form_repeat_passcode": {
+    "message": "Repeat passcode"
+  },
+  "form_passcode_6_chars": {
+    "message": "passcode must be at least 6 characters"
+  },
+  "button_enter_another_passcode": {
+    "message": "Enter another passcode"
+  },
+  "button_continue": {
+    "message": "Continue"
+  },
+  "button_encrypt_access": {
+    "message": "Encrypt and Access"
+  },
+  "info_new_account": {
+    "message": "New Account"
+  },
+  "info_keep_key_safe": {
+    "message": "This is your secret key, keep it safe!"
+  },
+  "form_your_secret_key": {
+    "message": "Your secret key"
+  },
+  "notification_secret_key": {
+    "message": "Secret key copied to clipboard"
+  },
+  "button_copy_secret_key": {
+    "message": "Copy secret key"
+  },
+  "button_have_copied_key": {
+    "message": "I've copied this key"
+  },
+  "info_enter_passcode_unlock": {
+    "message": "Enter your passcode to unlock."
+  },
+  "form_passcode_decrypt_key": {
+    "message": "Enter passcode to decrypt your vault"
+  },
+  "form_error_passcode_incorrect": {
+    "message": "Passcode incorrect."
+  },
+  "button_connect_another_account": {
+    "message": "Connect another account"
+  },
+  "nav_search_vault": {
+    "message": "Search vault"
+  },
+  "nav_add": {
+    "message": "Add"
+  },
+  "nav_vault": {
+    "message": "Vault"
+  },
+  "nav_login": {
+    "message": "Login"
+  },
+  "nav_note": {
+    "message": "Note"
+  },
+  "nav_new_item": {
+    "message": "New Item"
+  },
+  "nav_roadmap": {
+    "message": "Roadmap"
+  },
+  "nav_faqs": {
+    "message": "FAQs"
+  },
+  "nav_support": {
+    "message": "Support"
+  },
+  "nav_settings": {
+    "message": "Settings"
+  },
+  "notification_accept": {
+    "message": "Accept"
+  },
+  "notification_decline": {
+    "message": "Decline"
+  },
+  "notification_vault_updated_success": {
+    "message": "Your vault is updated successfully!"
+  },
+  "notification_success": {
+    "message": "Success!"
+  },
+  "notification_something_wrong": {
+    "message": "Something went wrong!"
+  },
+  "notification_vault_updated_fail": {
+    "message": "Failed to update your vault. Please try again."
+  },
+  "notification_delete_item": {
+    "message": "Delete item?"
+  },
+  "notification_delete_item_message": {
+    "message": "Are you sure you want to delete this item?"
+  },
+  "form_name": {
+    "message": "Name"
+  },
+  "form_name_placeholder": {
+    "message": "something to identify this item"
+  },
+  "button_unlock_edit": {
+    "message": "Unlock to edit"
+  },
+  "button_edit": {
+    "message": "Edit"
+  },
+  "button_lock_edit": {
+    "message": "Lock to exit editing mode"
+  },
+  "button_lock": {
+    "message": "Lock"
+  },
+  "button_save": {
+    "message": "Save"
+  },
+  "button_save_changes": {
+    "message": "Save changes"
+  },
+  "button_delete_item": {
+    "message": "Delete item"
+  },
+  "button_delete": {
+    "message": "Delete"
+  },
+  "form_username": {
+    "message": "Username"
+  },
+  "form_username_placeholder": {
+    "message": "login username"
+  },
+  "notification_username_copied": {
+    "message": "Username copied to clipboard"
+  },
+  "notification_copy_username": {
+    "message": "Copy username"
+  },
+  "form_password": {
+    "message": "Password"
+  },
+  "form_password_placeholder": {
+    "message": "login password"
+  },
+  "button_generate_password": {
+    "message": "Generate password"
+  },
+  "button_hide_password": {
+    "message": "Hide password"
+  },
+  "button_show_password": {
+    "message": "Show password"
+  },
+  "notification_copy_password": {
+    "message": "Copy password"
+  },
+  "notification_password_copied": {
+    "message": "Password copied to clipboard"
+  },
+  "form_uris": {
+    "message": "URIs"
+  },
+  "form_uris_tip": {
+    "message": "When you are on this URI, this item will rank on top of the vault."
+  },
+  "button_delete_uri": {
+    "message": "Delete URI"
+  },
+  "button_add_uri": {
+    "message": "Add more URI"
+  },
+  "form_note": {
+    "message": "Your note"
+  },
+  "form_note_placeholder": {
+    "message": "need something remembered?"
+  },
+  "info_login": {
+    "message": "username and password"
+  },
+  "info_note": {
+    "message": "short notes about anything"
+  },
+  "form_item_type": {
+    "message": "Item Type"
+  },
+  "settings_header_nostr": {
+    "message": "NOSTR"
+  },
+  "settings_header_security": {
+    "message": "Security"
+  },
+  "settings_connected_account": {
+    "message": "Connected account"
+  },
+  "button_disconnect": {
+    "message": "Disconnect"
+  },
+  "notification_account_disconnected": {
+    "message": "Account disconnected"
+  },
+  "settings_user_nostr_data": {
+    "message": "Your data on NOSTR network"
+  },
+  "settings_vault_name": {
+    "message": "Vault name"
+  },
+  "settings_vault_name_tip": {
+    "message": "This is an identifier"
+  },
+  "settings_vault_size": {
+    "message": "Data size"
+  },
+  "settings_vault_size_tip": {
+    "message": "There are different size limit for different relays for how long a 'content' can be"
+  },
+  "settings_vault_updated": {
+    "message": "Updated"
+  },
+  "settings_vault_updated_tip": {
+    "message": "Data last updated on NOSTR network"
+  },
+  "settings_vault_synced": {
+    "message": "Synced"
+  },
+  "settings_vault_synced_tip": {
+    "message": "Data last synced to your device"
+  },
+  "settings_vault_no_data": {
+    "message": "No data"
+  },
+  "settings_vault_refetch": {
+    "message": "Refetch"
+  },
+  "notification_passcode_updated": {
+    "message": "Passcode updated"
+  },
+  "notification_passcode_updated_message": {
+    "message": "Use your new passcode to unlock your vault."
+  },
+  "notification_passcode_too_short": {
+    "message": "Passcode too short"
+  },
+  "notification_passcode_too_short_message": {
+    "message": "Passcode must be at least 6 characters."
+  },
+  "notification_passcode_wrong": {
+    "message": "Wrong passcode"
+  },
+  "notification_passcode_wrong_message": {
+    "message": "Please try again."
+  },
+  "notification_passcode_not_match": {
+    "message": "Passcode does not match"
+  },
+  "notification_passcode_not_match_message": {
+    "message": "Please try again."
+  },
+  "settings_passcode": {
+    "message": "Passcode"
+  },
+  "form_existing_passcode": {
+    "message": "Existing passcode"
+  },
+  "form_new_passcode": {
+    "message": "New passcode"
+  },
+  "form_new_passcode_repeat": {
+    "message": "Repeat your new passcode"
+  },
+  "settings_reenter_passcode": {
+    "message": "Re-enter passcode"
+  },
+  "settings_passcode_tip": {
+    "message": "Passcode is needed to decrypt your vault and secret key."
+  },
+  "button_update": {
+    "message": "Update"
+  },
+  "button_open_site": {
+    "message": "Open site"
+  },
+  "button_view_item": {
+    "message": "View item"
+  },
+  "button_fill_forms": {
+    "message": "Try to fill forms"
+  },
+  "button_copy_note": {
+    "message": "Copy note"
+  },
+  "notification_note_copied": {
+    "message": "Note copied to clipboard"
+  },
+  "vault_no_items": {
+    "message": "No items in vault"
+  },
+  "vault_add_item": {
+    "message": "Add Item"
+  },
+  "vault_fetching_data": {
+    "message": "Fetching Data"
+  },
+  "vault_refetch_data": {
+    "message": "Refetch Data"
+  },
+  "notification_error_decrypt_vault": {
+    "message": "Error decrypting vaults"
+  },
+  "notification_error_decrypt_vault_message": {
+    "message": "The passcode you have enter is incorrect. Check FAQ for details."
+  },
+  "info_what_relays": {
+    "message": "Relays are backend servers for NOSTR network. They are run by community members. You can choose which relay to use."
+  }
+}

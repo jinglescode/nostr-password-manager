@@ -63,9 +63,10 @@ export default function VaultView() {
           })
           .catch((e) => {
             setAppNotification({
-              title: "Error decrypting vaults",
-              message:
-                "The passcode you have enter is incorrect. Check FAQ for details.",
+              title: chrome.i18n.getMessage("notification_error_decrypt_vault"),
+              message: chrome.i18n.getMessage(
+                "notification_error_decrypt_vault_message"
+              ),
               type: "error",
             });
           });
@@ -146,38 +147,38 @@ export default function VaultView() {
 
   function rowRenderer({ index, item }: { index: number; item: Item }) {
     return (
-      <>
+      <div className="border-b border-gray-900/10">
         {item[ItemKeys.TYPE] === ItemType.LOGIN && item.login && (
           <LoginItem key={index} item={item} />
         )}
         {item[ItemKeys.TYPE] === ItemType.NOTE && item.note && (
           <NoteItem key={index} item={item} />
         )}
-      </>
+      </div>
     );
   }
 
   if (items.length === 0)
     return (
       <div className="flex flex-col items-center justify-center h-full">
-        <p className="text-md">No items in vault</p>
-        <p className="mt-2 text-sm leading-6 text-brand-2">
+        <p className="text-md">{chrome.i18n.getMessage("vault_no_items")}</p>
+        <p className="mt-2">
           <a
             onClick={() => setView(Views.ITEM)}
-            className="cursor-pointer flex items-center"
+            className="cursor-pointer flex items-center text-brand-2 hover:text-primary text-sm leading-6"
           >
-            Add Item
+            {chrome.i18n.getMessage("vault_add_item")}
             <ArrowRightIcon className={`inline-block w-4 h-4 ml-1`} />
           </a>
         </p>
-        <p className="mt-2 text-sm leading-6 text-brand-2">
+        <p className="mt-2">
           <a
             onClick={() => !isFetching && refetch()}
-            className={`cursor-pointer flex items-center`}
+            className={`cursor-pointer flex items-center text-brand-2 hover:text-primary text-sm leading-6`}
           >
             {isFetching ? (
               <>
-                Fetching Data
+                {chrome.i18n.getMessage("vault_fetching_data")}
                 <ArrowPathIcon
                   className={`inline-block w-4 h-4 ml-1 ${
                     isFetching && "animate-spin"
@@ -185,7 +186,7 @@ export default function VaultView() {
                 />
               </>
             ) : (
-              <>Refetch Data</>
+              <> {chrome.i18n.getMessage("vault_refetch_data")}</>
             )}
           </a>
         </p>

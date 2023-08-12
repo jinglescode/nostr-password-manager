@@ -37,7 +37,8 @@
   },
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "watch": "webpack -w --config webpack.config.js"
+    "watch": "webpack -w --config webpack.config.js",
+    "zip": "cd dist && zip -r dist.zip *"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",

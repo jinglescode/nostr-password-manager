@@ -28,7 +28,7 @@ export default function SettingsNostrRelay() {
   }
 
   function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter" || e.keyCode === 13) {
+    if (e.key === "Enter") {
       processInput();
     }
   }
@@ -47,6 +47,7 @@ export default function SettingsNostrRelay() {
   return (
     <SettingItem
       label="Relays"
+      tooltip={chrome.i18n.getMessage("info_what_relays")}
       value={
         <>
           {relays.map((relay, index) => {
@@ -62,7 +63,7 @@ export default function SettingsNostrRelay() {
                 {editRelay && (
                   <button
                     onClick={() => deleteRelay(index)}
-                    className="text-gray-400 hover:text-brand-3 active:text-primary"
+                    className="text-brand-gray-light hover:text-brand-3 active:text-primary"
                     title={`Delete ${relay}`}
                   >
                     <TrashIcon className="h-4 w-4" />
@@ -84,7 +85,7 @@ export default function SettingsNostrRelay() {
                   className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5 cursor-pointer"
                   onClick={() => processInput()}
                 >
-                  <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">
+                  <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-brand-gray-light">
                     enter
                   </kbd>
                 </div>

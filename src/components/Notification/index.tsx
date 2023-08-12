@@ -40,8 +40,6 @@ export default function Notification() {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          {/* <>
-            {appNotification && ( */}
           <div className="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
             <div className="p-4">
               <div className="flex items-start">
@@ -66,12 +64,12 @@ export default function Notification() {
                   )}
                 </div>
                 <div className="ml-3 w-0 flex-1 pt-0.5">
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-sm font-medium text-brand-black">
                     {appNotification?.title}
                   </p>
                   {appNotification?.message && (
-                    <p className="mt-1 text-sm text-gray-500">
-                      {appNotification?.message}
+                    <p className="mt-1 text-sm text-brand-gray-light">
+                      {appNotification.message}
                     </p>
                   )}
 
@@ -86,16 +84,16 @@ export default function Notification() {
                             appNotification?.onConfirm();
                         }}
                       >
-                        Accept
+                        {chrome.i18n.getMessage("notification_accept")}
                       </button>
                       <button
                         type="button"
-                        className="ml-3 inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                        className="ml-3 inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-brand-black shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                         onClick={() => {
                           setAppNotification(undefined);
                         }}
                       >
-                        Decline
+                        {chrome.i18n.getMessage("notification_decline")}
                       </button>
                     </div>
                   )}
@@ -103,20 +101,17 @@ export default function Notification() {
                 <div className="ml-4 flex flex-shrink-0">
                   <button
                     type="button"
-                    className="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="inline-flex rounded-md bg-white text-brand-gray-light hover:text-brand-gray-light focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     onClick={() => {
                       setAppNotification(undefined);
                     }}
                   >
-                    <span className="sr-only">Close</span>
                     <XMarkIcon className="h-5 w-5" aria-hidden="true" />
                   </button>
                 </div>
               </div>
             </div>
           </div>
-          {/* )}
-          </> */}
         </Transition>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import {
-  GiftIcon,
+  HeartIcon,
   ListBulletIcon,
   PlusIcon,
   RectangleStackIcon,
@@ -25,11 +25,11 @@ export default function MenuView() {
   }
 
   return (
-    <div className="bg-brand-4 rounded-b-lg pb-4 px-4">
+    <div className="bg-black rounded-b-lg pb-4 px-4">
       <div className="grid grid-cols-4 gap-4">
         <MenuItem
           icon={<RectangleStackIcon className="h-6 w-6" />}
-          text="Vault"
+          text={chrome.i18n.getMessage("nav_vault")}
           onClick={() => {
             if (state === AccountStates.LOGGED_IN) {
               goToView(Views.VAULT);
@@ -40,7 +40,7 @@ export default function MenuView() {
         />
         <MenuItem
           icon={<PlusIcon className="h-6 w-6" />}
-          text="Add"
+          text={chrome.i18n.getMessage("nav_add")}
           onClick={() => {
             goToView(Views.ITEM);
           }}
@@ -48,24 +48,24 @@ export default function MenuView() {
         />
         <MenuItem
           icon={<RocketLaunchIcon className="h-6 w-6" />}
-          text="Roadmap"
+          text={chrome.i18n.getMessage("nav_roadmap")}
           onClick={() => goToView(Views.ROADMAP)}
         />
         <MenuItem
           icon={<ListBulletIcon className="h-6 w-6" />}
-          text="FAQ"
+          text={chrome.i18n.getMessage("nav_faqs")}
           onClick={() => goToView(Views.FAQ)}
         />
         <MenuItem
           icon={<WrenchScrewdriverIcon className="h-6 w-6" />}
-          text="Settings"
+          text={chrome.i18n.getMessage("nav_settings")}
           onClick={() => goToView(Views.SETTINGS)}
           disabled={state !== AccountStates.LOGGED_IN}
         />
         <MenuItem
-          icon={<GiftIcon className="h-6 w-6" />}
-          text="Donate"
-          onClick={() => goToView(Views.DONATE)}
+          icon={<HeartIcon className="h-6 w-6" />}
+          text={chrome.i18n.getMessage("nav_support")}
+          onClick={() => goToView(Views.SUPPORT)}
         />
       </div>
     </div>
@@ -77,8 +77,8 @@ function MenuItem({ icon, text, onClick, disabled }: any) {
     <button
       onClick={onClick}
       className={`relative inline-flex items-center justify-center rounded-md p-2 ${
-        disabled ? "text-gray-600" : "text-gray-400"
-      } ${!disabled && "hover:bg-brand-2 hover:text-white"}`}
+        disabled ? "text-gray-600" : "text-brand-gray-light"
+      } ${!disabled && "hover:text-primary"}`}
       disabled={disabled}
     >
       <div className="flex flex-col items-center">

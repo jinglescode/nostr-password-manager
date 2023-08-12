@@ -62,21 +62,21 @@ export default function LoginItem({ item }: { item: Item }) {
   if (item.login === undefined) return <></>;
 
   return (
-    <div className="whitespace-nowrap text-sm py-2 overflow-x-hidden">
-      <div className="flex items-center mx-4">
+    <div className="whitespace-nowrap text-sm overflow-x-hidden">
+      <div className="flex items-center mx-4 h-14 py-2">
         <div className="flex-grow overflow-x-hidden">
-          <p className="font-medium text-gray-900 text-ellipsis overflow-x-hidden">
+          <p className="font-medium text-brand-black text-ellipsis overflow-x-hidden">
             {item[ItemKeys.NAME]}
           </p>
-          <p className="text-gray-500 text-ellipsis overflow-x-hidden">
+          <p className="text-brand-gray text-ellipsis overflow-x-hidden">
             {item.login[ItemKeys.USERNAME]}
           </p>
         </div>
-        <div className="flex-none text-gray-500 flex items-center">
+        <div className="flex-none flex items-center">
           <button
             onClick={() => fillForms()}
-            className="text-gray-400 hover:text-brand-3 active:text-primary"
-            title="Try to fill forms"
+            className="text-brand-gray-light hover:text-primary"
+            title={chrome.i18n.getMessage("button_fill_forms")}
           >
             <SparklesIcon className="h-6 w-6" />
           </button>
@@ -84,12 +84,12 @@ export default function LoginItem({ item }: { item: Item }) {
             onClick={() => {
               copyUser();
               setAppNotification({
-                title: "Username copied to clipboard",
+                title: chrome.i18n.getMessage("notification_username_copied"),
                 type: "success",
               });
             }}
-            className="text-gray-400 hover:text-brand-3 active:text-primary"
-            title="Copy username"
+            className="text-brand-gray-light hover:text-primary"
+            title={chrome.i18n.getMessage("notification_copy_username")}
           >
             <UserIcon className="h-6 w-6" />
           </button>
@@ -97,28 +97,28 @@ export default function LoginItem({ item }: { item: Item }) {
             onClick={() => {
               copyPassword();
               setAppNotification({
-                title: "Password copied to clipboard",
+                title: chrome.i18n.getMessage("notification_password_copied"),
                 type: "success",
               });
             }}
-            className="text-gray-400 hover:text-brand-3 active:text-primary"
-            title="Copy password"
+            className="text-brand-gray-light hover:text-primary"
+            title={chrome.i18n.getMessage("notification_copy_password")}
           >
             <KeyIcon className="h-6 w-6" />
           </button>
           {hasUri && (
             <button
               onClick={() => openSite()}
-              className="text-gray-400 hover:text-brand-3 active:text-primary"
-              title="Open site"
+              className="text-brand-gray-light hover:text-primary"
+              title={chrome.i18n.getMessage("button_open_site")}
             >
               <ArrowTopRightOnSquareIcon className="h-6 w-6" />
             </button>
           )}
           <button
             onClick={() => viewItem()}
-            className="text-gray-400 hover:text-brand-3 active:text-primary"
-            title="View item"
+            className="text-brand-gray-light hover:text-primary"
+            title={chrome.i18n.getMessage("button_view_item")}
           >
             <InformationCircleIcon className="h-6 w-6" />
           </button>

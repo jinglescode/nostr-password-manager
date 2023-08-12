@@ -12,23 +12,22 @@ export default function RoadmapView() {
   }
 
   return (
-    <div className="w-full h-full p-2 space-y-2">
-      <ul className="h-full">
-        <Virtuoso
-          style={{ height: "100%" }}
-          data={ROADMAP}
-          itemContent={(index, item) => rowRenderer({ index, item })}
-        />
-      </ul>
-    </div>
+    <ul className="w-full h-full">
+      <Virtuoso
+        style={{ height: "100%" }}
+        data={ROADMAP}
+        itemContent={(index, item) => rowRenderer({ index, item })}
+      />
+    </ul>
   );
 }
 
 function RoadmapItem({ index, item }: { index: number; item: any }) {
+  const isNotLast = index !== ROADMAP.length - 1;
   return (
-    <li>
-      <div className="relative pb-8">
-        {index !== ROADMAP.length - 1 ? (
+    <li className="mx-4 pt-2">
+      <div className={`relative ${isNotLast ? "pb-8" : "pb-2"}`}>
+        {isNotLast ? (
           <span
             className="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200"
             aria-hidden="true"
@@ -56,9 +55,9 @@ function RoadmapItem({ index, item }: { index: number; item: any }) {
           </div>
           <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
             <div>
-              <p className="text-sm text-gray-500">{item.desc}</p>
+              <p className="text-sm text-brand-black">{item.desc}</p>
             </div>
-            <div className="whitespace-nowrap text-right text-sm text-gray-500">
+            <div className="whitespace-nowrap text-right text-sm text-brand-gray">
               {item.datetime && (
                 <time dateTime={item.datetime}>{item.datetime}</time>
               )}

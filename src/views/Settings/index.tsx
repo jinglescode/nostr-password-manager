@@ -5,11 +5,11 @@ import SettingsSecurityView from "./security";
 
 const navigationItems = [
   {
-    name: "NOSTR",
+    name: chrome.i18n.getMessage("settings_header_nostr"),
     view: SettingViews.NOSTR,
   },
   {
-    name: "Security",
+    name: chrome.i18n.getMessage("settings_header_security"),
     view: SettingViews.SECURITY,
   },
 ];
@@ -21,9 +21,9 @@ export default function SettingsView() {
 
   return (
     <>
-      <main className="w-full h-full space-y-2">
+      <main className="w-full h-full">
         <Menu settingView={settingView} setSettingView={setSettingView} />
-        <div className="mx-auto max-w-xl space-y-4">
+        <div className="mx-auto max-w-xl">
           <div className="px-4">
             {settingView === SettingViews.NOSTR && <SettingsNostrView />}
             {settingView === SettingViews.SECURITY && <SettingsSecurityView />}
@@ -50,8 +50,8 @@ function Menu({
               <a
                 className={`group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold cursor-pointer ${
                   item.view === settingView
-                    ? "bg-gray-50 text-indigo-600"
-                    : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50"
+                    ? "bg-gray-50 text-brand-2"
+                    : "text-brand-gray hover:text-primary hover:bg-gray-50"
                 }`}
                 onClick={() => setSettingView(item.view)}
               >

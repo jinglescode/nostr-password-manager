@@ -8,11 +8,14 @@ import {
   DocumentDuplicateIcon,
   EyeIcon,
   EyeSlashIcon,
+  PlusIcon,
+  QuestionMarkCircleIcon,
   TrashIcon,
 } from "@heroicons/react/20/solid";
 import Button from "../../components/Button";
 import { viewStore } from "../../stores/view";
 import { generatePassword } from "../../utils/strings/passwordGenerator";
+import Tooltip from "../../components/Tooltip";
 
 export default function LoginItem({
   editableItem,
@@ -68,9 +71,9 @@ export default function LoginItem({
   return (
     <>
       <Input
-        label="Username"
+        label={chrome.i18n.getMessage("form_username")}
         name="username"
-        placeholder="login username"
+        placeholder={chrome.i18n.getMessage("form_username_placeholder")}
         value={editableItem?.login?.[ItemKeys.USERNAME] || ""}
         onChange={(e) =>
           onChangeFormInput({
@@ -87,12 +90,14 @@ export default function LoginItem({
                 onClick={() => {
                   copyUser();
                   setAppNotification({
-                    title: "Username copied to clipboard",
+                    title: chrome.i18n.getMessage(
+                      "notification_username_copied"
+                    ),
                     type: "success",
                   });
                 }}
-                className="text-gray-400 hover:text-brand-3 active:text-primary"
-                title="Copy username"
+                className="text-brand-gray-light hover:text-primary"
+                title={chrome.i18n.getMessage("notification_copy_username")}
               >
                 <DocumentDuplicateIcon className="h-6 w-6" />
               </button>
@@ -101,10 +106,10 @@ export default function LoginItem({
         }
       />
       <Input
-        label="Password"
+        label={chrome.i18n.getMessage("form_password")}
         name="password"
         type={isShowPassword ? "text" : "password"}
-        placeholder="login password"
+        placeholder={chrome.i18n.getMessage("form_password_placeholder")}
         value={editableItem?.login?.[ItemKeys.PASSWORD] || ""}
         onChange={(e) =>
           onChangeFormInput({
@@ -119,16 +124,20 @@ export default function LoginItem({
             {mode == EditItemViews.EDIT && (
               <button
                 onClick={() => generateNewPassword()}
-                className="text-gray-400 hover:text-brand-3 active:text-primary"
-                title="Generate password"
+                className="text-brand-gray-light hover:text-primary"
+                title={chrome.i18n.getMessage("button_generate_password")}
               >
                 <ArrowPathIcon className="h-6 w-6" />
               </button>
             )}
             <button
               onClick={() => setIsShowPassword(!isShowPassword)}
-              className="text-gray-400 hover:text-brand-3 active:text-primary"
-              title={isShowPassword ? "Hide password" : "Show password"}
+              className="text-brand-gray-light hover:text-primary"
+              title={
+                isShowPassword
+                  ? chrome.i18n.getMessage("button_hide_password")
+                  : chrome.i18n.getMessage("button_show_password")
+              }
             >
               {isShowPassword ? (
                 <EyeSlashIcon className="h-6 w-6" />
@@ -141,12 +150,14 @@ export default function LoginItem({
                 onClick={() => {
                   copyPassword();
                   setAppNotification({
-                    title: "Password copied to clipboard",
+                    title: chrome.i18n.getMessage(
+                      "notification_password_copied"
+                    ),
                     type: "success",
                   });
                 }}
-                className="text-gray-400 hover:text-brand-3 active:text-primary"
-                title="Copy password"
+                className="text-brand-gray-light hover:text-primary"
+                title={chrome.i18n.getMessage("notification_copy_password")}
               >
                 <DocumentDuplicateIcon className="h-6 w-6" />
               </button>
@@ -155,9 +166,26 @@ export default function LoginItem({
         }
       />
 
-      <label className="block text-sm font-semibold leading-6 text-gray-900">
-        URIs
-      </label>
+      <div className="flex justify-between">
+        <div className="flex gap-1">
+          <label className="block text-sm font-semibold leading-6 text-brand-black">
+            {chrome.i18n.getMessage("form_uris")}
+          </label>
+          <Tooltip info={chrome.i18n.getMessage("form_uris_tip")}>
+            <QuestionMarkCircleIcon className="h-4 w-4 inline-block text-brand-gray" />
+          </Tooltip>
+        </div>
+        <div>
+          {mode == EditItemViews.EDIT && (
+            <button
+              onClick={() => addUriRow()}
+              className="bg-brand-2 hover:bg-primary rounded-full text-center items-center justify-center w-6 h-6"
+            >
+              <PlusIcon className="h-6 w-6 inline-block text-white" />
+            </button>
+          )}
+        </div>
+      </div>
       {editableItem?.login?.[ItemKeys.URI].map((uri, index) => {
         return (
           <Input
@@ -178,8 +206,8 @@ export default function LoginItem({
                   <div className="absolute inset-y-0 right-0 flex items-center pr-2">
                     <button
                       onClick={() => deleteUri(index)}
-                      className="text-gray-400 hover:text-brand-3 active:text-primary"
-                      title="Delete URI"
+                      className="text-brand-gray-light hover:text-primary"
+                      title={chrome.i18n.getMessage("button_delete_uri")}
                     >
                       <TrashIcon className="h-6 w-6" />
                     </button>
@@ -190,9 +218,6 @@ export default function LoginItem({
           />
         );
       })}
-      {mode == EditItemViews.EDIT && (
-        <Button onClick={() => addUriRow()}>Add more URI</Button>
-      )}
     </>
   );
 }

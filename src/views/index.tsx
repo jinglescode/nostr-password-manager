@@ -3,10 +3,7 @@ import Navbar from "../components/Navbar";
 import { Views, viewStore } from "../stores/view";
 import LoginView from "./Login";
 import MenuView from "./Menu";
-import {
-  getSessionStorage,
-  getSyncStorage,
-} from "../utils/chrome/storage";
+import { getSessionStorage, getSyncStorage } from "../utils/chrome/storage";
 import { accountStore } from "../stores/account";
 import { AccountStates } from "../enums/account";
 import { StorageKeys } from "../enums/storage";
@@ -18,7 +15,7 @@ import { User } from "../types/user";
 import { getPublicKeys } from "../utils/nostr/getPublicKeys";
 import Notification from "../components/Notification";
 import FAQView from "./FAQ";
-import DonateView from "./Donate";
+import SupportView from "./Support";
 import SettingsView from "./Settings";
 
 export default function MainView() {
@@ -81,7 +78,7 @@ export default function MainView() {
             {view === Views.ITEM && <ItemView />}
             {view === Views.ROADMAP && <RoadmapView />}
             {view === Views.FAQ && <FAQView />}
-            {view === Views.DONATE && <DonateView />}
+            {view === Views.SUPPORT && <SupportView />}
             {view === Views.SETTINGS && <SettingsView />}
           </>
         )}

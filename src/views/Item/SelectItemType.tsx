@@ -11,13 +11,13 @@ const itemTypes: {
   };
 } = {
   [ItemType.LOGIN]: {
-    label: "Login",
-    desc: "username and password",
+    label: chrome.i18n.getMessage("nav_login"),
+    desc: chrome.i18n.getMessage("info_login"),
     key: ItemType.LOGIN,
   },
   [ItemType.NOTE]: {
-    label: "Note",
-    desc: "short notes about anything",
+    label: chrome.i18n.getMessage("nav_note"),
+    desc: chrome.i18n.getMessage("info_note"),
     key: ItemType.NOTE,
   },
 };
@@ -37,23 +37,20 @@ export default function SelectItemType({
     <Listbox value={itemType} onChange={setSelected}>
       {({ open }) => (
         <>
-          <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">
-            Item Type
+          <Listbox.Label className="block text-sm font-medium leading-6 text-brand-black">
+            {chrome.i18n.getMessage("form_item_type")}
           </Listbox.Label>
           <div className="relative mt-2">
-            <Listbox.Button 
-            className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 sm:text-sm sm:leading-6 ring-brand-2 focus:ring-primary"
-            // className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
-            >
+            <Listbox.Button className="block w-full rounded-md border-0 px-3.5 py-2 text-brand-black shadow-sm ring-1 ring-inset placeholder:text-brand-gray-light sm:text-sm sm:leading-6 ring-brand-2 focus:ring-primary">
               <span className="inline-flex w-full truncate">
                 <span className="truncate">{itemTypes[itemType].label}</span>
-                <span className="ml-2 truncate text-gray-500">
+                <span className="ml-2 truncate text-brand-gray">
                   {itemTypes[itemType].desc}
                 </span>
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronUpDownIcon
-                  className="h-5 w-5 text-gray-400"
+                  className="h-5 w-5 text-brand-gray-light"
                   aria-hidden="true"
                 />
               </span>
@@ -71,8 +68,8 @@ export default function SelectItemType({
                   <Listbox.Option
                     key={i}
                     className={({ active }) => {
-                      return `relative cursor-default select-none py-2 pl-3 pr-9 ${
-                        active ? "bg-brand-2 text-white" : "text-gray-900"
+                      return `relative select-none py-2 pl-3 pr-9 ${
+                        active ? "bg-brand-2 text-white" : "text-brand-black"
                       }`;
                     }}
                     value={itemTypes[item].key}
@@ -89,7 +86,7 @@ export default function SelectItemType({
                           </span>
                           <span
                             className={`ml-2 truncate ${
-                              active ? "text-white" : "text-gray-500"
+                              active ? "text-white" : "text-brand-gray"
                             }`}
                           >
                             {itemTypes[item].desc}

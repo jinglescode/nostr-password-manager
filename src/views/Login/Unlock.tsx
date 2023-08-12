@@ -92,7 +92,7 @@ export default function Unlock({ setStep }: { setStep: Function }) {
     if (passcodeIsError) {
       setPasscodeIsError(false);
     }
-    if (e.key === "Enter" || e.keyCode === 13) {
+    if (e.key === "Enter") {
       decrypt();
     }
   }
@@ -110,7 +110,7 @@ export default function Unlock({ setStep }: { setStep: Function }) {
               : chrome.runtime.getURL("/images/rounded-512.png")
           }
         />
-        <h2 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+        <h2 className="mt-2 text-2xl font-bold tracking-tight text-brand-black sm:text-4xl">
           Welcome{" "}
           {getProfile(npub).displayName
             ? getProfile(npub).displayName
@@ -119,38 +119,48 @@ export default function Unlock({ setStep }: { setStep: Function }) {
             : ""}
         </h2>
         <p className="mt-2 text-lg leading-8 text-gray-600">
-          Enter your passcode to unlock.
+          {chrome.i18n.getMessage("info_enter_passcode_unlock")}
         </p>
       </div>
       <div className="mx-auto max-w-xl mt-20">
         <Input
-          label="Passcode to decrypt your key"
+          label={chrome.i18n.getMessage("form_passcode_decrypt_key")}
           type="password"
           name="passcode"
-          placeholder="at least 6 characters"
+          placeholder={chrome.i18n.getMessage("form_passcode_6_chars")}
           value={inputPasscode}
           onChange={(e) => setInputPasscode(e.target.value)}
           isError={passcodeIsError}
-          isErrorMessage="Passcode incorrect."
+          isErrorMessage={chrome.i18n.getMessage(
+            "form_error_passcode_incorrect"
+          )}
           onKeyUp={(e) => handleKeyUp(e)}
           after={
             <div
               className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5 cursor-pointer"
               onClick={() => decrypt()}
             >
-              <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">
+              <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-brand-gray-light">
                 enter
               </kbd>
             </div>
           }
         />
         <div className="mt-10">
-          <Button disabled={inputPasscode.length < 6} onClick={() => decrypt()}>
-            Access
+          <Button
+            disabled={inputPasscode.length < 6}
+            onClick={() => decrypt()}
+            hasGradientBackground={true}
+          >
+            {chrome.i18n.getMessage("button_continue")}
           </Button>
-          <p className="mt-4 text-sm leading-6 text-brand-2">
-            <a onClick={() => forgetAccount()} className="cursor-pointer">
-              Connect another account<span> &rarr;</span>
+          <p className="mt-4">
+            <a
+              onClick={() => forgetAccount()}
+              className="cursor-pointer text-brand-2 hover:text-primary text-sm leading-6"
+            >
+              {chrome.i18n.getMessage("button_connect_another_account")}
+              <span> &rarr;</span>
             </a>
           </p>
         </div>
