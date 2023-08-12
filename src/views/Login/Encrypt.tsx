@@ -152,7 +152,11 @@ export default function Encrypt({
           </p>
         )}
         <div className="mt-10">
-          <Button disabled={inputPasscode.length < 6} onClick={() => encrypt()}>
+          <Button
+            disabled={inputPasscode.length < 6}
+            onClick={() => encrypt()}
+            hasGradientBackground={true}
+          >
             {firstNewPassInput == undefined
               ? chrome.i18n.getMessage("button_continue")
               : chrome.i18n.getMessage("button_encrypt_access")}

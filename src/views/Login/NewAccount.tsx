@@ -79,7 +79,7 @@ export default function NewAccount({
           }
         />
         <div className="mt-10">
-          <Button onClick={() => handleNext()}>
+          <Button onClick={() => handleNext()} hasGradientBackground={true}>
             {chrome.i18n.getMessage("button_have_copied_key")}
           </Button>
         </div>

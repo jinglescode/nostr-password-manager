@@ -147,7 +147,11 @@ export default function Unlock({ setStep }: { setStep: Function }) {
           }
         />
         <div className="mt-10">
-          <Button disabled={inputPasscode.length < 6} onClick={() => decrypt()}>
+          <Button
+            disabled={inputPasscode.length < 6}
+            onClick={() => decrypt()}
+            hasGradientBackground={true}
+          >
             {chrome.i18n.getMessage("button_continue")}
           </Button>
           <p className="mt-4">

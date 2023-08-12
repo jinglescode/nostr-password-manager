@@ -8,6 +8,7 @@ import {
   DocumentDuplicateIcon,
   EyeIcon,
   EyeSlashIcon,
+  PlusIcon,
   QuestionMarkCircleIcon,
   TrashIcon,
 } from "@heroicons/react/20/solid";
@@ -165,15 +166,27 @@ export default function LoginItem({
       />
 
       <div className="flex justify-between">
-        <label className="block text-sm font-semibold leading-6 text-brand-black">
-          {chrome.i18n.getMessage("form_uris")}
-        </label>
-        <span
-          className="text-sm leading-6 text-gray-500"
-          title={chrome.i18n.getMessage("form_uris_tip")}
-        >
-          <QuestionMarkCircleIcon className="h-4 w-4 inline-block text-brand-gray" />
-        </span>
+        <div className="flex gap-1">
+          <label className="block text-sm font-semibold leading-6 text-brand-black">
+            {chrome.i18n.getMessage("form_uris")}
+          </label>
+          <span
+            className="text-sm leading-6 text-gray-500"
+            title={chrome.i18n.getMessage("form_uris_tip")}
+          >
+            <QuestionMarkCircleIcon className="h-4 w-4 inline-block text-brand-gray" />
+          </span>
+        </div>
+        <div>
+          {mode == EditItemViews.EDIT && (
+            <button
+              onClick={() => addUriRow()}
+              className="bg-brand-2 hover:bg-primary rounded-full text-center items-center justify-center w-6 h-6"
+            >
+              <PlusIcon className="h-6 w-6 inline-block text-white" />
+            </button>
+          )}
+        </div>
       </div>
       {editableItem?.login?.[ItemKeys.URI].map((uri, index) => {
         return (
@@ -207,11 +220,6 @@ export default function LoginItem({
           />
         );
       })}
-      {mode == EditItemViews.EDIT && (
-        <Button onClick={() => addUriRow()}>
-          {chrome.i18n.getMessage("button_add_uri")}
-        </Button>
-      )}
     </>
   );
 }

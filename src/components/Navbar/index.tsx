@@ -18,7 +18,7 @@ export default function Navbar() {
   const itemDetails = viewStore((state) => state.itemDetails);
 
   return (
-    <div className="bg-brand-4">
+    <div className="bg-black">
       <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="flex items-center px-2 lg:px-0">

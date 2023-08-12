@@ -74,7 +74,7 @@
     "message": "Enter your passcode to unlock."
   },
   "form_passcode_decrypt_key": {
-    "message": "Enter passcode to decrypt your key"
+    "message": "Enter passcode to decrypt your vault"
   },
   "form_error_passcode_incorrect": {
     "message": "Passcode incorrect."

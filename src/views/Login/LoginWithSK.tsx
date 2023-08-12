@@ -81,6 +81,7 @@ export default function LoginWithSK({
           <Button
             disabled={ndk === undefined || inputSk.length === 0}
             onClick={() => login()}
+            hasGradientBackground={true}
           >
             {chrome.i18n.getMessage("button_connect")}
           </Button>

@@ -25,7 +25,7 @@ export default function MenuView() {
   }
 
   return (
-    <div className="bg-brand-4 rounded-b-lg pb-4 px-4">
+    <div className="bg-black rounded-b-lg pb-4 px-4">
       <div className="grid grid-cols-4 gap-4">
         <MenuItem
           icon={<RectangleStackIcon className="h-6 w-6" />}

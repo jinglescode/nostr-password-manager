@@ -4,13 +4,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#7E81FF",
-        "brand-2": "#635EC0",
-        "brand-3": "#262230",
-        "brand-4": "#141119",
-        "brand-black": "#141119",
+        primary: "#5593FE",
+        "brand-2": "#3B4D8A",
+        "brand-3": "#232E52",
+        "brand-black": "#090B11",
         "brand-gray": "#6B6C7E",
-        "brand-gray-light": "#9CA3AF",
+        "brand-gray-light": "#9CA3AF"
       },
     },
   },
