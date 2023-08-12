@@ -16,7 +16,7 @@ function Item({ item }: { item: any }) {
   return (
     <a
       href={item.href}
-      className="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 hover:border-brand-gray-light"
+      className="relative flex items-center space-x-3 rounded-lg border border-brand-2 bg-white px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 hover:border-primary"
       target="_blank"
     >
       <div className="min-w-0 flex-1">

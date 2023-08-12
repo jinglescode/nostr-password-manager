@@ -203,7 +203,7 @@
     "message": "URIs"
   },
   "form_uris_tip": {
-    "message": "When you are on this URI, this login will rank on top."
+    "message": "When you are on this URI, this item will rank on top of the vault."
   },
   "button_delete_uri": {
     "message": "Delete URI"
@@ -314,7 +314,7 @@
     "message": "Re-enter passcode"
   },
   "settings_passcode_tip": {
-    "message": "Passcode is needed to decrypt your data."
+    "message": "Passcode is needed to decrypt your vault and secret key."
   },
   "button_update": {
     "message": "Update"
@@ -351,5 +351,8 @@
   },
   "notification_error_decrypt_vault_message": {
     "message": "The passcode you have enter is incorrect. Check FAQ for details."
+  },
+  "info_what_relays": {
+    "message": "Relays are backend servers for NOSTR network. They are run by community members. You can choose which relay to use."
   }
 }

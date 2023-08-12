@@ -22,7 +22,7 @@ import { useQueryClient } from "@tanstack/react-query";
 export default function Unlock({ setStep }: { setStep: Function }) {
   const { ndk, loginWithSecret } = useNDK();
   const [npub, setNpub] = useState<undefined | string>(undefined);
-  const [inputPasscode, setInputPasscode] = useState<string>("1q2w3e");
+  const [inputPasscode, setInputPasscode] = useState<string>("");
   const [passcodeIsError, setPasscodeIsError] = useState<boolean>(false);
   const setState = accountStore((state) => state.setState);
   const setView = viewStore((state) => state.setView);

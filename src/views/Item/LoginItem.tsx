@@ -15,6 +15,7 @@ import {
 import Button from "../../components/Button";
 import { viewStore } from "../../stores/view";
 import { generatePassword } from "../../utils/strings/passwordGenerator";
+import Tooltip from "../../components/Tooltip";
 
 export default function LoginItem({
   editableItem,
@@ -170,12 +171,9 @@ export default function LoginItem({
           <label className="block text-sm font-semibold leading-6 text-brand-black">
             {chrome.i18n.getMessage("form_uris")}
           </label>
-          <span
-            className="text-sm leading-6 text-gray-500"
-            title={chrome.i18n.getMessage("form_uris_tip")}
-          >
+          <Tooltip info={chrome.i18n.getMessage("form_uris_tip")}>
             <QuestionMarkCircleIcon className="h-4 w-4 inline-block text-brand-gray" />
-          </span>
+          </Tooltip>
         </div>
         <div>
           {mode == EditItemViews.EDIT && (

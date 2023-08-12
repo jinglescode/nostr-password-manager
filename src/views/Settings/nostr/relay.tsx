@@ -47,6 +47,7 @@ export default function SettingsNostrRelay() {
   return (
     <SettingItem
       label="Relays"
+      tooltip={chrome.i18n.getMessage("info_what_relays")}
       value={
         <>
           {relays.map((relay, index) => {
