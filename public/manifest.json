@@ -7,12 +7,24 @@
   "default_locale": "en",
   "action": {
     "default_popup": "index.html",
-    "default_title": "__MES_app_name__"
+    "default_title": "Vault"
   },
   "icons": {
-    "128": "images/rounded-128.png",
+    "16": "images/rounded-16.png",
+    "32": "images/rounded-32.png",
     "48": "images/rounded-48.png",
-    "32": "images/rounded-32.png"
+    "128": "images/rounded-128.png"
   },
-  "permissions": ["tabs", "storage"]
+  "permissions": ["tabs", "storage"],
+  "background": {
+    "service_worker": "scripts/background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["scripts/contentScript.js"],
+      "all_frames": true
+    }
+  ]
 }

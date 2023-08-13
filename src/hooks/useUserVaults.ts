@@ -57,7 +57,8 @@ export function useUserVaults() {
     },
     {
       enabled: !!ndk && !!user,
-      staleTime: 1000 * 60 * 5,
+      cacheTime: 1000 * 60 * 60 * 24 * 365,
+      staleTime: 1000 * 60 * 15,
     }
   );
 

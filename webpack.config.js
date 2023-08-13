@@ -57,7 +57,7 @@ function getHtmlPlugins(chunks) {
   return chunks.map(
     (chunk) =>
       new HTMLPlugin({
-        title: "NOSTR Password Manager",
+        title: "Vault",
         filename: `${chunk}.html`,
         chunks: [chunk],
       })

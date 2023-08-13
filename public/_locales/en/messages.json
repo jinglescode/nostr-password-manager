@@ -1,6 +1,6 @@
 {
   "extension_name": {
-    "message": "Vault (Password Manager on NOSTR)"
+    "message": "Vault"
   },
   "extension_description": {
     "message": "Free, open source, and decentralized. Vault utilizes zero-knowledge encryption and stores data on NOSTR network."

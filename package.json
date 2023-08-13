@@ -1,6 +1,6 @@
 {
   "name": "nostr-password-manager",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "dependencies": {
     "@headlessui/react": "^1.7.16",
@@ -38,7 +38,8 @@
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "watch": "webpack -w --config webpack.config.js",
-    "zip": "cd dist && zip -r dist.zip *"
+    "zip": "cd dist && zip -r vault.zip * && cd .. && mv dist/vault.zip .",
+    "package": "rm -rf dist/ && yarn build && yarn zip"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",
