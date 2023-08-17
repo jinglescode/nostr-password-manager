@@ -2,8 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-.container {
+.extension {
   width: 375px;
   height: 600px;
   cursor: default;
 }
+
+/* #plasmo-shadow-container {
+  
+} */

@@ -15,9 +15,10 @@ import { AccountStates } from "../../enums/account";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import { Views, viewStore } from "../../stores/view";
-import { User } from "../../types/user";
+import type { User } from "../../types/user";
 import { getPublicKeys } from "../../utils/nostr/getPublicKeys";
 import { useQueryClient } from "@tanstack/react-query";
+import logo from "data-base64:~assets/icon.png"
 
 export default function Unlock({ setStep }: { setStep: Function }) {
   const { ndk, loginWithSecret } = useNDK();
@@ -107,7 +108,7 @@ export default function Unlock({ setStep }: { setStep: Function }) {
           src={
             getProfile(npub).image
               ? getProfile(npub).image
-              : chrome.runtime.getURL("/images/rounded-512.png")
+              : logo
           }
         />
         <h2 className="mt-2 text-2xl font-bold tracking-tight text-brand-black sm:text-4xl">

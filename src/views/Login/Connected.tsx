@@ -3,6 +3,7 @@ import { getSyncStorage } from "../../utils/chrome/storage";
 import { useEffect, useState } from "react";
 import { StorageKeys } from "../../enums/storage";
 import { getPublicKeys } from "../../utils/nostr/getPublicKeys";
+import logo from "data-base64:~assets/icon.png"
 
 export default function Connected() {
   const { ndk, getProfile } = useNDK();
@@ -29,7 +30,7 @@ export default function Connected() {
           src={
             getProfile(npub).image
               ? getProfile(npub).image
-              : chrome.runtime.getURL("/images/rounded-512.png")
+              : logo
           }
         />
         <h2 className="mt-2 text-2xl font-bold tracking-tight text-brand-black sm:text-4xl">

@@ -1,52 +1,62 @@
 {
   "name": "nostr-password-manager",
-  "version": "1.0.2",
-  "private": true,
+  "displayName": "__MSG_extension_name__",
+  "version": "1.1.0",
+  "description": "__MSG_extension_description__",
+  "author": "Jingles (jingles.dev)",
+  "homepage": "https://github.com/jinglescode/nostr-password-manager",
+  "contributors": [
+    "jinglescode"
+  ],
+  "scripts": {
+    "start": "next start",
+    "dev": "run-p dev:*",
+    "dev:plasmo": "plasmo dev",
+    "dev:next": "next dev --port 1947",
+    "build": "run-p build:*",
+    "build:plasmo": "plasmo build",
+    "build:next": "next build"
+  },
   "dependencies": {
     "@headlessui/react": "^1.7.16",
     "@heroicons/react": "^2.0.18",
-    "@nostr-dev-kit/ndk": "^0.8.1",
+    "@nostr-dev-kit/ndk": "^0.8.17",
     "@nostr-dev-kit/ndk-react": "^0.1.1",
+    "@plasmohq/messaging": "^0.5.0",
     "@tanstack/react-query": "^4.32.6",
     "@tanstack/react-query-persist-client": "^4.32.6",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/chrome": "^0.0.243",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.11",
-    "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
-    "buffer": "^6.0.3",
     "copy-to-clipboard": "^3.3.3",
-    "copy-webpack-plugin": "^11.0.0",
-    "crypto-browserify": "^3.12.0",
-    "css-loader": "^6.7.3",
-    "html-webpack-plugin": "^5.5.0",
+    "next": "13.4.9",
     "nostr-tools": "^1.14.0",
-    "postcss-loader": "^7.3.3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "react-virtuoso": "^4.4.2",
-    "stream-browserify": "^3.0.0",
+    "plasmo": "0.82.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-virtuoso": "^4.5.0",
     "string-crypto": "^2.0.2",
-    "typescript": "^5.1.6",
-    "web-vitals": "^2.1.4",
-    "zustand": "^4.4.0"
-  },
-  "scripts": {
-    "build": "webpack --config webpack.config.js",
-    "watch": "webpack -w --config webpack.config.js",
-    "zip": "cd dist && zip -r vault.zip * && cd .. && mv dist/vault.zip .",
-    "package": "rm -rf dist/ && yarn build && yarn zip"
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.14",
+    "@ianvs/prettier-plugin-sort-imports": "4.1.0",
+    "@plasmohq/rps": "workspace:*",
+    "@plasmohq/storage": "workspace:*",
+    "@types/chrome": "0.0.241",
+    "@types/node": "20.4.2",
+    "@types/react": "18.2.15",
+    "@types/react-dom": "18.2.7",
+    "autoprefixer": "^10.4.15",
     "postcss": "^8.4.27",
+    "prettier": "3.0.0",
     "tailwindcss": "^3.3.3",
-    "ts-loader": "^9.4.2",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.1"
+    "typescript": "5.1.6"
+  },
+  "manifest": {
+    "default_locale": "en",
+    "host_permissions": [
+      "https://*/*"
+    ],
+    "permissions": [
+      "tabs",
+      "storage"
+    ]
   }
 }

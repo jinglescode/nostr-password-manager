@@ -3,6 +3,7 @@ import { LoginViews } from "../../enums/views";
 import Input from "../../components/Input";
 import { useState } from "react";
 import Button from "../../components/Button";
+import logo from "data-base64:~assets/icon.png"
 
 export default function LoginWithSK({
   inputSk,
@@ -46,7 +47,7 @@ export default function LoginWithSK({
       <div className="mx-auto max-w-2xl text-center">
         <img
           className="h-16 mx-auto"
-          src={chrome.runtime.getURL("/images/rounded-512.png")}
+          src={logo}
         />
         <h2 className="mt-2 text-2xl font-bold tracking-tight text-brand-black sm:text-4xl">
           {chrome.i18n.getMessage("app_name")}

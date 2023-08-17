@@ -1,21 +1,23 @@
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Views, viewStore } from "../../stores/view";
-import { accountStore } from "../../stores/account";
-import { AccountStates } from "../../enums/account";
-import { searchStore } from "../../stores/search";
-import { ItemKeys, ItemType } from "../../enums/item";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid"
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
+import logo from "data-base64:~assets/icon.png"
+
+import { AccountStates } from "../../enums/account"
+import { ItemKeys, ItemType } from "../../enums/item"
+import { accountStore } from "../../stores/account"
+import { searchStore } from "../../stores/search"
+import { Views, viewStore } from "../../stores/view"
 
 export default function Navbar() {
-  const showMenu = viewStore((state) => state.showMenu);
-  const toggleShowMenu = viewStore((state) => state.toggleShowMenu);
-  const state = accountStore((state) => state.state);
-  const searchInput = searchStore((state) => state.searchInput);
-  const setSearchInput = searchStore((state) => state.setSearchInput);
+  const showMenu = viewStore((state) => state.showMenu)
+  const toggleShowMenu = viewStore((state) => state.toggleShowMenu)
+  const state = accountStore((state) => state.state)
+  const searchInput = searchStore((state) => state.searchInput)
+  const setSearchInput = searchStore((state) => state.setSearchInput)
 
-  const view = viewStore((state) => state.view);
-  const setView = viewStore((state) => state.setView);
-  const itemDetails = viewStore((state) => state.itemDetails);
+  const view = viewStore((state) => state.view)
+  const setView = viewStore((state) => state.setView)
+  const itemDetails = viewStore((state) => state.itemDetails)
 
   return (
     <div className="bg-black">
@@ -23,10 +25,7 @@ export default function Navbar() {
         <div className="relative flex h-16 items-center justify-between">
           <div className="flex items-center px-2 lg:px-0">
             <div className="flex-shrink-0">
-              <img
-                className="h-8 w-auto"
-                src={chrome.runtime.getURL("/images/rounded-512.png")}
-              />
+              <img className="h-8 w-auto" src={logo} />
             </div>
           </div>
 
@@ -93,15 +92,13 @@ export default function Navbar() {
             {view === Views.ITEM ? (
               <button
                 className="relative inline-flex items-center justify-center rounded-md p-2 text-brand-gray-light hover:text-primary"
-                onClick={() => setView(Views.VAULT)}
-              >
+                onClick={() => setView(Views.VAULT)}>
                 <XMarkIcon className="block h-6 w-6" />
               </button>
             ) : (
               <button
                 className="relative inline-flex items-center justify-center rounded-md p-2 text-brand-gray-light hover:text-primary"
-                onClick={() => toggleShowMenu()}
-              >
+                onClick={() => toggleShowMenu()}>
                 {showMenu ? (
                   <XMarkIcon className="block h-6 w-6" />
                 ) : (
@@ -113,5 +110,5 @@ export default function Navbar() {
         </div>
       </div>
     </div>
-  );
+  )
 }

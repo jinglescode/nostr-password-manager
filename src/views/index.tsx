@@ -11,12 +11,12 @@ import VaultView from "./Vault";
 import ItemView from "./Item";
 import RoadmapView from "./Roadmap";
 import { useNDK } from "@nostr-dev-kit/ndk-react";
-import { User } from "../types/user";
 import { getPublicKeys } from "../utils/nostr/getPublicKeys";
 import Notification from "../components/Notification";
 import FAQView from "./FAQ";
 import SupportView from "./Support";
 import SettingsView from "./Settings";
+import type { User } from "~types/user";
 
 export default function MainView() {
   const { loginWithSecret } = useNDK();

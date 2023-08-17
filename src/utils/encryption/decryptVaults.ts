@@ -3,7 +3,7 @@ import {
   NDKNip46Signer,
   NDKPrivateKeySigner,
 } from "@nostr-dev-kit/ndk";
-import { Vault } from "../../types/vault";
+import type { Vault } from "../../types/vault";
 import StringCrypto from "string-crypto";
 
 export async function decryptVaults({

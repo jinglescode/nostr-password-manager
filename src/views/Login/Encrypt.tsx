@@ -10,7 +10,8 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import { Views, viewStore } from "../../stores/view";
 import { getPublicKeys } from "../../utils/nostr/getPublicKeys";
-import { User } from "../../types/user";
+import type { User } from "../../types/user";
+import logo from "data-base64:~assets/icon.png"
 
 export default function Encrypt({
   session,
@@ -97,7 +98,7 @@ export default function Encrypt({
           src={
             getProfile(session.npub).image
               ? getProfile(session.npub).image
-              : chrome.runtime.getURL("/images/rounded-512.png")
+              : logo
           }
         />
         <h2 className="mt-2 text-2xl font-bold tracking-tight text-brand-black sm:text-4xl">
