@@ -100,6 +100,12 @@
   "nav_new_item": {
     "message": "New Item"
   },
+  "nav_nostr": {
+    "message": "NOSTR"
+  },
+  "nav_nostr_title": {
+    "message": "Your NOSTR Keys"
+  },
   "nav_roadmap": {
     "message": "Roadmap"
   },

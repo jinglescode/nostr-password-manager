@@ -81,6 +81,11 @@ export default function Navbar() {
                       {chrome.i18n.getMessage("nav_settings")}
                     </div>
                   )}
+                  {view === Views.NOSTR && (
+                    <div className="text-white text-center text-lg">
+                      {chrome.i18n.getMessage("nav_nostr_title")}
+                    </div>
+                  )}
                 </>
               ) : (
                 <></>

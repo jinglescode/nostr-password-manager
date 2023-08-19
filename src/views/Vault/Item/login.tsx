@@ -5,7 +5,7 @@ import {
   SparklesIcon,
   UserIcon,
 } from "@heroicons/react/20/solid";
-import { Item } from "../../../types/item";
+import type { Item } from "../../../types/item";
 import { ItemKeys } from "../../../enums/item";
 import { useClipboard } from "../../../hooks/useCopyClipboard";
 import { Views, viewStore } from "../../../stores/view";

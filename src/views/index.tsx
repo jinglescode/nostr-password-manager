@@ -1,69 +1,72 @@
-import { useEffect } from "react";
-import Navbar from "../components/Navbar";
-import { Views, viewStore } from "../stores/view";
-import LoginView from "./Login";
-import MenuView from "./Menu";
-import { getSessionStorage, getSyncStorage } from "../utils/chrome/storage";
-import { accountStore } from "../stores/account";
-import { AccountStates } from "../enums/account";
-import { StorageKeys } from "../enums/storage";
-import VaultView from "./Vault";
-import ItemView from "./Item";
-import RoadmapView from "./Roadmap";
-import { useNDK } from "@nostr-dev-kit/ndk-react";
-import { getPublicKeys } from "../utils/nostr/getPublicKeys";
-import Notification from "../components/Notification";
-import FAQView from "./FAQ";
-import SupportView from "./Support";
-import SettingsView from "./Settings";
-import type { User } from "~types/user";
+import { useNDK } from "@nostr-dev-kit/ndk-react"
+import { useEffect } from "react"
+
+import type { User } from "~types/user"
+
+import Navbar from "../components/Navbar"
+import Notification from "../components/Notification"
+import { AccountStates } from "../enums/account"
+import { StorageKeys } from "../enums/storage"
+import { accountStore } from "../stores/account"
+import { Views, viewStore } from "../stores/view"
+import { getSessionStorage, getSyncStorage } from "../utils/chrome/storage"
+import { getPublicKeys } from "../utils/nostr/getPublicKeys"
+import FAQView from "./FAQ"
+import ItemView from "./Item"
+import LoginView from "./Login"
+import MenuView from "./Menu"
+import NostrView from "./Nostr"
+import RoadmapView from "./Roadmap"
+import SettingsView from "./Settings"
+import SupportView from "./Support"
+import VaultView from "./Vault"
 
 export default function MainView() {
-  const { loginWithSecret } = useNDK();
-  const view = viewStore((state) => state.view);
-  const setView = viewStore((state) => state.setView);
-  const showMenu = viewStore((state) => state.showMenu);
-  const state = accountStore((state) => state.state);
-  const setState = accountStore((state) => state.setState);
-  const setUser = accountStore((state) => state.setUser);
+  const { loginWithSecret } = useNDK()
+  const view = viewStore((state) => state.view)
+  const setView = viewStore((state) => state.setView)
+  const showMenu = viewStore((state) => state.showMenu)
+  const state = accountStore((state) => state.state)
+  const setState = accountStore((state) => state.setState)
+  const setUser = accountStore((state) => state.setUser)
 
   useEffect(() => {
     async function load() {
       const encryptedsk = await getSyncStorage(
         StorageKeys.LOCAL_USER_ENCRYPTED_SK
-      );
+      )
 
       if (encryptedsk && state === AccountStates.NOT_LOGGED_IN) {
-        const sk = await getSessionStorage(StorageKeys.SESSION_USER_SK);
+        const sk = await getSessionStorage(StorageKeys.SESSION_USER_SK)
 
         if (sk) {
-          const _user = await loginWithSecret(sk);
+          const _user = await loginWithSecret(sk)
           if (_user) {
-            const pk = await getSyncStorage(StorageKeys.LOCAL_USER_PK);
-            const npub = getPublicKeys(pk).npub;
+            const pk = await getSyncStorage(StorageKeys.LOCAL_USER_PK)
+            const npub = getPublicKeys(pk).npub
 
             let user: User = {
               pk: pk,
-              npub: npub,
-            };
+              npub: npub
+            }
 
-            setUser(user);
+            setUser(user)
 
-            setState(AccountStates.LOGGED_IN);
-            setView(Views.VAULT);
+            setState(AccountStates.LOGGED_IN)
+            setView(Views.VAULT)
           }
         } else {
-          setState(AccountStates.LOGGED_IN_NO_ACCESS);
-          setView(Views.LOGIN);
+          setState(AccountStates.LOGGED_IN_NO_ACCESS)
+          setView(Views.LOGIN)
         }
       } else {
-        setView(Views.LOGIN);
+        setView(Views.LOGIN)
       }
     }
-    load();
-  }, []);
+    load()
+  }, [])
 
-  if (view === Views.INIT) return <></>;
+  if (view === Views.INIT) return <></>
 
   return (
     <div className="h-screen flex flex-col">
@@ -80,10 +83,11 @@ export default function MainView() {
             {view === Views.FAQ && <FAQView />}
             {view === Views.SUPPORT && <SupportView />}
             {view === Views.SETTINGS && <SettingsView />}
+            {view === Views.NOSTR && <NostrView />}
           </>
         )}
       </div>
       <Notification />
     </div>
-  );
+  )
 }

@@ -6,7 +6,7 @@ import { viewStore } from "../../../stores/view";
 import { useUserVaults } from "../../../hooks/useUserVaults";
 import { decryptVaults } from "../../../utils/encryption/decryptVaults";
 import { accountStore } from "../../../stores/account";
-import { Vault } from "../../../types/vault";
+import type { Vault } from "../../../types/vault";
 import { encryptVault } from "../../../utils/encryption/encryptVault";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { useUserVaultsPost } from "../../../hooks/useUserVaultsPost";

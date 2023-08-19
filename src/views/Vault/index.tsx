@@ -1,9 +1,9 @@
 import { useUserVaults } from "../../hooks/useUserVaults";
 import { useEffect, useState } from "react";
-import { Item } from "../../types/item";
+import type { Item } from "../../types/item";
 import { ItemKeys, ItemType } from "../../enums/item";
 import { useNDK } from "@nostr-dev-kit/ndk-react";
-import { Vault } from "../../types/vault";
+import type { Vault } from "../../types/vault";
 import { accountStore } from "../../stores/account";
 import { searchStore } from "../../stores/search";
 import { getActiveTab } from "../../utils/chrome/getActiveTab";

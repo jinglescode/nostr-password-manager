@@ -1,3 +1,7 @@
+import { Storage } from "@plasmohq/storage"
+
+const storage = new Storage()
+
 export default function injectNostr() {
   // function _call(type: string, params: Record<string, any>) {
   //   let id = Math.random().toString().slice(-4)
@@ -72,8 +76,9 @@ export default function injectNostr() {
     //   }
     // },
 
-    _call(type, params) {
+    async _call(type, params) {
       let id = Math.random().toString().slice(-4)
+
       console.log(
         "%c[vault2:%c" +
           id +
@@ -90,6 +95,10 @@ export default function injectNostr() {
         "font-weight:bold;color:#90b12d;font-family:monospace"
       )
 
+      console.log(333, id)
+      const data = await storage.get("nostr-session")
+      console.log(555, data)
+
       return new Promise((resolve, reject) => {
         this._requests[id] = { resolve, reject }
         window.postMessage(
@@ -104,4 +113,17 @@ export default function injectNostr() {
       })
     }
   }
+
+  ////
 }
+
+const main = async () => {
+  // Wait for all the watch event to be processed
+  await new Promise((resolve) => setTimeout(resolve, 1470))
+
+  await storage.set("nostr-session", "session state")
+
+  console.log("set")
+}
+
+main()

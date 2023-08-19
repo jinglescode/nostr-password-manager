@@ -4,24 +4,26 @@ import {
   PlusIcon,
   RectangleStackIcon,
   RocketLaunchIcon,
-  WrenchScrewdriverIcon,
-} from "@heroicons/react/20/solid";
-import { Views, viewStore } from "../../stores/view";
-import { accountStore } from "../../stores/account";
-import { AccountStates } from "../../enums/account";
+  WrenchScrewdriverIcon
+} from "@heroicons/react/20/solid"
+import nostrIcon from "data-base64:~assets/nostr-icon.png"
+
+import { AccountStates } from "../../enums/account"
+import { accountStore } from "../../stores/account"
+import { Views, viewStore } from "../../stores/view"
 
 export default function MenuView() {
-  const setView = viewStore((state) => state.setView);
-  const toggleShowMenu = viewStore((state) => state.toggleShowMenu);
-  const setItemDetails = viewStore((state) => state.setItemDetails);
-  const state = accountStore((state) => state.state);
+  const setView = viewStore((state) => state.setView)
+  const toggleShowMenu = viewStore((state) => state.toggleShowMenu)
+  const setItemDetails = viewStore((state) => state.setItemDetails)
+  const state = accountStore((state) => state.state)
 
   function goToView(view: Views) {
     if (view === Views.ITEM) {
-      setItemDetails(undefined);
+      setItemDetails(undefined)
     }
-    setView(view);
-    toggleShowMenu();
+    setView(view)
+    toggleShowMenu()
   }
 
   return (
@@ -32,9 +34,9 @@ export default function MenuView() {
           text={chrome.i18n.getMessage("nav_vault")}
           onClick={() => {
             if (state === AccountStates.LOGGED_IN) {
-              goToView(Views.VAULT);
+              goToView(Views.VAULT)
             } else {
-              goToView(Views.LOGIN);
+              goToView(Views.LOGIN)
             }
           }}
         />
@@ -42,7 +44,15 @@ export default function MenuView() {
           icon={<PlusIcon className="h-6 w-6" />}
           text={chrome.i18n.getMessage("nav_add")}
           onClick={() => {
-            goToView(Views.ITEM);
+            goToView(Views.ITEM)
+          }}
+          disabled={state !== AccountStates.LOGGED_IN}
+        />
+        <MenuItem
+          icon={<img src={nostrIcon} className="h-6 w-6" />}
+          text={chrome.i18n.getMessage("nav_nostr")}
+          onClick={() => {
+            goToView(Views.NOSTR)
           }}
           disabled={state !== AccountStates.LOGGED_IN}
         />
@@ -69,7 +79,7 @@ export default function MenuView() {
         />
       </div>
     </div>
-  );
+  )
 }
 
 function MenuItem({ icon, text, onClick, disabled }: any) {
@@ -79,12 +89,11 @@ function MenuItem({ icon, text, onClick, disabled }: any) {
       className={`relative inline-flex items-center justify-center rounded-md p-2 ${
         disabled ? "text-gray-600" : "text-brand-gray-light"
       } ${!disabled && "hover:text-primary"}`}
-      disabled={disabled}
-    >
+      disabled={disabled}>
       <div className="flex flex-col items-center">
         {icon}
         <span className="text-xs">{text}</span>
       </div>
     </button>
-  );
+  )
 }

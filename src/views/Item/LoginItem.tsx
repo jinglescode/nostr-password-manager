@@ -1,8 +1,3 @@
-import { useState } from "react";
-import { EditItemViews, ItemKeys } from "../../enums/item";
-import { Item } from "../../types/item";
-import { useClipboard } from "../../hooks/useCopyClipboard";
-import Input from "../../components/Input";
 import {
   ArrowPathIcon,
   DocumentDuplicateIcon,
@@ -10,62 +5,67 @@ import {
   EyeSlashIcon,
   PlusIcon,
   QuestionMarkCircleIcon,
-  TrashIcon,
-} from "@heroicons/react/20/solid";
-import Button from "../../components/Button";
-import { viewStore } from "../../stores/view";
-import { generatePassword } from "../../utils/strings/passwordGenerator";
-import Tooltip from "../../components/Tooltip";
+  TrashIcon
+} from "@heroicons/react/20/solid"
+import { useState } from "react"
+
+import Input from "../../components/Input"
+import Tooltip from "../../components/Tooltip"
+import { EditItemViews, ItemKeys } from "../../enums/item"
+import { useClipboard } from "../../hooks/useCopyClipboard"
+import { viewStore } from "../../stores/view"
+import type { Item } from "../../types/item"
+import { generatePassword } from "../../utils/strings/passwordGenerator"
 
 export default function LoginItem({
   editableItem,
   onChangeFormInput,
   mode,
   isNew,
-  setEditableItem,
+  setEditableItem
 }: {
-  editableItem: Item;
-  onChangeFormInput: Function;
-  mode: EditItemViews;
-  isNew: boolean;
-  setEditableItem: Function;
+  editableItem: Item
+  onChangeFormInput: Function
+  mode: EditItemViews
+  isNew: boolean
+  setEditableItem: Function
 }) {
-  const setAppNotification = viewStore((state) => state.setAppNotification);
+  const setAppNotification = viewStore((state) => state.setAppNotification)
 
-  const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
+  const [isShowPassword, setIsShowPassword] = useState<boolean>(false)
 
   const { onCopy: copyUser } = useClipboard(
     editableItem?.login?.[ItemKeys.USERNAME] || ""
-  );
+  )
   const { onCopy: copyPassword } = useClipboard(
     editableItem?.login?.[ItemKeys.PASSWORD] || ""
-  );
+  )
 
   function deleteUri(index: number) {
-    if (editableItem === undefined) return;
+    if (editableItem === undefined) return
     //@ts-ignore
-    const _updatedItem = { ...editableItem };
+    const _updatedItem = { ...editableItem }
     //@ts-ignore
-    _updatedItem.login[ItemKeys.URI].splice(index, 1);
-    setEditableItem(_updatedItem);
+    _updatedItem.login[ItemKeys.URI].splice(index, 1)
+    setEditableItem(_updatedItem)
   }
 
   function addUriRow() {
-    if (editableItem === undefined) return;
+    if (editableItem === undefined) return
     //@ts-ignore
-    const _updatedItem = { ...editableItem };
+    const _updatedItem = { ...editableItem }
     //@ts-ignore
-    _updatedItem.login[ItemKeys.URI].push("");
-    setEditableItem(_updatedItem);
+    _updatedItem.login[ItemKeys.URI].push("")
+    setEditableItem(_updatedItem)
   }
 
   async function generateNewPassword() {
-    const password = await generatePassword();
+    const password = await generatePassword()
     onChangeFormInput({
       key: ItemKeys.PASSWORD,
       value: password,
-      isLogin: true,
-    });
+      isLogin: true
+    })
   }
 
   return (
@@ -79,7 +79,7 @@ export default function LoginItem({
           onChangeFormInput({
             key: ItemKeys.USERNAME,
             value: e.target.value,
-            isLogin: true,
+            isLogin: true
           })
         }
         disabled={mode === EditItemViews.VIEW}
@@ -88,17 +88,16 @@ export default function LoginItem({
             <div className="absolute inset-y-0 right-0 flex items-center pr-2">
               <button
                 onClick={() => {
-                  copyUser();
+                  copyUser()
                   setAppNotification({
                     title: chrome.i18n.getMessage(
                       "notification_username_copied"
                     ),
-                    type: "success",
-                  });
+                    type: "success"
+                  })
                 }}
                 className="text-brand-gray-light hover:text-primary"
-                title={chrome.i18n.getMessage("notification_copy_username")}
-              >
+                title={chrome.i18n.getMessage("notification_copy_username")}>
                 <DocumentDuplicateIcon className="h-6 w-6" />
               </button>
             </div>
@@ -115,7 +114,7 @@ export default function LoginItem({
           onChangeFormInput({
             key: ItemKeys.PASSWORD,
             value: e.target.value,
-            isLogin: true,
+            isLogin: true
           })
         }
         disabled={mode === EditItemViews.VIEW}
@@ -125,8 +124,7 @@ export default function LoginItem({
               <button
                 onClick={() => generateNewPassword()}
                 className="text-brand-gray-light hover:text-primary"
-                title={chrome.i18n.getMessage("button_generate_password")}
-              >
+                title={chrome.i18n.getMessage("button_generate_password")}>
                 <ArrowPathIcon className="h-6 w-6" />
               </button>
             )}
@@ -137,8 +135,7 @@ export default function LoginItem({
                 isShowPassword
                   ? chrome.i18n.getMessage("button_hide_password")
                   : chrome.i18n.getMessage("button_show_password")
-              }
-            >
+              }>
               {isShowPassword ? (
                 <EyeSlashIcon className="h-6 w-6" />
               ) : (
@@ -148,17 +145,16 @@ export default function LoginItem({
             {!isNew && (
               <button
                 onClick={() => {
-                  copyPassword();
+                  copyPassword()
                   setAppNotification({
                     title: chrome.i18n.getMessage(
                       "notification_password_copied"
                     ),
-                    type: "success",
-                  });
+                    type: "success"
+                  })
                 }}
                 className="text-brand-gray-light hover:text-primary"
-                title={chrome.i18n.getMessage("notification_copy_password")}
-              >
+                title={chrome.i18n.getMessage("notification_copy_password")}>
                 <DocumentDuplicateIcon className="h-6 w-6" />
               </button>
             )}
@@ -179,8 +175,7 @@ export default function LoginItem({
           {mode == EditItemViews.EDIT && (
             <button
               onClick={() => addUriRow()}
-              className="bg-brand-2 hover:bg-primary rounded-full text-center items-center justify-center w-6 h-6"
-            >
+              className="bg-brand-2 hover:bg-primary rounded-full text-center items-center justify-center w-6 h-6">
               <PlusIcon className="h-6 w-6 inline-block text-white" />
             </button>
           )}
@@ -195,7 +190,7 @@ export default function LoginItem({
                 key: ItemKeys.URI,
                 value: e.target.value,
                 isLogin: true,
-                uriIndex: index,
+                uriIndex: index
               })
             }
             placeholder={`URI #${index + 1}`}
@@ -207,8 +202,7 @@ export default function LoginItem({
                     <button
                       onClick={() => deleteUri(index)}
                       className="text-brand-gray-light hover:text-primary"
-                      title={chrome.i18n.getMessage("button_delete_uri")}
-                    >
+                      title={chrome.i18n.getMessage("button_delete_uri")}>
                       <TrashIcon className="h-6 w-6" />
                     </button>
                   </div>
@@ -216,8 +210,8 @@ export default function LoginItem({
               </>
             }
           />
-        );
+        )
       })}
     </>
-  );
+  )
 }

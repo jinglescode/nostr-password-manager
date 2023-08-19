@@ -14,6 +14,13 @@ const inject = async (tabId: number) => {
     }
   )
 }
-chrome.tabs.onActivated.addListener((e) => {
-  inject(e.tabId)
+
+// chrome.tabs.onActivated.addListener((e) => {
+//   inject(e.tabId)
+// })
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === "complete") {
+    inject(tabId)
+  }
 })
