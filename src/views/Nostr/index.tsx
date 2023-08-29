@@ -8,6 +8,7 @@ import {
 } from "@heroicons/react/20/solid"
 import { useEffect, useState } from "react"
 
+import { Storage } from "@plasmohq/storage"
 import { SecureStorage } from "@plasmohq/storage/secure"
 
 import Button from "~components/Button"
@@ -17,7 +18,12 @@ import type { NostrKey, NostrKeys } from "~types/nostrKeys"
 import { getSessionStorage, getSyncStorage } from "~utils/chrome/storage"
 import { getPublicKeys } from "~utils/nostr/getPublicKeys"
 
-const storage = new SecureStorage()
+const secureStorage = new SecureStorage()
+const storage = new Storage(
+//   {
+//   area: "local"
+// }
+)
 
 export default function NostrView() {
   const [nostrKeys, setNostrKeys] = useState<NostrKeys>({})
@@ -36,7 +42,9 @@ export default function NostrView() {
       [pk]: keyData
     }
 
-    await storage.set("nostr-keys", JSON.stringify(initKeyData))
+    await secureStorage.set("nostr-keys", JSON.stringify(initKeyData))
+    const data = await secureStorage.get("nostr-keys")
+    console.log(44, "data nostr-keys set", data)
 
     setNostrKeys(initKeyData)
   }
@@ -49,9 +57,11 @@ export default function NostrView() {
       console.log(11, "passcode", passcode)
 
       if (passcode) {
-        await storage.setPassword(passcode)
+        await secureStorage.setPassword(passcode)
 
-        const data = await storage.get("nostr-keys")
+        await storage.set("nostr-keys", JSON.stringify({ passcode }))
+
+        const data = await secureStorage.get("nostr-keys")
         console.log(22, "data", data)
 
         if (data === undefined) await initKey()

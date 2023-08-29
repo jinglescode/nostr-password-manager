@@ -24,3 +24,10 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     inject(tabId)
   }
 })
+
+import "@plasmohq/messaging/background"
+
+import { startHub } from "@plasmohq/messaging/pub-sub"
+
+console.log(`BGSW - Starting Hub`)
+startHub()
