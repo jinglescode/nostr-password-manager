@@ -1,3 +1,8 @@
 export enum MESSAGE {
-  RequestDecryptPassword
+  RequestDecryptPassword,
+  RequestPubkey,
+  SetDecryptPassword,
+  SelectWallet,
+  WalletSelected,
+  InvalidPassword,
 }

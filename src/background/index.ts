@@ -10,24 +10,13 @@ const inject = async (tabId: number) => {
       func: injectNostr
     },
     () => {
-      console.log("window.nostr injected")
+      // console.log("window.nostr injected")
     }
   )
 }
-
-// chrome.tabs.onActivated.addListener((e) => {
-//   inject(e.tabId)
-// })
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === "complete") {
     inject(tabId)
   }
 })
-
-import "@plasmohq/messaging/background"
-
-import { startHub } from "@plasmohq/messaging/pub-sub"
-
-console.log(`BGSW - Starting Hub`)
-startHub()

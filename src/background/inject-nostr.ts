@@ -4,8 +4,12 @@ export default function injectNostr() {
     _pubkey: null,
 
     async getPublicKey() {
-      if (this._pubkey) return this._pubkey
+      if (this._pubkey) {
+        console.log("returning cached pubkey", this._pubkey)
+        return this._pubkey
+      }
       this._pubkey = await this._call("getPublicKey", {})
+      console.log("gotten pubkey", this._pubkey)
       return this._pubkey
     },
 

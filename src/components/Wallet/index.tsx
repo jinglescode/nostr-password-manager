@@ -23,6 +23,7 @@ import { useStorage } from "@plasmohq/storage/hook"
 import { SecureStorage } from "@plasmohq/storage/secure"
 
 import { StorageKeys } from "~enums/storage"
+import { MESSAGE } from "~messages"
 import { getSessionStorage } from "~utils/chrome/storage"
 
 const storage = new Storage()
@@ -32,39 +33,36 @@ const storage = new Storage()
 
 // const secureStorage = new SecureStorage()
 
+export enum MODALVIEW {
+  RequestDecryptPassword
+}
+
 export const WalletMain = () => {
   const [nostrSession, setNostrSession] = useStorage("nostr-session")
 
-  const [display, setDisplay] = useState<boolean>(false)
+  const [showModal, setShowModal] = useState<boolean>(false)
+  const [modalView, setModalView] = useState<MODALVIEW | undefined>(undefined)
 
-  async function newEvent() {
-    // todo prompt user for passcode
-    setDisplay(true)
-    console.log(1111, "newEvent")
-    // send to background to process decrypt key and perform task
-    let resp = await sendToBackgroundViaRelay({
-      name: "open-extension"
-    })
-    console.log(333, resp)
-  }
+  const [requestId, setRequestId] = useState<string>("")
+
+  // password
+  const [vaultPassword, setVaultPassword] = useState<string>("")
+  const [invalidVaultPassword, setInvalidVaultPassword] =
+    useState<boolean>(false)
 
   useEffect(() => {
     async function load() {
       window.addEventListener("message", (event) => {
-        const { id, type, params } = event.data
+        const { id, ext, type, params } = event.data
 
-        if (type === "getPublicKey") {
-          newEvent()
+        if (ext != undefined && ext == "vault") {
+          console.log("message", event.data)
 
-          //////
-          // console.log(333, "getPublicKey", id, type, params)
+          setRequestId(id)
 
-          // // // todo, get from storage, the current selected sk
-          // const res = getPublicKey("")
-          // console.log(444, res)
-          // window.nostr._requests[id].resolve(res)
-
-          // setDisplay(true)
+          if (type === "getPublicKey") {
+            requestPubkey(id)
+          }
         }
       })
     }
@@ -72,146 +70,136 @@ export const WalletMain = () => {
     load()
   }, [])
 
-  // const [open, setOpen] = useState(true)
+  async function requestPubkey(requestId: string) {
+    let resp = await sendToBackgroundViaRelay({
+      name: "nostr",
+      body: {
+        type: MESSAGE.RequestPubkey,
+        requestId: requestId
+      }
+    })
+    await requestPubkeyResp(requestId, resp)
+  }
 
-  const cancelButtonRef = useRef(null)
+  async function requestPubkeyResp(requestId: string, resp: any) {
+    console.log(333, "requestPubkeyResp", resp)
+
+    // if keys are still encrypted
+    if (resp.type == MESSAGE.RequestDecryptPassword) {
+      // if wrong password
+      if (resp.data.error == MESSAGE.InvalidPassword) {
+        setInvalidVaultPassword(true)
+      } else {
+        setInvalidVaultPassword(false)
+      }
+      setModalView(MODALVIEW.RequestDecryptPassword)
+      setShowModal(true)
+    }
+    // if keys are decrypted
+    if (resp.type == MESSAGE.WalletSelected) {
+      window.nostr._requests[requestId].resolve(resp.data.pubkey)
+    }
+  }
+
+  async function setPassword() {
+    setShowModal(false)
+    let resp = await sendToBackgroundViaRelay({
+      name: "nostr",
+      body: {
+        type: MESSAGE.SetDecryptPassword,
+        requestId: requestId,
+        data: vaultPassword
+      }
+    })
+    await requestPubkeyResp(requestId, resp)
+  }
 
   return (
     <>
-      {display && (
-        // <div
-        //   className="z-50 flex fixed top-32 right-8"
-        //   style={{
-        //     padding: 8,
-        //     background: "purple",
-        //     color: "white"
-        //   }}>
-        //   hello!
-        // </div>
-        <></>
+      {showModal && (
+        <div className="z-50 flex fixed top-0 left-0 w-screen h-screen">
+          <div className="container flex justify-center mx-auto">
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
+              <div className="relative w-full max-w-2xl max-h-full">
+                <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                  <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                      Vault
+                    </h3>
+                    <button
+                      type="button"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      onClick={() => setShowModal(false)}>
+                      <svg
+                        className="w-3 h-3"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 14 14">
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+
+                  <div className="p-6 space-y-6">
+                    {modalView == MODALVIEW.RequestDecryptPassword && (
+                      <>
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                          Please enter your password to decrypt your private
+                          key.
+                        </p>
+                        <div>
+                          <label
+                            htmlFor="password"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Password to decrypt key
+                          </label>
+                          <input
+                            type="password"
+                            id="password"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="password"
+                            value={vaultPassword}
+                            onChange={(e) => setVaultPassword(e.target.value)}
+                          />
+                          {invalidVaultPassword && (
+                            <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                              <span className="font-medium">
+                                Invalid password
+                              </span>
+                            </p>
+                          )}
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  <div className="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button
+                      type="button"
+                      className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      onClick={() => setPassword()}>
+                      Unlock Vault
+                    </button>
+                    <button
+                      type="button"
+                      className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                      onClick={() => setShowModal(false)}>
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
-      ok
-      <Dialog open={display} onClose={() => setDisplay(false)} className="relative z-50">
-      <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        
-        <div className="fixed w-screen h-screen top-0 bottom-0">
-          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-              <div>
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                  <CheckIcon
-                    className="h-6 w-6 text-green-600"
-                    aria-hidden="true"
-                  />
-                </div>
-                <div className="mt-3 text-center sm:mt-5">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-base font-semibold leading-6 text-gray-900">
-                    Payment successful
-                  </Dialog.Title>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                      Eius aliquam laudantium explicabo pariatur iste dolorem
-                      animi vitae error totam. At sapiente aliquam accusamus
-                      facere veritatis.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
-                <button
-                  type="button"
-                  className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2"
-                  onClick={() => setDisplay(false)}>
-                  Deactivate
-                </button>
-                <button
-                  type="button"
-                  className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0"
-                  onClick={() => setDisplay(false)}
-                  ref={cancelButtonRef}>
-                  Cancel
-                </button>
-              </div>
-            </Dialog.Panel>
-          </div>
-        </div>
-      </Dialog>
-
-      {/* <Dialog
-      open={display}
-      onClose={() => setDisplay(false)}
-      className="relative z-50"
-    >
-      <div className="fixed inset-0 bg-black" aria-hidden="true" />
-
-      <div className="fixed inset-0 flex items-center justify-center p-4">
-        <Dialog.Panel className="mx-auto max-w-sm rounded bg-white">
-          <Dialog.Title>Complete your order</Dialog.Title>
-
-        </Dialog.Panel>
-      </div>
-    </Dialog> */}
-
-      {/* <Transition.Root show={display} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={() => setDisplay(false)}>
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        </Transition.Child>
-
-        <div className="fixed inset-0 z-10 overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enterTo="opacity-100 translate-y-0 sm:scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-            >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
-                <div>
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                    <CheckIcon className="h-6 w-6 text-green-600" aria-hidden="true" />
-                  </div>
-                  <div className="mt-3 text-center sm:mt-5">
-                    <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
-                      Payment successful
-                    </Dialog.Title>
-                    <div className="mt-2">
-                      <p className="text-sm text-gray-500">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur amet labore.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-5 sm:mt-6">
-                  <button
-                    type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    onClick={() => setDisplay(false)}
-                  >
-                    Go back to dashboard
-                  </button>
-                </div>
-              </Dialog.Panel>
-            </Transition.Child>
-          </div>
-        </div>
-      </Dialog>
-    </Transition.Root> */}
-      11
     </>
   )
 }
