@@ -5,7 +5,7 @@ import { MESSAGE } from "~messages"
 
 const secureStorage = new SecureStorage()
 
-async function getPublicKey(req,res) {
+async function getPublicKey(req, res) {
   const hasAllowed = !secureStorage.isValidKey("nostr-keys")
 
   console.log(11, hasAllowed)
@@ -49,15 +49,30 @@ async function getPublicKey(req,res) {
   }
 }
 
-const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
+async function signEvent(req, res) {
+  console.log("signEvent", req)
+  // todo sign the event
 
+  res.send({
+    type: MESSAGE.SignEventApproved,
+    data: {
+      requestId: req.body.requestId
+    }
+  })
+}
+
+const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   if (req.body.type === MESSAGE.SetDecryptPassword) {
-    await secureStorage.setPassword(req.body.data)
-    await getPublicKey(req,res)
+    await secureStorage.setPassword(req.body.data.password)
+    await getPublicKey(req, res)
   }
 
   if (req.body.type === MESSAGE.RequestPubkey) {
-    await getPublicKey(req,res)
+    await getPublicKey(req, res)
+  }
+
+  if (req.body.type === MESSAGE.RequestSignEvent) {
+    await signEvent(req, res)
   }
 }
 

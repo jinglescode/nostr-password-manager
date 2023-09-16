@@ -5,4 +5,7 @@ export enum MESSAGE {
   SelectWallet,
   WalletSelected,
   InvalidPassword,
+  // sign event
+  RequestSignEvent,
+  SignEventApproved,
 }
